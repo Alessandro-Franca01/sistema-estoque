@@ -35,7 +35,7 @@ Para configurar o projeto localmente, siga os passos abaixo:
 
 1. Clone o repositório:
    ```bash
-   git clone <URL_DO_SEU_REPOSITORIO>
+   git clone https://github.com/Alessandro-Franca01/sistema-estoque.git
    cd sistema-de-estoque
    ```
 2. Instale as dependências do Composer:
@@ -47,7 +47,15 @@ Para configurar o projeto localmente, siga os passos abaixo:
    cp .env.example .env
    php artisan key:generate
    ```
-4. Configure as informações do seu banco de dados no arquivo `.env`.
+4. Configure as informações do seu banco de dados no arquivo `.env` a seguir um exemplo.
+   ```
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=laravel
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 5. Execute as migrações do banco de dados:
    ```bash
    php artisan migrate
