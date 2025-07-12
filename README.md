@@ -64,12 +64,7 @@ Para configurar o projeto localmente, siga os passos abaixo:
    ```bash
    php artisan db:seed
    ```
-7. Instale as dependências do NPM e compile os assets:
-   ```bash
-   npm install
-   npm run dev
-   ```
-8. Inicie o servidor local:
+7. Inicie o servidor local:
    ```bash
    php artisan serve
    ```
@@ -86,7 +81,7 @@ Este projeto está licenciado sob a [Licença MIT](https://opensource.org/licens
 
 ## 📌 Versão
 
-Versão 1.0.0
+Versão 0.0.2
 
 ## ✒️ Autor & Mantedor
 
