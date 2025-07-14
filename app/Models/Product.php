@@ -60,6 +60,14 @@ class Product extends Model
     }
 
     /**
+     * Get the category that owns the product.
+     */
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    /**
      * Check if the product is in stock.
      */
     public function getIsInStockAttribute(): bool
