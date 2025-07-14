@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('manage_stock')->default(true);
             $table->boolean('is_active')->default(true);
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('supplier_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

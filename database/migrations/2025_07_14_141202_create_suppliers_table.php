@@ -38,8 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('suppliers', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('suppliers');
     }
 };

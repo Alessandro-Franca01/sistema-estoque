@@ -19,5 +19,6 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('categories', \App\Http\Controllers\CategoryController::class);
 Route::resource('products', \App\Http\Controllers\ProductController::class);
+Route::resource('suppliers', \App\Http\Controllers\SupplierController::class);
 
 require __DIR__.'/auth.php';

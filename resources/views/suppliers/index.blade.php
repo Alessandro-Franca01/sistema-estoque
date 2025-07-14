@@ -1,0 +1,71 @@
+@extends('layouts.app')
+
+@section('title', 'Fornecedores')
+
+@section('content')
+<div class="container mx-auto px-4 py-8 mt-4">
+    <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-gray-800 text-white px-6 py-4 flex items-center justify-between">
+            <h1 class="text-2xl font-semibold">Fornecedores</h1>
+            <a href="{{ route('suppliers.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Novo Fornecedor
+            </a>
+        </div>
+        <div class="p-6 overflow-x-auto">
+            @if(session('success'))
+                <div class="mb-4 text-green-600 font-semibold">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2">#</th>
+                        <th class="px-4 py-2">Razão Social</th>
+                        <th class="px-4 py-2">Nome Fantasia</th>
+                        <th class="px-4 py-2">CNPJ</th>
+                        <th class="px-4 py-2">Telefone</th>
+                        <th class="px-4 py-2">E-mail</th>
+                        <th class="px-4 py-2">Ativo</th>
+                        <th class="px-4 py-2">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($suppliers as $supplier)
+                        <tr class="border-b">
+                            <td class="px-4 py-2">{{ $supplier->id }}</td>
+                            <td class="px-4 py-2">{{ $supplier->company_name }}</td>
+                            <td class="px-4 py-2">{{ $supplier->trade_name }}</td>
+                            <td class="px-4 py-2">{{ $supplier->cnpj }}</td>
+                            <td class="px-4 py-2">{{ $supplier->phone }}</td>
+                            <td class="px-4 py-2">{{ $supplier->email }}</td>
+                            <td class="px-4 py-2">
+                                @if($supplier->active)
+                                    <span class="text-green-600 font-bold">Sim</span>
+                                @else
+                                    <span class="text-red-600 font-bold">Não</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-2 flex space-x-2">
+                                <a href="{{ route('suppliers.edit', $supplier) }}" class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded">Editar</a>
+                                <form action="{{ route('suppliers.destroy', $supplier) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este fornecedor?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="text-center py-4">Nenhum fornecedor cadastrado.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+            <div class="mt-4">
+                {{ $suppliers->links() }}
+            </div>
+        </div>
+    </div>
+</div>
+@endsection 
