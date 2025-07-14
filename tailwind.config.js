@@ -9,6 +9,11 @@ export default {
         './resources/views/**/*.blade.php',
     ],
 
+    safelist: [
+        { pattern: /text-(green|red)-(500|900)/, variants: ['hover'] },
+        { pattern: /bg-(green|red)-(100|200)/, variants: ['opacity'] },
+    ],
+
     theme: {
         extend: {
             fontFamily: {
