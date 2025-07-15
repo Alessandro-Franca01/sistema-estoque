@@ -32,7 +32,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                             </svg>
-                            Nova categoria
+                            <p class="text-gray-500 dark:text-gray-400">Nova categoria</p>
                         </a>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="px-6 pb-4 flex justify-between">
-                        <a href="#" class="text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 transition-colors">
+                        <a href="{{ route('products.index') }}" class="text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 transition-colors">
                             Ver todas
                         </a>
                         <a href="{{ route('products.create') }}" class="text-sm font-medium bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-lg transition-colors flex items-center">
@@ -88,6 +88,7 @@
                         </a>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

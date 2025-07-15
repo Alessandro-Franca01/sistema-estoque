@@ -11,7 +11,7 @@
                 Novo Fornecedor
             </a>
         </div>
-        <div class="p-6 overflow-x-auto">
+        <div class="flex flex-col items-center">
             @if(session('success'))
                 <div class="mb-4 text-green-600 font-semibold">
                     {{ session('success') }}
@@ -47,11 +47,11 @@
                                 @endif
                             </td>
                             <td class="px-4 py-2 flex space-x-2">
-                                <a href="{{ route('suppliers.edit', $supplier) }}" class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded">Editar</a>
+                                <a href="{{ route('suppliers.edit', $supplier) }}" class="bg-yellow-400 hover:bg-yellow-500 text-danger font-bold py-1 px-3 rounded">Editar</a>
                                 <form action="{{ route('suppliers.destroy', $supplier) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este fornecedor?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">Excluir</button>
+                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-success font-bold py-1 px-3 rounded">Excluir</button>
                                 </form>
                             </td>
                         </tr>
