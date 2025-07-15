@@ -22,23 +22,23 @@
                 @if ($categories->isEmpty())
                     <p class="text-gray-600">Nenhuma categoria cadastrada ainda.</p>
                 @else
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full leading-normal">
+                    <div class="flex flex-col items-center">
+                        <table class="min-w-full divide-y divide-gray-200">
                             <thead>
                             <tr>
-                                <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                <th class="px-4 py-2">
                                     ID
                                 </th>
-                                <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                <th class="px-4 py-2">
                                     Nome
                                 </th>
-                                <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                <th class="px-4 py-2">
                                     Descrição
                                 </th>
-                                <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                <th class="px-4 py-2">
                                     Status
                                 </th>
-                                <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                <th class="px-4 py-2">
                                     Ações
                                 </th>
                             </tr>
@@ -46,16 +46,16 @@
                             <tbody>
                             @foreach ($categories as $category)
                                 <tr>
-                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <td class="px-4 py-">
                                         <p class="text-gray-900 whitespace-no-wrap">{{ $category->id }}</p>
                                     </td>
-                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <td class="px-4 py-">
                                         <p class="text-gray-900 whitespace-no-wrap">{{ $category->name }}</p>
                                     </td>
-                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <td class="px-4 py-">
                                         <p class="text-gray-900 whitespace-no-wrap">{{ $category->description ?? 'N/A' }}</p>
                                     </td>
-                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                    <td class="px-4 py-">
                                         @if ($category->is_active)
                                             <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
                                             <span aria-hidden="true" class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
@@ -68,7 +68,7 @@
                                         </span>
                                         @endif
                                     </td>
-                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right">
+                                    <td class="px-4 py-">
                                         <a href="{{ route('categories.edit', $category->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Editar</a>
                                         <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Tem certeza que deseja excluir esta categoria?');">
                                             @csrf

@@ -20,6 +20,7 @@ class Product extends Model
         'manage_stock',
         'is_active',
         'category_id',
+        'supplier_id',
     ];
 
     protected $casts = [
@@ -35,20 +36,11 @@ class Product extends Model
     {
         parent::boot();
 
-        static::creating(function ($product) {
-            if (empty($product->slug)) {
-                $product->slug = Str::slug($product->name);
-            }
-            if (empty($product->sku)) {
-                $product->sku = strtoupper(Str::random(8));
-            }
-        });
+        // static::creating(function ($product) {
+        // });
 
-        static::updating(function ($product) {
-            if ($product->isDirty('name') && empty($product->slug)) {
-                $product->slug = Str::slug($product->name);
-            }
-        });
+        // static::updating(function ($product) {
+        // });
     }
 
     /**
@@ -60,7 +52,7 @@ class Product extends Model
     }
 
     /**
-     * Get the category that owns the product.
+     * Get the supplier that owns the product.
      */
     public function supplier(): BelongsTo
     {
@@ -92,13 +84,5 @@ class Product extends Model
             $q->where('manage_stock', false)
               ->orWhere('stock_quantity', '>', 0);
         });
-    }
-
-    /**
-     * Get the route key for the model.
-     */
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
     }
 }

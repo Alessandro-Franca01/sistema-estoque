@@ -68,6 +68,25 @@
                             @enderror
                         </div>
 
+                        <!-- Fornecedor -->
+                        <div>
+                            <label for="supplier_id" class="block text-gray-700 text-sm font-bold mb-2">
+                                Fornecedor <span class="text-red-500">*</span>
+                            </label>
+                            <select name="supplier_id" id="supplier_id"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('supplier_id') border-red-500 @enderror">
+                                <option value="">Selecione um fornecedor</option>
+                                @foreach($suppliers as $supplier)
+                                    <option value="{{ $supplier->id }}" @selected(old('supplier_id') == $supplier->id)>
+                                        {{ $supplier->company_name }} ({{ $supplier->trade_name }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('supplier_id')
+                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Preço -->
                         <div>
                             <label for="price" class="block text-gray-700 text-sm font-bold mb-2">
