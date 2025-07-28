@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Product extends Model
@@ -15,18 +16,15 @@ class Product extends Model
         'name',
         'code',
         'description',
-        'price',
-        'stock_quantity',
-        'manage_stock',
+        'quantity',
+        'meansurement_unit',
+        'observation',
         'is_active',
         'category_id',
-        'supplier_id',
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
         'is_active' => 'boolean',
-        'manage_stock' => 'boolean',
     ];
 
     /**
@@ -52,11 +50,11 @@ class Product extends Model
     }
 
     /**
-     * Get the supplier that owns the product.
+     * Get the product entries for the product.
      */
-    public function supplier(): BelongsTo
+    public function productEntries(): HasMany
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->hasMany(ProductEntry::class);
     }
 
     /**
@@ -64,7 +62,7 @@ class Product extends Model
      */
     public function getIsInStockAttribute(): bool
     {
-        return !$this->manage_stock || $this->stock_quantity > 0;
+        return $this->quantity > 0;
     }
 
     /**
@@ -80,9 +78,6 @@ class Product extends Model
      */
     public function scopeInStock($query)
     {
-        return $query->where(function ($q) {
-            $q->where('manage_stock', false)
-              ->orWhere('stock_quantity', '>', 0);
-        });
+        return $query->where('quantity', '>', 0);
     }
 }

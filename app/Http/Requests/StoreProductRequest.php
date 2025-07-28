@@ -22,14 +22,12 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'code' => 'nullable|string|max:6',
+            'code' => 'required|string|max:10|unique:products,code',
             'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
-            'manage_stock' => 'boolean',
+            'meansurement_unit' => 'nullable|string|max:50',
+            'observation' => 'nullable|string',
             'is_active' => 'boolean',
             'category_id' => 'required|exists:categories,id',
-            'supplier_id' => 'required|exists:suppliers,id',
         ];
     }
 
@@ -41,16 +39,12 @@ class StoreProductRequest extends FormRequest
         return [
             'name.required' => 'O nome do produto é obrigatório.',
             'name.max' => 'O nome do produto não pode ter mais de 255 caracteres.',
-            'price.required' => 'O preço é obrigatório.',
-            'price.numeric' => 'O preço deve ser um número.',
-            'price.min' => 'O preço deve ser maior ou igual a zero.',
-            'stock_quantity.required' => 'A quantidade em estoque é obrigatória.',
-            'stock_quantity.integer' => 'A quantidade em estoque deve ser um número inteiro.',
-            'stock_quantity.min' => 'A quantidade em estoque deve ser maior ou igual a zero.',
+            'code.required' => 'O código do produto é obrigatório.',
+            'code.max' => 'O código do produto não pode ter mais de 10 caracteres.',
+            'code.unique' => 'Já existe um produto com este código.',
+            'meansurement_unit.max' => 'A unidade de medida não pode ter mais de 50 caracteres.',
             'category_id.required' => 'A categoria é obrigatória.',
             'category_id.exists' => 'A categoria selecionada não existe.',
-            'supplier_id.required' => 'O fornecedor é obrigatório.',
-            'supplier_id.exists' => 'O fornecedor selecionado não existe.',
         ];
     }
 }

@@ -6,9 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use App\Models\Supplier;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -17,7 +15,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'supplier']);
+        $query = Product::with(['category']);
 
         // Search
         if ($request->has('search')) {
@@ -32,11 +30,6 @@ class ProductController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        // Filter by supplier
-        if ($request->has('supplier_id') && $request->supplier_id) {
-            $query->where('supplier_id', $request->supplier_id);
-        }
-
         // Filter by status
         if ($request->has('status')) {
             $query->where('is_active', $request->status);
@@ -49,9 +42,7 @@ class ProductController extends Controller
 
         $products = $query->paginate(15);
         $categories = Category::active()->get();
-        $suppliers = Supplier::active()->get();
-
-        return view('products.index', compact('products', 'categories', 'suppliers'));
+        return view('products.index', compact('products', 'categories'));
     }
 
     /**
@@ -60,8 +51,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::active()->get();
-        $suppliers = Supplier::active()->get();
-        return view('products.create', compact('categories', 'suppliers'));
+        return view('products.create', compact('categories'));
     }
 
     /**
@@ -69,8 +59,10 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        // dd($request->all());
+//        dd($request->all());
         $data = $request->validated();
+        $data['quantity'] = 0;
+        dd($data);
         $product = Product::create($data);
 
         return redirect()->route('products.index')
@@ -129,20 +121,5 @@ class ProductController extends Controller
 
         return redirect()->back()
             ->with('success', "Produto {$status} com sucesso.");
-    }
-
-    /**
-     * Update stock quantity.
-     */
-    public function updateStock(Request $request, Product $product)
-    {
-        $request->validate([
-            'stock_quantity' => 'required|integer|min:0',
-        ]);
-
-        $product->update(['stock_quantity' => $request->stock_quantity]);
-
-        return redirect()->back()
-            ->with('success', 'Estoque atualizado com sucesso.');
     }
 }
