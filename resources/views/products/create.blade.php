@@ -28,6 +28,25 @@
                             @enderror
                         </div>
 
+                        <!-- Categoria -->
+                        <div>
+                            <label for="category_id" class="block text-gray-700 text-sm font-bold mb-2">
+                                Categoria <span class="text-red-500">*</span>
+                            </label>
+                            <select name="category_id" id="category_id"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('category_id') border-red-500 @enderror">
+                                <option value="">Selecione uma categoria</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Código do Produto -->
                         <div>
                             <label for="code" class="block text-gray-700 text-sm font-bold mb-2">
@@ -40,81 +59,47 @@
                             @enderror
                         </div>
 
-                        <!-- Descrição -->
+                        <!-- Tipo de medição -->
                         <div>
-                            <label for="description" class="block text-gray-700 text-sm font-bold mb-2">
-                                Descrição
+                            <label for="measurement_types_id" class="block text-gray-700 text-sm font-bold mb-2">
+                                Tipo de Medição
                             </label>
-                            <textarea name="description" id="description" rows="3"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('description') }}</textarea>
-                        </div>
-
-                        <!-- Categoria -->
-                        <div>
-                            <label for="category_id" class="block text-gray-700 text-sm font-bold mb-2">
-                                Categoria <span class="text-red-500">*</span>
-                            </label>
-                            <select name="category_id" id="category_id"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('category_id') border-red-500 @enderror">
-                                <option value="">Selecione uma categoria</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
-                                        {{ $category->name }}
+                            <select name="measurement_types_id" id="measurement_types_id"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('measurement_types_id') border-red-500 @enderror">
+                                <option value="">Selecione um Tipo</option>
+                                @foreach($measurementTypes as $measurementType)
+                                    <option value="{{ $measurementType->id }}" @selected(old('measurement_types_id') == $measurementType->id)>
+                                        {{ $measurementType->name }} ({{ $measurementType->acronym }})
                                     </option>
                                 @endforeach
                             </select>
-                            @error('category_id')
-                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @error('measurement_types_id')
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <!-- Fornecedor -->
+                        <!-- Quantidade -->
                         <div>
-                            <label for="supplier_id" class="block text-gray-700 text-sm font-bold mb-2">
-                                Fornecedor <span class="text-red-500">*</span>
+                            <label for="quantity" class="block text-gray-700 text-sm font-bold mb-2">
+                                Quantidade <span class="text-red-500">*</span>
                             </label>
-                            <select name="supplier_id" id="supplier_id"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('supplier_id') border-red-500 @enderror">
-                                <option value="">Selecione um fornecedor</option>
-                                @foreach($suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}" @selected(old('supplier_id') == $supplier->id)>
-                                        {{ $supplier->company_name }} ({{ $supplier->trade_name }})
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('supplier_id')
+                            <input type="number" name="quantity" id="quantity" value="{{ old('quantity') }}"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('quantity') border-red-500 @enderror">
+                            @error('quantity')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <!-- Preço -->
+                        <!-- Observação -->
                         <div>
-                            <label for="price" class="block text-gray-700 text-sm font-bold mb-2">
-                                Preço <span class="text-red-500">*</span>
+                            <label for="observation" class="block text-gray-700 text-sm font-bold mb-2">
+                                Observação
                             </label>
-                            <input type="number" step="0.01" min="0" name="price" id="price" value="{{ old('price') }}"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('price') border-red-500 @enderror">
-                            @error('price')
+                            <textarea name="observation" id="observation" rows="3"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('observation') }}</textarea>
+                            @error('observation')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                             @enderror
-                        </div>
-
-                        <!-- Estoque -->
-                        <div class="space-y-2">
-                            <label for="stock_quantity" class="block text-gray-700 text-sm font-bold mb-2">
-                                Quantidade em Estoque <span class="text-red-500">*</span>
-                            </label>
-                            <input type="number" min="0" name="stock_quantity" id="stock_quantity" value="{{ old('stock_quantity', 0) }}"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('stock_quantity') border-red-500 @enderror">
-                            @error('stock_quantity')
-                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
-                            @enderror
-                            
-                            <label class="inline-flex items-center mt-2">
-                                <input type="checkbox" name="manage_stock" value="1" @checked(old('manage_stock', true))
-                                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                <span class="ml-2 text-gray-700">Gerenciar estoque</span>
-                            </label>
                         </div>
 
                         <!-- Status -->
@@ -127,7 +112,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="flex items-center justify-between mt-6">
                     <button type="submit"
                         class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">

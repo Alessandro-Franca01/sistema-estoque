@@ -32,11 +32,11 @@
                             @endforeach
                         </select>
 
-                        <select name="supplier_id"
+                        <select name="measurement_type_id"
                                 class="min-w-[180px] shadow border rounded py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline">
-                            <option value="">Todos os Fornecedores</option>
-                            @foreach($suppliers as $supplier)
-                                <option value="{{ $supplier->id }}" @selected(request('supplier_id') == $supplier->id)>{{ $supplier->company_name }}</option>
+                            <option value="">Todos os Tipos de Medida</option>
+                            @foreach($measurementTypes as $measurementType)
+                                <option value="{{ $measurementType->id }}" @selected(request('measurement_type_id') == $measurementType->id)>{{ $measurementType->name }}</option>
                             @endforeach
                         </select>
 
@@ -50,8 +50,7 @@
                         <select name="sort_by"
                                 class="min-w-[180px] shadow border rounded py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline">
                             <option value="name" @selected(request('sort_by', 'name') == 'name')>Ordenar por Nome</option>
-                            <option value="price" @selected(request('sort_by') == 'price')>Ordenar por Preço</option>
-                            <option value="stock_quantity" @selected(request('sort_by') == 'stock_quantity')>Ordenar por Estoque</option>
+                            <option value="quantity" @selected(request('sort_by') == 'quantity')>Ordenar por Quantidade</option>
                         </select>
 
                         <select name="sort_order"
@@ -83,9 +82,8 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Código</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoria</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fornecedor</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Preço</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estoque</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo de Medida</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantidade</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
                                 </tr>
@@ -97,9 +95,8 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->name }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->code }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->category->name ?? 'N/A' }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->supplier->company_name ?? 'N/A' }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">R$ {{ number_format($product->price, 2, ',', '.') }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->stock_quantity }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->measurementType->acronym ?? 'N/A' }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->quantity }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                                             @if ($product->is_active)
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ativo</span>

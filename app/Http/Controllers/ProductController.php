@@ -6,6 +6,8 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\MeasurementType;
+use App\Models\ProductEntry;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +19,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'supplier']);
+        $query = Product::with(['category', 'measurementType']);
 
         // Search
         if ($request->has('search')) {
@@ -32,9 +34,9 @@ class ProductController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        // Filter by supplier
-        if ($request->has('supplier_id') && $request->supplier_id) {
-            $query->where('supplier_id', $request->supplier_id);
+        // Filter by measurement type
+        if ($request->has('measurement_type_id') && $request->measurement_type_id) {
+            $query->where('measurement_types_id', $request->measurement_type_id);
         }
 
         // Filter by status
@@ -49,9 +51,9 @@ class ProductController extends Controller
 
         $products = $query->paginate(15);
         $categories = Category::active()->get();
-        $suppliers = Supplier::active()->get();
+        $measurementTypes = MeasurementType::active()->get();
 
-        return view('products.index', compact('products', 'categories', 'suppliers'));
+        return view('products.index', compact('products', 'categories', 'measurementTypes'));
     }
 
     /**
@@ -60,8 +62,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::active()->get();
-        $suppliers = Supplier::active()->get();
-        return view('products.create', compact('categories', 'suppliers'));
+        $measurementTypes = MeasurementType::active()->get();
+        return view('products.create', compact('categories', 'measurementTypes'));
     }
 
     /**
@@ -69,9 +71,8 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        // dd($request->all());
         $data = $request->validated();
-        $product = Product::create($data);
+        Product::create($data);
 
         return redirect()->route('products.index')
             ->with('success', 'Produto criado com sucesso.');
@@ -82,7 +83,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load('category');
+        $product->load('category', 'measurementType');
         return view('products.show', compact('product'));
     }
 
@@ -92,7 +93,8 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::active()->get();
-        return view('products.edit', compact('product', 'categories'));
+        $measurementTypes = MeasurementType::active()->get();
+        return view('products.edit', compact('product', 'categories', 'measurementTypes'));
     }
 
     /**
@@ -134,15 +136,56 @@ class ProductController extends Controller
     /**
      * Update stock quantity.
      */
-    public function updateStock(Request $request, Product $product)
+    // public function updateStock(Request $request, Product $product)
+    // {
+    //     $request->validate([
+    //         'stock_quantity' => 'required|integer|min:0',
+    //     ]);
+
+    //     $product->update(['stock_quantity' => $request->stock_quantity]);
+
+    //     return redirect()->back()
+    //         ->with('success', 'Estoque atualizado com sucesso.');
+    // }
+
+    /**
+     * Display the product entries history.
+     */
+    public function entries(Request $request, Product $product)
     {
-        $request->validate([
-            'stock_quantity' => 'required|integer|min:0',
-        ]);
+        $query = ProductEntry::with(['supplier']) // Keep supplier as ProductEntry has supplier_id
+            ->where('product_id', $product->id);
 
-        $product->update(['stock_quantity' => $request->stock_quantity]);
+        // Filter by supplier
+        if ($request->has('supplier_id') && $request->supplier_id) {
+            $query->where('supplier_id', $request->supplier_id);
+        }
 
-        return redirect()->back()
-            ->with('success', 'Estoque atualizado com sucesso.');
+        // Filter by date range
+        if ($request->has('start_date') && $request->start_date) {
+            $query->whereDate('entry_date', '>=', $request->start_date);
+        }
+
+        if ($request->has('end_date') && $request->end_date) {
+            $query->whereDate('entry_date', '<=', $request->end_date);
+        }
+
+        // Order by date (newest first)
+        $query->orderBy('created_at', 'desc'); // Changed to created_at as entry_date is not always present
+
+        $productEntries = $query->paginate(15);
+        $suppliers = Supplier::active()->get(); // Still needed for filtering entries
+
+        // Calculate totals
+        $totalQuantity = $productEntries->sum('quantity');
+        $totalCost = $productEntries->sum('total_cost');
+
+        return view('products.entries', compact(
+            'product', 
+            'productEntries', 
+            'suppliers', 
+            'totalQuantity', 
+            'totalCost'
+        ));
     }
 }
