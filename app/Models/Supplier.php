@@ -10,15 +10,15 @@ class Supplier extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_name',
+        'legal_name',
         'trade_name',
         'cnpj',
-        'state_registration',
-        'municipal_registration',
         'email',
         'phone',
-        'active',
-        'notes',
+        'state_registration',
+        'municipal_registration',
+        'observation',
+        'active'
     ];
 
     protected $casts = [
@@ -41,9 +41,18 @@ class Supplier extends Model
         return $this->trade_name ?: $this->company_name;
     }
 
-    // Relacionamento com produtos 
+    // Relacionamento com produtos
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsToMany(Product::class, 'supplier_products')
+            ->withTimestamps();
     }
-} 
+
+    /**
+     * Relacionamento com entradas
+     */
+    public function entries()
+    {
+        return $this->hasMany(Entry::class);
+    }
+}

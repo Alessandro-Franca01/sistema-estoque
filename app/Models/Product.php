@@ -15,18 +15,16 @@ class Product extends Model
         'name',
         'code',
         'description',
-        'price',
-        'stock_quantity',
-        'manage_stock',
+        'quantity',
+        'observation',
         'is_active',
         'category_id',
-        'supplier_id',
+        'measurement_types_id',
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
         'is_active' => 'boolean',
-        'manage_stock' => 'boolean',
+        'quantity' => 'integer',
     ];
 
     /**
@@ -35,12 +33,6 @@ class Product extends Model
     protected static function boot()
     {
         parent::boot();
-
-        // static::creating(function ($product) {
-        // });
-
-        // static::updating(function ($product) {
-        // });
     }
 
     /**
@@ -51,12 +43,30 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function measurementType()
+    {
+        return $this->belongsTo(MeasurementType::class, 'measurement_types_id');
+    }
+
     /**
      * Get the supplier that owns the product.
      */
-    public function supplier(): BelongsTo
+    public function suppliers()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsToMany(Supplier::class, 'supplier_products')
+            ->withTimestamps();
+    }
+
+    public function entries()
+    {
+        return $this->belongsToMany(Entry::class, 'product_entries')
+            ->withPivot(['batch_number', 'quantity', 'unit_cost', 'total_cost']);
+    }
+
+    public function outputs()
+    {
+        return $this->belongsToMany(Output::class, 'products_output')
+            ->withPivot(['quantity', 'quantity_used', 'quantity_returned', 'is_finished']);
     }
 
     /**
