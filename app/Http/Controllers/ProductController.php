@@ -59,10 +59,8 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-//        dd($request->all());
         $data = $request->validated();
         $data['quantity'] = 0;
-        dd($data);
         $product = Product::create($data);
 
         return redirect()->route('products.index')

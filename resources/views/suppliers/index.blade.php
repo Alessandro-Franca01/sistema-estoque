@@ -34,7 +34,7 @@
                     @forelse($suppliers as $supplier)
                         <tr class="border-b">
                             <td class="px-4 py-2">{{ $supplier->id }}</td>
-                            <td class="px-4 py-2">{{ $supplier->company_name }}</td>
+                            <td class="px-4 py-2">{{ $supplier->legal_name }}</td>
                             <td class="px-4 py-2">{{ $supplier->trade_name }}</td>
                             <td class="px-4 py-2">{{ $supplier->cnpj }}</td>
                             <td class="px-4 py-2">{{ $supplier->phone }}</td>
@@ -68,4 +68,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

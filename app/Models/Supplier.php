@@ -10,7 +10,7 @@ class Supplier extends Model
     use HasFactory;
 
     protected $fillable = [
-        'company_name',
+        'legal_name',
         'trade_name',
         'cnpj',
         'state_registration',
@@ -18,7 +18,7 @@ class Supplier extends Model
         'email',
         'phone',
         'active',
-        'notes',
+        'observation',
     ];
 
     protected $casts = [
@@ -35,15 +35,10 @@ class Supplier extends Model
 
     /**
      * Retorna o nome formatado do fornecedor
+     * Ajustado para usar 'legal_name' em vez de 'company_name'
      */
     public function getDisplayNameAttribute(): string
     {
-        return $this->trade_name ?: $this->company_name;
+        return $this->trade_name ?: $this->legal_name;
     }
-
-    // Relacionamento com produtos 
-    public function products()
-    {
-        return $this->hasMany(Product::class);
-    }
-} 
+}
