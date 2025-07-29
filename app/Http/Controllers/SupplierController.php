@@ -15,7 +15,7 @@ class SupplierController extends Controller
     public function index()
     {
         $suppliers = Supplier::paginate(15);
-        
+
         return view('suppliers.index', compact('suppliers'));
     }
 
@@ -33,6 +33,7 @@ class SupplierController extends Controller
     public function store(StoreSupplierRequest $request)
     {
         $data = $request->validated();
+//        dd($data);
         Supplier::create($data);
 
         return redirect()->route('suppliers.index')->with('success', 'Fornecedor criado com sucesso.');
@@ -74,4 +75,4 @@ class SupplierController extends Controller
 
         return redirect()->route('suppliers.index')->with('success', 'Fornecedor excluído com sucesso.');
     }
-} 
+}

@@ -16,7 +16,7 @@ class UpdateSupplierRequest extends FormRequest
     {
         $supplierId = $this->route('supplier')->id ?? null;
         return [
-            'company_name' => 'required|string|max:255',
+            'legal_name' => 'required|string|max:255',
             'trade_name' => 'nullable|string|max:255',
             'cnpj' => [
                 'required',
@@ -24,12 +24,12 @@ class UpdateSupplierRequest extends FormRequest
                 'size:14',
                 Rule::unique('suppliers', 'cnpj')->ignore($supplierId),
             ],
-            'state_registration' => 'nullable|string|max:255',
-            'municipal_registration' => 'nullable|string|max:255',
+            'state_registration' => 'nullable|string|max:9',
+            'municipal_registration' => 'nullable|string|max:7',
             'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:20',
+            'phone' => 'nullable|string|max:14',
             'active' => 'boolean',
-            'notes' => 'nullable|string',
+            'observation' => 'nullable|string',
         ];
     }
-} 
+}
