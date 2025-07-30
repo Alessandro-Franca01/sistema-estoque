@@ -28,6 +28,14 @@ class Entry extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_entries')
+            ->withPivot(['batch_item', 'quantity', 'unit_cost', 'total_cost']);
+    }
+
+    /*
+    public function productEntries()
+    {
+        return $this->belongsToMany(ProductEntry::class, 'product_entries')
             ->withPivot(['batch_number', 'quantity', 'unit_cost', 'total_cost']);
     }
+    */
 }
