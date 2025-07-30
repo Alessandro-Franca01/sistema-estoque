@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntryController;
-
+// teste12345
 Route::get('/', function () {
     return view('welcome');
 });

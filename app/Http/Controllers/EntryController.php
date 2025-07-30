@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\Product;
+use App\Models\ProductEntry;
 use App\Http\Requests\EntryStoreRequest;
 use App\Http\Requests\EntryUpdateRequest;
 
@@ -18,6 +19,7 @@ class EntryController extends Controller
     public function index()
     {
         $entries = Entry::with(['supplier', 'products'])->latest()->paginate(10);
+//        dd($entries);
         return view('entries.index', compact('entries'));
     }
 
@@ -37,13 +39,14 @@ class EntryController extends Controller
     public function store(EntryStoreRequest $request)
     {
         $entry = Entry::create($request->validated());
-        dd($entry);
+
         foreach ($request->products as $productData) {
             $entry->products()->attach($productData['product_id'], [
-                'batch_number' => $productData['batch_number'],
+                'entry_id' => $entry->id,
+                'batch_item' => $productData['batch_number'],
                 'quantity' => $productData['quantity'],
                 'unit_cost' => $productData['unit_cost'],
-                'total_cost' => $productData['quantity'] * $productData['unit_cost'],
+                'total_cost' => $productData['quantity'] * $productData['unit_cost'], // TODO: MELHORAR ISSO!
             ]);
         }
 

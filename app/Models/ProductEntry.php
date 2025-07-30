@@ -12,7 +12,7 @@ class ProductEntry extends Model
 
     protected $fillable = [
         'product_id',
-        'supplier_id',
+        'entry_id',
         'batch_item',
         'quantity',
         'unit_cost',
@@ -28,4 +28,9 @@ class ProductEntry extends Model
     {
         return $this->belongsTo(Supplier::class);
     }
-} 
+
+    public function entry(): BelongsTo
+    {
+        return $this->belongsTo(Entry::class);
+    }
+}

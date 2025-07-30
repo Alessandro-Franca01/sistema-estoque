@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code', 10)->unique();
+            $table->string('code', 10)->unique()->nullable();
             $table->text('description')->nullable();
             $table->integer('quantity')->default(0);
             $table->string('meansurement_unit', 50);

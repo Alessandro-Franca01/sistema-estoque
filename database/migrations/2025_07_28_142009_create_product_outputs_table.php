@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('quantity_used');
             $table->integer('quantity_returned');
             $table->boolean('is_finished')->default(false);
+            $table->text('observation')->nullable();
             $table->timestamps();
         });
     }

@@ -12,9 +12,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('registration');
-            $table->string('cpf')->unique();
-            $table->string('email');
-            $table->string('phone');
+            $table->string('cpf', 11);
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
             $table->enum('role', ['OPERADOR', 'ALMOXARIFE', 'SERVIDOR'])->default('SERVIDOR');
             $table->boolean('active')->default(true);
             $table->timestamps();
