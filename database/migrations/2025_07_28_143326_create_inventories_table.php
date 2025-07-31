@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->bigIncrements('id')->primary();
-            $table->dateTime('start_date')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('start_date');
             $table->dateTime('end_date')->nullable();
             $table->enum('status', ['OPEN', 'IN_PROGRESS', 'CLOSED'])->default('OPEN');
             $table->foreignId('user_id')->constrained('users');

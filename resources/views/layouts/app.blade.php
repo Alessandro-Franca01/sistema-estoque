@@ -39,17 +39,14 @@
         <!-- Rodapé -->
         <footer class="bg-white dark:bg-gray-800 shadow-lg border-t border-gray-200 dark:border-gray-700">
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <div class="text-center md:text-left md:mb-0">
+                <div class="flex flex-col md:flex-row justify-center items-center">
+                    <div class="text-center md:mb-0">
                         <p class="text-sm text-gray-600 dark:text-gray-400">
-                            &copy; {{ now()->year }} SECTIN - Secretaria de Tecnologia, Ciência e Inovação.
+                            &copy; {{ now()->year }} SECTIN - Secretaria de Tecnologia, Ciência e Inovação.<br>
+                                Desenvolvido por: <span class="font-medium text-gray-700 dark:text-gray-300">Alessandro de França Silva</span>
                         </p>
                     </div>
-                    <div class="text-center md:text-right">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            Desenvolvido por: <span class="font-medium text-gray-700 dark:text-gray-300">Alessandro de França Silva</span>
-                        </p>
-                    </div>
+                    
                 </div>
             </div>
         </footer>

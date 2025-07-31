@@ -19,7 +19,7 @@ class EntryController extends Controller
     public function index()
     {
         $entries = Entry::with(['supplier', 'products'])->latest()->paginate(10);
-//        dd($entries);
+
         return view('entries.index', compact('entries'));
     }
 
