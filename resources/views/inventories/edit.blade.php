@@ -84,7 +84,7 @@
         const addItemButton = document.getElementById('add-item');
         const itemsContainer = document.getElementById('items-container');
         const productSelect = document.getElementById('product_id');
-        let itemIndex = 2; //{{ $inventory->items->count() }};
+        let itemIndex = {{ $inventory->items->count() }};
 
         addItemButton.addEventListener('click', function () {
             const productId = productSelect.value;

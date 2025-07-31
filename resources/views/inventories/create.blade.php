@@ -24,6 +24,16 @@
                     @enderror
                 </div>
 
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Produtos</label>
+                    @foreach($products as $product)
+                        <div class="flex items-center mb-2">
+                            <input type="checkbox" name="products[]" value="{{ $product->id }}" id="product_{{ $product->id }}" class="mr-2">
+                            <label for="product_{{ $product->id }}">{{ $product->name }} (Estoque: {{ $product->quantity }})</label>
+                        </div>
+                    @endforeach
+                </div>
+
                 <div class="flex items-center justify-between mt-6">
                 <button type="submit" style="background-color: #22c55e;"
                     class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">

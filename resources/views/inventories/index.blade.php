@@ -39,6 +39,9 @@
                                     Status
                                 </th>
                                 <th class="px-4 py-2">
+                                    Produtos
+                                </th>
+                                <th class="px-4 py-2">
                                     Ações
                                 </th>
                             </tr>
@@ -58,6 +61,17 @@
                                     <td class="px-4 py-">
                                         <p class="text-gray-900 whitespace-no-wrap">{{ $inventory->status }}</p>
                                     </td>
+                                    @if($inventory->items->isEmpty())
+                                    <td class="px-4 py-">
+                                        <p class="text-gray-900 whitespace-no-wrap">N/A</p>
+                                    </td>
+                                    @else
+                                    <td class="px-4 py-">
+                                        @foreach($inventory->items as $item)
+                                            <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">{{ $item->product->name }}</span>
+                                        @endforeach
+                                    </td>
+                                    @endif
                                     <td class="px-4 py-">
                                         <a href="{{ route('inventories.show', $inventory->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Ver</a>
                                         <a href="{{ route('inventories.edit', $inventory->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Editar</a>

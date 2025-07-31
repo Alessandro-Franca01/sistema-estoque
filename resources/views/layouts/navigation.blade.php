@@ -15,6 +15,21 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.index')">
+                        {{ __('Categories') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.index')">
+                        {{ __('Fornecedores') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')">
+                        {{ __('Produtos') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('entries.index')" :active="request()->routeIs('entries.index')">
+                        {{ __('Entradas') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('outputs.index')" :active="request()->routeIs('outputs.index')">
+                        {{ __('Saídas') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
                         {{ __('Inventários') }}
                     </x-nav-link>
@@ -72,6 +87,21 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.index')">
+                {{ __('Categorias') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.index')">
+                {{ __('Fornecedores') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')">
+                {{ __('Produtos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('entries.index')" :active="request()->routeIs('entries.index')">
+                {{ __('Entradas') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('outputs.index')" :active="request()->routeIs('outputs.index')">
+                {{ __('Saídas') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
                 {{ __('Inventários') }}
