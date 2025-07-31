@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {

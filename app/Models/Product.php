@@ -57,6 +57,11 @@ class Product extends Model
         return $this->hasMany(ProductEntry::class);
     }
 
+    public function productOutputs(): HasMany
+    {
+        return $this->hasMany(ProductOutput::class);
+    }
+
     /**
      * Check if the product is in stock.
      */

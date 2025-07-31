@@ -94,7 +94,6 @@
                     <div class="p-4 sm:p-6 flex items-start flex-grow">
                         <div class="bg-amber-100 dark:bg-amber-900 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 dark:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                             </svg>
                         </div>
@@ -115,7 +114,58 @@
                         </a>
                     </div>
                 </div>
+                <!-- Card Saídas de Produtos -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
+                    <div class="p-4 sm:p-6 flex items-start flex-grow">
+                        <div class="bg-emerald-100 dark:bg-emerald-900 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-emerald-600 dark:text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M12 4l-8 8 8 8" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                            </svg>
+                        </div>
+                        <div class="flex-grow min-w-0">
+                            <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Saídas</h3>
+                            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncate">Registre saídas de produtos</p>
+                        </div>
+                    </div>
+                    <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
+                        <a href="{{ route('outputs.index') }}" class="text-xs sm:text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors whitespace-nowrap">
+                            Ver histórico
+                        </a>
+                        <a href="{{ route('outputs.create') }}" class="text-xs sm:text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Nova saída
+                        </a>
+                    </div>
+                </div>
                 
+                <!-- Card Servidores Públicos -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
+                    <div class="p-4 sm:p-6 flex items-start flex-grow">
+                        <div class="bg-indigo-100 dark:bg-indigo-900 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-indigo-600 dark:text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <div class="flex-grow min-w-0">
+                            <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Servidores Públicos</h3>
+                            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncate">Gerencie os servidores cadastrados</p>
+                        </div>
+                    </div>
+                    <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
+                        <a href="{{ route('public_servants.index') }}" class="text-xs sm:text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors whitespace-nowrap">
+                            Ver todos
+                        </a>
+                        <a href="{{ route('public_servants.create') }}" class="text-xs sm:text-sm font-medium bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Novo servidor
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

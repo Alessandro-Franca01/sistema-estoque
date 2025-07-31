@@ -17,7 +17,6 @@ return new class extends Migration
             $table->decimal('difference', 10, 3)->nullable();
             $table->text('observations')->nullable();
             $table->timestamps();
-
         });
     }
 
