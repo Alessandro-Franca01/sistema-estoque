@@ -12,7 +12,7 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        $inventories = \App\Models\Inventory::all();
+        $inventories = \App\Models\Inventory::with('items.product')->get();
         return view('inventories.index', compact('inventories'));
     }
 
@@ -21,7 +21,8 @@ class InventoryController extends Controller
      */
     public function create()
     {
-        return view('inventories.create');
+        $products = \App\Models\Product::all();
+        return view('inventories.create', compact('products'));
     }
 
     /**
@@ -31,6 +32,8 @@ class InventoryController extends Controller
     {
         $request->validate([
             'start_date' => 'required|date',
+            'products' => 'nullable|array',
+            'products.*' => 'exists:products,id',
         ]);
 
         $inventory = new \App\Models\Inventory([
@@ -39,7 +42,20 @@ class InventoryController extends Controller
         ]);
         $inventory->save();
 
-        return redirect()->route('inventories.index')->with('success', 'Inventário criado com sucesso.');
+        if ($request->has('products')) {
+            foreach ($request->products as $productId) {
+                $product = \App\Models\Product::find($productId);
+                if ($product) {
+                    \App\Models\ItemInventory::create([
+                        'inventory_id' => $inventory->id,
+                        'product_id' => $product->id,
+                        'register_amount' => $product->quantity,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('inventories.index')->with('success', 'Inventário criado com sucesso. Todos os produtos foram adicionados.');
     }
 
     /**
@@ -77,12 +93,23 @@ class InventoryController extends Controller
         $inventory = \App\Models\Inventory::findOrFail($id);
         $inventory->update($request->only(['status', 'end_date']));
 
+        if ($inventory->status == 'CLOSED') {
+            foreach ($inventory->items as $item) {
+                if (!is_null($item->real_amount)) {
+                    $product = $item->product;
+                    $product->quantity = $item->real_amount;
+                    $product->save();
+                }
+            }
+        }
+
         if ($request->has('items')) {
             foreach ($request->items as $itemData) {
-                $inventory->items()->updateOrCreate(
-                    ['product_id' => $itemData['product_id']],
-                    $itemData
-                );
+                $item = $inventory->items()->where('product_id', $itemData['product_id'])->first();
+                if ($item) {
+                    $itemData['difference'] = ($itemData['real_amount'] ?? $item->real_amount) - $item->register_amount;
+                    $item->update($itemData);
+                }
             }
         }
 

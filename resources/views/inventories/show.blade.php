@@ -7,6 +7,9 @@
     <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
         <div class="bg-gray-800 text-white px-6 py-4 flex justify-between items-center">
             <h1 class="text-2xl font-semibold">Detalhes do Inventário #{{ $inventory->id }}</h1>
+            <a href="{{ route('inventories.edit', $inventory->id) }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2">
+                Adicionar Produtos
+            </a>
             <a href="{{ route('inventories.index') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 Voltar
             </a>
