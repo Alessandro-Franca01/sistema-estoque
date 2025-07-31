@@ -63,6 +63,32 @@
                     </div>
                 </div>
 
+                <!-- Card Inventários -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
+                    <div class="p-4 sm:p-6 flex items-start flex-grow">
+                        <div class="bg-teal-100 dark:bg-teal-900 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-teal-600 dark:text-teal-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                        </div>
+                        <div class="flex-grow min-w-0">
+                            <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Inventários</h3>
+                            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncate">Controle de estoque e inventários</p>
+                        </div>
+                    </div>
+                    <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
+                        <a href="{{ route('inventories.index') }}" class="text-xs sm:text-sm font-medium text-teal-600 dark:text-teal-400 hover:text-teal-800 dark:hover:text-teal-300 transition-colors whitespace-nowrap">
+                            Ver estoque
+                        </a>
+                        <a href="{{ route('inventories.create') }}" class="text-xs sm:text-sm font-medium bg-teal-500 hover:bg-teal-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Novo inventário
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Card Fornecedores -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
                     <div class="p-4 sm:p-6 flex items-start flex-grow">
@@ -114,6 +140,7 @@
                         </a>
                     </div>
                 </div>
+
                 <!-- Card Saídas de Produtos -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
                     <div class="p-4 sm:p-6 flex items-start flex-grow">
