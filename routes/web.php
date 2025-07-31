@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('entries', EntryController::class);
     Route::resource('public_servants', PublicServantController::class);
     Route::resource('outputs', \App\Http\Controllers\OutputController::class);
+    Route::resource('inventories', \App\Http\Controllers\InventoryController::class);
 });
 
 require __DIR__.'/auth.php';
