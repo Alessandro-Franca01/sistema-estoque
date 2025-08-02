@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('call', function (Blueprint $table) {
+        Schema::create('calls', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['whatssap', 'conectar_cabedelo', 'personally', 'phone', 'other'])->default('conectar_cabedelo');
             $table->string('service_order')->nullable();
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('caller_name')->nullable();
             $table->text('observation')->nullable();
-            $table->foreignId('output_id')->constrained()->onDelete('set null');
+            $table->foreignId('output_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('call');
+        Schema::dropIfExists('calls');
     }
 };

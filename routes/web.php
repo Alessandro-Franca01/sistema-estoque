@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntryController;
 use App\Http\Controllers\PublicServantController;
+use App\Http\Requests\StoreCallRequest;
+use App\Http\Requests\UpdateCallRequest;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('public_servants', PublicServantController::class);
     Route::resource('outputs', \App\Http\Controllers\OutputController::class);
     Route::resource('inventories', \App\Http\Controllers\InventoryController::class);
+    Route::resource('calls', \App\Http\Controllers\CallController::class);
 });
 
 require __DIR__.'/auth.php';
