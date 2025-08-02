@@ -48,6 +48,12 @@ class EntryController extends Controller
                 'unit_cost' => $productData['unit_cost'],
                 'total_cost' => $productData['quantity'] * $productData['unit_cost'], // TODO: MELHORAR ISSO!
             ]);
+
+            // TODO: TESTAR ESSE TRECHO DE CÓDIGO! NAO FUNCIONADO
+            $product = Product::find($productData['product_id']);
+            if ($product) {
+                $product->increment('quantity', $productData['quantity']);
+            }
         }
 
         return redirect()->route('entries.index')->with('success', 'Entrada criada com sucesso!');
@@ -78,6 +84,9 @@ class EntryController extends Controller
      */
     public function update(EntryUpdateRequest $request, Entry $entry)
     {
+        // Get original product quantities before update
+        $originalProductQuantities = $entry->products->pluck('pivot.quantity', 'id')->toArray();
+
         $entry->update($request->validated());
 
         $productData = [];
@@ -88,7 +97,27 @@ class EntryController extends Controller
                 'unit_cost' => $product['unit_cost'],
                 'total_cost' => $product['quantity'] * $product['unit_cost'],
             ];
+
+            $productId = $product['product_id'];
+            $newQuantity = $product['quantity'];
+            $oldQuantity = $originalProductQuantities[$productId] ?? 0;
+
+            $productModel = Product::find($productId);
+            if ($productModel) {
+                $difference = $newQuantity - $oldQuantity;
+                $productModel->increment('quantity', $difference);
+            }
         }
+
+        // Handle products that were removed from the entry
+        $removedProductIds = array_diff(array_keys($originalProductQuantities), array_keys($productData));
+        foreach ($removedProductIds as $productId) {
+            $productModel = Product::find($productId);
+            if ($productModel) {
+                $productModel->decrement('quantity', $originalProductQuantities[$productId]);
+            }
+        }
+
         $entry->products()->sync($productData);
 
         return redirect()->route('entries.index')->with('success', 'Entrada atualizada com sucesso!');
@@ -99,6 +128,13 @@ class EntryController extends Controller
      */
     public function destroy(Entry $entry)
     {
+        foreach ($entry->products as $product) {
+            $productModel = Product::find($product->id);
+            if ($productModel) {
+                $productModel->decrement('quantity', $product->pivot->quantity);
+            }
+        }
+
         $entry->delete();
         return redirect()->route('entries.index')->with('success', 'Entrada excluída com sucesso!');
     }

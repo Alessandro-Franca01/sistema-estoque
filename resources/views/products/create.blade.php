@@ -70,10 +70,34 @@
                         <label for="meansurement_unit" class="block text-gray-700 text-sm font-bold mb-2">
                             Unidade de Medida
                         </label>
-                        <input type="text" name="meansurement_unit" id="meansurement_unit" value="{{ old('meansurement_unit') }}"
+                        <select name="meansurement_unit_id" id="meansurement_unit_id"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <option value="">Selecione uma unidade de medida</option>
+                                <option value="m">
+                                    metros
+                                </option>
+                                <option value="cm">
+                                    centimetros
+                                </option>
+                                <option value="mm">
+                                    milímetros
+                                </option>
+                                <option value="pc">
+                                    peça
+                                </option>
+                                <option value="unidade">
+                                unidade
+                            </option>
+                        </select>
+                        <div class="mt-2">
+                            <input type="checkbox" id="custom_unit_checkbox" class="mr-2" {{ old('custom_meansurement_unit') ? 'checked' : '' }}>
+                            <label for="custom_unit_checkbox" class="text-gray-700 text-sm">Usar unidade de medida personalizada</label>
+                        </div>
+                        <div id="custom_unit_input" class="mt-2 {{ old('custom_meansurement_unit') ? '' : 'hidden' }}">
+                            <label for="custom_unit" class="block text-gray-700 text-sm font-bold mb-2">Unidade de Medida Personalizada</label>
+                            <input type="text" name="custom_meansurement_unit" id="custom_unit" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ old('custom_meansurement_unit') }}">
+                        </div>
                     </div>
-
                     <!-- Observação -->
                     <div>
                         <label for="note" class="block text-gray-700 text-sm font-bold mb-2">
@@ -98,4 +122,30 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const customUnitCheckbox = document.getElementById('custom_unit_checkbox');
+        const customUnitInputDiv = document.getElementById('custom_unit_input');
+        const meansurementUnitSelect = document.getElementById('meansurement_unit_id');
+
+        // Initial state based on old input
+        if (customUnitCheckbox.checked) {
+            meansurementUnitSelect.disabled = true;
+        }
+
+        customUnitCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+                customUnitInputDiv.classList.remove('hidden');
+                meansurementUnitSelect.value = ''; // Clear selection when custom is used
+                meansurementUnitSelect.disabled = true; // Disable select when custom is used
+            } else {
+                customUnitInputDiv.classList.add('hidden');
+                meansurementUnitSelect.disabled = false; // Enable select when custom is not used
+            }
+        });
+    });
+</script>
+@endpush
+
 @endsection
