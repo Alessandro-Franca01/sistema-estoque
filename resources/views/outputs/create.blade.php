@@ -104,8 +104,8 @@
                                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 border" 
                                             required>
                                         @foreach ($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->name }}</option>
-                                        @endforeach
+                                    <option value="{{ $product->id }}">{{ $product->name }} (Estoque: {{ $product->quantity }})</option>
+                                @endforeach
                                     </select>
                                 </div>
                                 
@@ -177,7 +177,7 @@
                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 border" 
                                 required>
                             @foreach ($products as $product)
-                                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                <option value="{{ $product->id }}">{{ $product->name }} (Estoque: {{ $product->quantity }})</option>
                             @endforeach
                         </select>
                     </div>

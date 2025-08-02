@@ -60,6 +60,12 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $data = $request->validated();
+
+        if ($request->has('custom_meansurement_unit') && !empty($request->custom_meansurement_unit)) {
+            $data['meansurement_unit'] = $request->custom_meansurement_unit;
+            //unset($data['meansurement_unit_id']); // Remove meansurement_unit_id if custom unit is used
+        } 
+
         $data['quantity'] = 0;
         $product = Product::create($data);
 
@@ -91,6 +97,12 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         $data = $request->validated();
+
+        if ($request->has('custom_meansurement_unit') && !empty($request->custom_meansurement_unit)) {
+            $data['meansurement_unit'] = $request->custom_meansurement_unit;
+            //unset($data['meansurement_unit_id']); // Remove meansurement_unit_id if custom unit is used
+        } 
+
         $product->update($data);
 
         return redirect()->route('products.index')

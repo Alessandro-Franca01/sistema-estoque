@@ -136,7 +136,7 @@
                         <label for="products_${productIndex}_product_id" class="block text-gray-700 text-sm font-bold mb-2">Produto <span class="text-red-500">*</span></label>
                         <select name="products[${productIndex}][product_id]" id="products_${productIndex}_product_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                             <option value="">Selecione um produto</option>
-                            ${products.map(product => `<option value="${product.id}">${product.name}</option>`).join('')}
+                            ${products.map(product => `<option value="${product.id}">${product.name} (Estoque: ${product.quantity})</option>`).join('')}
                         </select>
                     </div>
                     

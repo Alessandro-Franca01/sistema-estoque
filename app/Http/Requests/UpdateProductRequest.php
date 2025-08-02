@@ -31,7 +31,8 @@ class UpdateProductRequest extends FormRequest
                 Rule::unique('products', 'slug')->ignore($productId),
             ],
             'description' => 'nullable|string',
-            'meansurement_unit' => 'nullable|string|max:50',
+            'meansurement_unit_id' => 'nullable|exists:categories,id',
+            'custom_meansurement_unit' => 'nullable|string|max:50',
             'observation' => 'nullable|string',
             'is_active' => 'boolean',
             'category_id' => 'required|exists:categories,id',
@@ -46,8 +47,22 @@ class UpdateProductRequest extends FormRequest
             'slug.unique' => 'Já existe um produto com este slug.',
             'slug.max' => 'O slug não pode ter mais de 255 caracteres.',
             'description.max' => 'A descrição não pode ter mais de 255 caracteres.',
-            'meansurement_unit.max' => 'A unidade de medida não pode ter mais de 50 caracteres.',
+            'meansurement_unit_id.exists' => 'A unidade de medida selecionada não existe.',
+            'custom_meansurement_unit.max' => 'A unidade de medida personalizada não pode ter mais de 50 caracteres.',
             'observation.max' => 'A observação não pode ter mais de 255 caracteres.',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        if ($this->has('custom_meansurement_unit') && !empty($this->custom_meansurement_unit)) {
+            $this->merge([
+                'meansurement_unit_id' => null,
+            ]);
+        } else {
+            $this->merge([
+                'custom_meansurement_unit' => null,
+            ]);
+        }
     }
 }
