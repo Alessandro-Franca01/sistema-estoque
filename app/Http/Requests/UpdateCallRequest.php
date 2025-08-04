@@ -25,8 +25,11 @@ class UpdateCallRequest extends FormRequest
             'connect_code' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
             'caller_name' => 'nullable|string|max:255',
+            'destination' => 'required|string',
+            'cep' => 'nullable|string|max:8',
+            'complement' => 'nullable|string',
             'observation' => 'nullable|string',
-            'output_id' => 'required|exists:outputs,id',
+            'output_id' => 'nullable|exists:outputs,id',
         ];
     }
 }

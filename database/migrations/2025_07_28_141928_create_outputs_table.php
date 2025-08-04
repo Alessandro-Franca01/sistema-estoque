@@ -12,9 +12,6 @@ return new class extends Migration
             $table->id();
             $table->dateTime('output_date');
             $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');
-            $table->text('destination')->nullable();
-            $table->string('cep')->nullable();
-            $table->string('complement')->nullable();
             $table->text('observation')->nullable();
             $table->boolean('is_active')->default(true);
             $table->foreignId('public_servant_id')->constrained()->onDelete('cascade');

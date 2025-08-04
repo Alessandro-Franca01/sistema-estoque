@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('connect_code')->nullable();
             $table->string('phone')->nullable();
             $table->string('caller_name')->nullable();
+            $table->text('destination');
+            $table->string('cep', 8)->nullable();
+            $table->string('complement')->nullable();
             $table->text('observation')->nullable();
             $table->foreignId('output_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();

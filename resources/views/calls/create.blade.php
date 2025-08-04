@@ -90,12 +90,55 @@
                         <!-- Output ID -->
                         <div>
                             <label for="output_id" class="block text-sm font-medium text-gray-700">
-                                ID de Saída <span class="text-red-500">*</span>
+                                Saída <span class="text-red-500">*</span>
                             </label>
-                            <input type="number" id="output_id" name="output_id" value="{{ old('output_id') }}" required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('output_id') border-red-300 text-red-900 @enderror"
-                                placeholder="Número identificador">
+                            <select id="output_id" name="output_id" required
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('output_id') border-red-300 text-red-900 @enderror">
+                                <option value="">Selecione a Saída</option>
+                                @foreach($outputs as $output)
+                                    <option value="{{ $output->id }}" @if(old('output_id') == $output->id) selected @endif>{{ $output->connect_code }} - {{ \Carbon\Carbon::parse($output->output_date)->format('d/m/Y') }}</option>
+                                @endforeach
+                            </select>
                             @error('output_id')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Destino -->
+                        <div>
+                            <label for="destination" class="block text-sm font-medium text-gray-700">
+                                Destino / Local
+                            </label>
+                            <input type="text" id="destination" name="destination" value="{{ old('destination') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('destination') border-red-300 text-red-900 @enderror"
+                                placeholder="Destino">
+                            @error('destination')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- CEP -->
+                        <div>
+                            <label for="cep" class="block text-sm font-medium text-gray-700">
+                                CEP
+                            </label>
+                            <input type="text" id="cep" name="cep" value="{{ old('cep') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('cep') border-red-300 text-red-900 @enderror"
+                                placeholder="CEP">
+                            @error('cep')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Complemento -->
+                        <div>
+                            <label for="complement" class="block text-sm font-medium text-gray-700">
+                                Complemento
+                            </label>
+                            <input type="text" id="complement" name="complement" value="{{ old('complement') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('complement') border-red-300 text-red-900 @enderror"
+                                placeholder="Complemento">
+                            @error('complement')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>

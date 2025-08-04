@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Call;
+use App\Models\Output;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -24,7 +25,8 @@ class CallController extends Controller
      */
     public function create(): View
     {
-        return view('calls.create');
+        $outputs = Output::all();
+        return view('calls.create', compact('outputs'));
     }
 
     /**
@@ -38,8 +40,11 @@ class CallController extends Controller
             'connect_code' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
             'caller_name' => 'nullable|string|max:255',
+            'destination' => 'required|string',
+            'cep' => 'nullable|string|max:8',
+            'complement' => 'nullable|string',
             'observation' => 'nullable|string',
-            'output_id' => 'required|exists:outputs,id',
+            'output_id' => 'nullable|exists:outputs,id',
         ]);
 
         Call::create($validated);
@@ -75,8 +80,11 @@ class CallController extends Controller
             'connect_code' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
             'caller_name' => 'nullable|string|max:255',
+            'destination' => 'required|string',
+            'cep' => 'nullable|string|max:8',
+            'complement' => 'nullable|string',
             'observation' => 'nullable|string',
-            'output_id' => 'required|exists:outputs,id',
+            'output_id' => 'nullable|exists:outputs,id',
         ]);
 
         $call->update($validated);

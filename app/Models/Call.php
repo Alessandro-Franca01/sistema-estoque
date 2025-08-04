@@ -16,6 +16,9 @@ class Call extends Model
         'connect_code',
         'phone',
         'caller_name',
+        'destination',
+        'cep',
+        'complement',
         'observation',
         'output_id',
     ];

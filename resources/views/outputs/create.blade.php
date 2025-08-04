@@ -21,47 +21,11 @@
                 <!-- Seção de Informações Básicas -->
                 <div class="mb-8">
                     <h2 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Informações da Saída</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
                         <!-- Data da Saída -->
                         <div>
                             <label for="output_date" class="block text-sm font-medium text-gray-700 mb-1">Data da Saída*</label>
                             <input type="datetime-local" name="output_date" id="output_date" 
-                                   class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 border" 
-                                   required>
-                        </div>
-                        
-                        <!-- Tipo de Chamado -->
-                        <div>
-                            <label for="call_type" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Chamado*</label>
-                            <select name="call_type" id="call_type" 
-                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 border"
-                                    required>
-                                <option value="whatssap">WhatsApp</option>
-                                <option value="conectar_cabedelo">Conectar Cabedelo</option>
-                                <option value="personally">Pessoalmente</option>
-                                <option value="phone">Telefone</option>
-                                <option value="other">Outro</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Código do Conecta (mostrado apenas quando Conectar Cabedelo é selecionado) -->
-                        <div id="conecta-code-container" class="hidden">
-                            <label for="conecta_code" class="block text-sm font-medium text-gray-700 mb-1">Código do Conecta*</label>
-                            <input type="text" name="conecta_code" id="conecta_code" 
-                                   class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 border">
-                        </div>
-                        
-                        <!-- Nome do Solicitante -->
-                        <div>
-                            <label for="caller_name" class="block text-sm font-medium text-gray-700 mb-1">Nome do Solicitante*</label>
-                            <input type="text" name="caller_name" id="caller_name" 
-                                   class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 border">
-                        </div>
-                        
-                        <!-- Destino -->
-                        <div>
-                            <label for="destination" class="block text-sm font-medium text-gray-700 mb-1">Destino*</label>
-                            <input type="text" name="destination" id="destination" 
                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-2 px-3 border" 
                                    required>
                         </div>
@@ -149,19 +113,6 @@
     document.addEventListener('DOMContentLoaded', function() {
         const addProductBtn = document.getElementById('add-product');
         const productsContainer = document.getElementById('products-container');
-        const callTypeSelect = document.getElementById('call_type');
-        const conectaCodeContainer = document.getElementById('conecta-code-container');
-        
-        // Mostrar/ocultar campo do código do Conecta conforme seleção
-        callTypeSelect.addEventListener('change', function() {
-            if (this.value === 'conectar_cabedelo') {
-                conectaCodeContainer.classList.remove('hidden');
-                document.getElementById('conecta_code').required = true;
-            } else {
-                conectaCodeContainer.classList.add('hidden');
-                document.getElementById('conecta_code').required = false;
-            }
-        });
         
         // Adicionar novo produto
         addProductBtn.addEventListener('click', function() {

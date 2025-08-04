@@ -1,10 +1,8 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Show Call') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
+@section('title', 'Chamado')
+
+@section('content')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -28,13 +26,13 @@
                         <strong>Observation:</strong> {{ $call->observation }}
                     </div>
                     <div class="mb-4">
-                        <strong>Output ID:</strong> {{ $call->output_id }}
+                        <strong>Output ID:</strong> {{ $call->output_id }} {{-- TODO: ADD A DATA DA SAIDA AQUI --}}
                     </div>
                     <div class="flex justify-end">
-                        <a href="{{ route('calls.index') }}" class="btn btn-secondary">Back to List</a>
+                        <a href="{{ route('calls.index') }}" class="btn btn-secondary">Voltar para a Lista</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

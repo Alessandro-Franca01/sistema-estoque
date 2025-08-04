@@ -12,14 +12,13 @@ class Output extends Model
     protected $table = 'outputs';
 
     protected $fillable = [
-        'connect_code',
         'output_date',
-        'call_type',
+        'cep',
+        'complement',
         'status',
-        'whatsapp_number',
-        'caller_name',
         'observation',
         'destination',
+        'is_active',
         'public_servant_id'
     ];
 
