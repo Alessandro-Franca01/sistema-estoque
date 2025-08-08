@@ -26,13 +26,6 @@ class Output extends Model
         'output_date' => 'datetime',
     ];
 
-    // Tipos de chamado
-    const CALL_TYPE_WHATSAPP = 'whatssap';
-    const CALL_TYPE_CONECTAR_CABEDELO = 'conectar_cabedelo';
-    const CALL_TYPE_PERSONALLY = 'personally';
-    const CALL_TYPE_PHONE = 'phone';
-    const CALL_TYPE_OTHER = 'other';
-
     // Status
     const STATUS_PENDING = 'pending';
     const STATUS_COMPLETED = 'completed';

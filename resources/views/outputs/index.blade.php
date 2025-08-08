@@ -34,15 +34,28 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($outputs as $output)
+                            @php
+                                $classStatus = 'N/A';
+                                $hiddenEditBtn = false;
+
+                                if ($output->status === 'pending') {
+                                    $classStatus = 'bg-yellow-100 text-yellow-800';
+                                } elseif ($output->status === 'completed') {
+                                    $classStatus = 'bg-green-100 text-green-800';
+                                    $hiddenEditBtn = true;
+                                }
+
+                            @endphp
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $output->output_date->format('d/m/Y H:i') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $output->output_date->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">{{ str_replace('_', ' ', $output->call_type) }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $output->caller_name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $output->destination }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $output->publicServant->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {{ $output->status === 'pendente' ? 'bg-yellow-100 text-yellow-800' : 
+                                {{-- TODO: Criar um metodo para converter o nome no Helper retornando o status + classes css      --}}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                    {{ $output->status === 'pendente' ? 'bg-yellow-100 text-yellow-800' :
                                        ($output->status === 'concluído' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800') }}">
                                     {{ $output->status }}
                                 </span>
@@ -55,20 +68,23 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                         </svg>
                                     </a>
-                                    <a href="{{ route('outputs.edit', $output) }}" class="text-yellow-600 hover:text-yellow-900" title="Editar">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
-                                    </a>
-                                    <form action="{{ route('outputs.destroy', $output) }}" method="POST" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta saída?')">
+                                    @empty ($hiddenEditBtn)
+                                        <a href="{{ route('outputs.edit', $output) }}" class="text-yellow-600 hover:text-yellow-900" title="Editar">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
-                                        </button>
-                                    </form>
+                                        </a>
+                                    @endempty
+{{--                                    TODO: REMOVER ESSE BOTÃO DE EXCLUSÃO--}}
+{{--                                    <form action="{{ route('outputs.destroy', $output) }}" method="POST" class="inline">--}}
+{{--                                        @csrf--}}
+{{--                                        @method('DELETE')--}}
+{{--                                        <button type="submit" class="text-red-600 hover:text-red-900" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta saída?')">--}}
+{{--                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">--}}
+{{--                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />--}}
+{{--                                            </svg>--}}
+{{--                                        </button>--}}
+{{--                                    </form>--}}
                                 </div>
                             </td>
                         </tr>
@@ -86,8 +102,8 @@
                                     <h3 class="font-medium text-gray-900">{{ $output->caller_name }}</h3>
                                     <p class="text-sm text-gray-500 mt-1">{{ $output->output_date->format('d/m/Y H:i') }}</p>
                                 </div>
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {{ $output->status === 'pendente' ? 'bg-yellow-100 text-yellow-800' : 
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                    {{ $output->status === 'pendente' ? 'bg-yellow-100 text-yellow-800' :
                                        ($output->status === 'concluído' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800') }}">
                                     {{ $output->status }}
                                 </span>

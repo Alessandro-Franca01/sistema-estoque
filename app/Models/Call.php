@@ -23,6 +23,13 @@ class Call extends Model
         'output_id',
     ];
 
+    // Tipos de chamado
+    const CALL_TYPE_WHATSAPP = 'whatssap';
+    const CALL_TYPE_CONECTAR_CABEDELO = 'conectar_cabedelo';
+    const CALL_TYPE_PERSONALLY = 'personally';
+    const CALL_TYPE_PHONE = 'phone';
+    const CALL_TYPE_OTHER = 'other';
+
     public function output(): BelongsTo
     {
         return $this->belongsTo(Output::class);
