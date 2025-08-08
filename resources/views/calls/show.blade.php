@@ -14,19 +14,20 @@
                         <strong>Service Order:</strong> {{ $call->service_order }}
                     </div>
                     <div class="mb-4">
-                        <strong>Connect Code:</strong> {{ $call->connect_code }}
+                        <strong>Connect Code:</strong> {{ $call->connect_code ?? 'N/A' }}
                     </div>
                     <div class="mb-4">
-                        <strong>Phone:</strong> {{ $call->phone }}
+                        <strong>Phone:</strong> {{ $call->phone ?? 'N/A'}}
                     </div>
                     <div class="mb-4">
-                        <strong>Caller Name:</strong> {{ $call->caller_name }}
+                        <strong>Caller Name:</strong> {{ $call->caller_name ?? 'N/A' }}
                     </div>
                     <div class="mb-4">
                         <strong>Observation:</strong> {{ $call->observation }}
                     </div>
+                    {{-- TODO: ADD A DATA DA SAIDA NO LUGAR DO ID --}}
                     <div class="mb-4">
-                        <strong>Output ID:</strong> {{ $call->output_id }} {{-- TODO: ADD A DATA DA SAIDA AQUI --}}
+                        <strong>Output ID:</strong> {{ $call->output_id }}
                     </div>
                     <div class="flex justify-end">
                         <a href="{{ route('calls.index') }}" class="btn btn-secondary">Voltar para a Lista</a>

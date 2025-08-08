@@ -38,6 +38,7 @@ class EntryController extends Controller
      */
     public function store(EntryStoreRequest $request)
     {
+        dd($request->all());
         $entry = Entry::create($request->validated());
 
         foreach ($request->products as $productData) {
