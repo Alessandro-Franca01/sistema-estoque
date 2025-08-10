@@ -11,11 +11,13 @@ return new class extends Migration
         Schema::create('public_servants', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('registration');
-            $table->string('cpf', 11);
+            $table->string('cpf', 11)->unique();
+            $table->string('registration')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->enum('role', ['OPERADOR', 'ALMOXARIFE', 'SERVIDOR'])->default('SERVIDOR');
+            $table->string('department')->nullable();
+            $table->string('position')->nullable();
+            $table->enum('job_function', ['ADMINISTRADOR', 'ALMOXARIFE', 'OPERADOR', 'SERVIDOR'])->default('SERVIDOR');
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
