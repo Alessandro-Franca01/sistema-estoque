@@ -5,8 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntryController;
 use App\Http\Controllers\PublicServantController;
 use App\Http\Controllers\OutputController;
-use App\Http\Requests\StoreCallRequest;
-use App\Http\Requests\UpdateCallRequest;
 
 Route::get('/', function () {
     return view('auth.login');

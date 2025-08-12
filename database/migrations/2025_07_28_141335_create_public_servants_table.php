@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('position')->nullable();
             $table->enum('job_function', ['ADMINISTRADOR', 'ALMOXARIFE', 'OPERADOR', 'SERVIDOR'])->default('SERVIDOR');
             $table->boolean('active')->default(true);
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
