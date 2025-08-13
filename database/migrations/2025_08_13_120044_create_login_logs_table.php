@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('permissions', function (Blueprint $table) {
+        Schema::create('login_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('display_name');
-            $table->string('module'); // products, entries, outputs, etc.
-            $table->string('action'); // create, read, update, delete, approve, etc.
-            $table->text('description')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->string('ip_address', 45);
+            $table->text('user_agent')->nullable();
             $table->timestamps();
+
+            // Chave estrangeira
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('permissions');
+        Schema::dropIfExists('login_logs');
     }
 };

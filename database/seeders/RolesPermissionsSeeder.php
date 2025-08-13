@@ -727,12 +727,12 @@ class RolesPermissionsSeeder extends Seeder
             'products.view_any',
             'products.view',
             'products.create',
-            'products.update',
-            'products.view_stock',
 
             // Categorias (apenas visualização)
             'categories.view_any',
             'categories.view',
+            'categories.update',
+            'categories.create',
 
             // Fornecedores (apenas visualização)
             'suppliers.view_any',
@@ -742,26 +742,22 @@ class RolesPermissionsSeeder extends Seeder
             'entries.view_any',
             'entries.view',
             'entries.create',
-            'entries.update',
+//            'entries.update',
 
             // Saídas
             'outputs.view_any',
             'outputs.view',
             'outputs.create',
-            'outputs.update',
             'outputs.finish',
 
             // Inventários
             'inventories.view_any',
             'inventories.view',
-            'inventories.create',
-            'inventories.update',
 
             // Chamados
             'calls.view_any',
             'calls.view',
             'calls.create',
-            'calls.update',
 
             // Servidores (apenas visualização)
             'public_servants.view_any',
@@ -811,14 +807,14 @@ class RolesPermissionsSeeder extends Seeder
             'suppliers.view_cnpj',
 
             // Entradas - permissões administrativas
-            'entries.delete',
-            'entries.approve',
+//            'entries.delete',
+            'entries.create',
             'entries.reject',
             'entries.view_values',
             'entries.view_all',
 
             // Saídas - permissões administrativas
-            'outputs.delete',
+//            'outputs.delete',
             'outputs.cancel',
             'outputs.approve',
             'outputs.view_all',

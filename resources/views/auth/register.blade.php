@@ -1,51 +1,134 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <h2 class="text-lg font-medium text-center text-gray-900 dark:text-gray-100">
+        Cadastro de Usuário
+    </h2>
+
+    <form method="POST" action="{{ route('register') }}" class="space-y-6">
         @csrf
+    
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- COLUNA 1 - Informações Pessoais -->
+            <div class="px-2 mb-4">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 border-b pb-2 mb-4">
+                     Pessoal
+                </h2>
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                <!-- Name -->
+                <div>
+                    <x-input-label for="name" :value="__('Nome Completo')" class="mb-1" />
+                    <x-text-input id="name" class="block w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <x-input-label for="email" :value="__('Email')" class="mb-1" />
+                    <x-text-input id="email" class="block w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                </div>
+
+                <!-- CPF -->
+                <div>
+                    <x-input-label for="cpf" :value="__('CPF')" class="mb-1" />
+                    <x-text-input id="cpf" class="block w-full" type="text" name="cpf" :value="old('cpf')" required autocomplete="cpf" />
+                    <x-input-error :messages="$errors->get('cpf')" class="mt-2" />
+                </div>
+
+                <!-- Phone -->
+                <div>
+                    <x-input-label for="phone" :value="__('Telefone')" class="mb-1" />
+                    <x-text-input id="phone" class="block w-full" type="text" name="phone" :value="old('phone')" autocomplete="phone" />
+                    <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+                </div>
+            </div>
+
+            <!-- COLUNA 2 - Informações Profissionais -->
+            <div class="px-2 mb-4">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 border-b pb-2 mb-4">
+                     Profissional
+                </h2>
+
+                <!-- Department -->
+                <div>
+                    <x-input-label for="department" :value="__('Departamento')" class="mb-1" />
+                    <x-text-input id="department" class="block w-full" type="text" name="department" :value="old('department')" autocomplete="department" />
+                    <x-input-error :messages="$errors->get('department')" class="mt-2" />
+                </div>
+
+                <!-- Registration -->
+                <div>
+                    <x-input-label for="registration" :value="__('Matrícula')" class="mb-1" />
+                    <x-text-input id="registration" class="block w-full" type="text" name="registration" :value="old('registration')" required autocomplete="registration" />
+                    <x-input-error :messages="$errors->get('registration')" class="mt-2" />
+                </div>
+
+                <!-- Position -->
+                <div>
+                    <x-input-label for="position" :value="__('Cargo')" class="mb-1" />
+                    <x-text-input id="position" class="block w-full" type="text" name="position" :value="old('position')" autocomplete="position" />
+                    <x-input-error :messages="$errors->get('position')" class="mt-2" />
+                </div>
+
+                <!-- Job Function -->
+                <div class="md:col-span-2">
+                    <x-input-label for="job_function" :value="__('Função')" class="mb-1" />
+                    <select id="job_function" name="job_function" class="block w-full rounded-md shadow-sm bg-gray-100 dark:bg-gray-900 text-white border-t border-gray-200 dark:border-gray-700 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600">
+                        <option value="">Selecione uma função...</option>
+                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                        <option value="ALMOXARIFE">ALMOXARIFE</option>
+                    </select>
+                    <x-input-error :messages="$errors->get('job_function')" class="mt-2" />
+                </div>
+            </div>
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <!-- Seção de Segurança (full width) -->
+        <div class="mt-2 px-2">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 border-b pb-2 mb-4">
+                Sistema e Segurança
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Adicione esta seção após o campo de telefone e antes das Informações Profissionais -->
+                <div class="md:col-span-2">
+                    <x-input-label for="role" :value="__('Perfil de Acesso')" class="mb-1" />
+                    <select id="role" name="role" class="block w-full rounded-md shadow-sm bg-gray-100 dark:bg-gray-900 text-white border-t border-gray-200 dark:border-gray-700 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600">
+                        <option value="">Selecione um perfil...</option>
+                        @foreach($roles as $role)
+                            @if($role->is_active)
+                                <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
+                                    {{ $role->display_name }}
+                                </option>
+                            @endif
+                        @endforeach
+                    </select>
+                    <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <x-input-label for="password" :value="__('Senha')" class="mb-1" />
+                    <x-text-input id="password" class="block w-full" type="password" name="password" required autocomplete="new-password" />
+                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                    <x-input-label for="password_confirmation" :value="__('Confirmar Senha')" class="mb-1" />
+                    <x-text-input id="password_confirmation" class="block w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
+                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                </div>
+            </div>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
+        <div class="flex flex-col sm:flex-row items-center justify-between mt-2 px-2">
+            <a class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded px-2 py-1"
+               href="{{ route('login') }}">
+                {{ __('Já possui cadastro?') }}
             </a>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
+            <x-primary-button class="w-full sm:w-auto justify-center mb-4">
+                {{ __('Registrar') }}
             </x-primary-button>
         </div>
     </form>

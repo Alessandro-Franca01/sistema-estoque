@@ -12,8 +12,16 @@ class PublicServant extends Model
         'cpf',
         'email',
         'phone',
-        'role',
+        'department',
+        'position',
+        'job_function',
         'active',
+        'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
 

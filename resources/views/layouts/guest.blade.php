@@ -15,16 +15,16 @@
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-            <div class="flex flex-col md:flex-row justify-center items-center">
+            <div class="flex flex-col md:flex-row justify-center items-center mt-4">
                 <a href="/">
                     <img class="w-40 h-40 justify-items-center" src="{{ asset('assets/images/logo_prefeitura_cabedelo.png') }}" alt="Logo Cabedelo">
                 </a>
-                <h2 class="text-center text-xl font-bold text-gray-800 dark:text-gray-200 mt-4">
+                <h2 class="text-center text-xl font-bold text-gray-800 dark:text-gray-100 mt-4">
                     GESTIN - Inovação em Gestão de Estoque
                 </h2>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
+            <div class="w-full mt-6 px-6 shadow-md overflow-hidden sm:rounded-lg lg:mx-auto">
                 {{ $slot }}
             </div>
         </div>

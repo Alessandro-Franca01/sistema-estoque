@@ -1,41 +1,36 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\PublicServant;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\PublicServant;
-use App\Models\Role;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Validation\Rules;
 
-class RegisteredUserController extends Controller
+class UserController
 {
-    /**
-     * Display the registration view.
-     */
-    public function create(): View
+    public function index(): View
+    {
+        $users = User::all();
+
+        return view('users.index', compact('users'));
+    }
+
+    public function create()
     {
         $roles = Role::all();
 
-        return view('auth.register', compact('roles'));
-
+        return view('users.create', compact('roles'));
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function store(Request $request): RedirectResponse
     {
-//        dd($request->all()); //teste12345, darci12345
-
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -51,25 +46,25 @@ class RegisteredUserController extends Controller
         ]);
         $role = Role::where('name', strtoupper($request->role))->first();
 
-        $user = User::create([
+        $userNew = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => $role->id,
         ]);
 
-        $assigned_by = null;
-
+        // Se tiver configurado no sistema então vai setar assinatua vai ser do proprio usuario criado teste12345
         if(!config('custom.show_link_user_create')){
             $assigned_by = auth()->user()->id;
         }else{
-            $assigned_by = $user->id;
+            $assigned_by = $userNew->id;
         }
 
-        $user->roles()->attach($role->id, [
-                'assigned_by' => $assigned_by,
-                'assigned_at' => now(),
-            ]);
+        $userNew->roles()->attach($role->id, [
+            'assigned_by' => $assigned_by,
+            'assigned_at' => now(),
+            'user_id' => $userNew->id,
+        ]);
 
         $publicServant = PublicServant::create([
             'name' => $request->name,
@@ -81,13 +76,13 @@ class RegisteredUserController extends Controller
             'position' => $request->position,
             'job_function' => $request->job_function,
             'active' => true,
-            'user_id' => $user->id,
+            'user_id' => $userNew->id,
         ]);
 
-        event(new Registered($user));
+        event(new Registered($userNew));
 
         if (!Auth::check()){
-            Auth::login($user);
+            Auth::login($userNew);
         }
 
         return redirect(route('dashboard', absolute: false));
