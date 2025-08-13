@@ -70,7 +70,7 @@
                         <label for="meansurement_unit" class="block text-gray-700 text-sm font-bold mb-2">
                             Unidade de Medida
                         </label>
-                        <select name="meansurement_unit_id" id="meansurement_unit_id"
+                        <select name="meansurement_unit" id="meansurement_unit"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             <option value="">Selecione uma unidade de medida</option>
                                 <option value="m">
@@ -107,7 +107,7 @@
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('note') }}</textarea>
                     </div>
                 </div>
-                
+
                 <div class="flex items-center justify-between mt-6">
                     <button type="submit"
                         class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">

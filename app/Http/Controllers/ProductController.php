@@ -61,10 +61,10 @@ class ProductController extends Controller
     {
         $data = $request->validated();
 
+        // TODO: FAZER TESTE USANDO A MEDIDA CUSTOMIZADA
         if ($request->has('custom_meansurement_unit') && !empty($request->custom_meansurement_unit)) {
             $data['meansurement_unit'] = $request->custom_meansurement_unit;
-            //unset($data['meansurement_unit_id']); // Remove meansurement_unit_id if custom unit is used
-        } 
+        }
 
         $data['quantity'] = 0;
         $product = Product::create($data);
@@ -101,7 +101,7 @@ class ProductController extends Controller
         if ($request->has('custom_meansurement_unit') && !empty($request->custom_meansurement_unit)) {
             $data['meansurement_unit'] = $request->custom_meansurement_unit;
             //unset($data['meansurement_unit_id']); // Remove meansurement_unit_id if custom unit is used
-        } 
+        }
 
         $product->update($data);
 

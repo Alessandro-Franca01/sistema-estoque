@@ -5,8 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntryController;
 use App\Http\Controllers\PublicServantController;
 use App\Http\Controllers\OutputController;
-use App\Http\Requests\StoreCallRequest;
-use App\Http\Requests\UpdateCallRequest;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -33,6 +31,10 @@ Route::middleware('auth')->group(function () {
 
     // Custom Routes:
     Route::put('/output/finish/{output}', [OutputController::class, 'finish'])->name('output.finish');
+    Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+    Route::get('/user/create', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
+    Route::post('/user/store', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
+
 });
 
 require __DIR__.'/auth.php';

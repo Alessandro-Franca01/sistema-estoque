@@ -18,7 +18,13 @@ class Entry extends Model
         'contract_number',
         'batch_number',
         'value',
+        'entry_type',
     ];
+
+    // Types: teste12345
+    const TYPE_PURCHASED = 'purchased';
+    const TYPE_INITIAL_ENTRY = 'initial_entry';
+    const TYPE_REVERSAL = 'reversal';
 
     public function supplier()
     {

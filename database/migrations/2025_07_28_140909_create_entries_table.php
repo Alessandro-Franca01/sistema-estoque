@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('entries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('supplier_id')->constrained()->onDelete('cascade');
+            $table->enum('entry_type', ['purchased', 'initial_entry', 'reversal'])->default('purchased');
             $table->dateTime('entry_date');
             $table->text('observation')->nullable();
             $table->boolean('is_existing')->default(false);
@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('contract_number', 20)->nullable();
             $table->string('batch_number', 10)->nullable();
             $table->decimal('value', 10, 2);
+            $table->foreignId('supplier_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

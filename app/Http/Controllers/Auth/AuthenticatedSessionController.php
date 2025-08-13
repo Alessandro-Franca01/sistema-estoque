@@ -24,7 +24,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+//        dd($request->all(), $request->header('user-agent'), $request->ip());
         $request->authenticate();
+
+        // TODO: Criar um log de login: user_id, ip_address, user_agent
+        \App\Models\LoginLog::create([
+            'user_id' => auth()->user()->id,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->header('user-agent'),
+        ]);
 
         $request->session()->regenerate();
 
