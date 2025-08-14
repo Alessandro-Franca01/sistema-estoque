@@ -26,12 +26,13 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/helpers.php"
+            "app/Helpers/helpers.php",
+            "app/Helpers/AuditHelper.php"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/" 
+            "Tests\\": "tests/"
         }
     },
     "scripts": {

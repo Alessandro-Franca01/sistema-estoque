@@ -13,6 +13,15 @@ use App\Http\Requests\EntryUpdateRequest;
 
 class EntryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:entries.read')->only(['index', 'show']);
+        $this->middleware('permission:entries.create')->only(['create', 'store']);
+        $this->middleware('permission:entries.update')->only(['edit', 'update']);
+        $this->middleware('permission:entries.delete')->only('destroy');
+        $this->middleware('permission:entries.approve')->only(['approve', 'reject']);
+    }
+    
     /**
      * Display a listing of the resource.
      */

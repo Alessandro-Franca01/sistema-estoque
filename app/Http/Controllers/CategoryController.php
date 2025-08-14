@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use Illuminate\Http\Request;
+use App\Helpers\AuditHelper;
 
 class CategoryController extends Controller
 {
@@ -51,6 +52,9 @@ class CategoryController extends Controller
     {
         $data = $request->validated();
         $category = Category::create($data);
+
+        // Registra a criação
+        AuditHelper::logCreate($category, $request);
 
         return redirect()->route('categories.index')
             ->with('success', 'Categoria criada com sucesso.');

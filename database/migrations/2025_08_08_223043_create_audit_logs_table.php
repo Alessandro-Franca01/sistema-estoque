@@ -38,7 +38,7 @@ return new class extends Migration
                 ->onDelete('SET NULL'); // Usuário responsável pela ação
 
             // Timestamps
-            $table->timestamp('created_at');
+            $table->timestamps();
 
             // Índices para otimização de consultas
             $table->index(['auditable_type', 'auditable_id']); // Busca por registro específico
