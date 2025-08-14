@@ -194,7 +194,7 @@
                             </a>
                         </div>
                         <div class="flex-1">
-                            <a href="#" class="text-xs sm:text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors whitespace-nowrap block mb-1">
+                            <a href="{{ route('users.index') }}" class="text-xs sm:text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors whitespace-nowrap block mb-1">
                                 Ver usuários
                             </a>
                             <a href="{{ route('users.create') }}" class="w-full text-xs sm:text-sm font-medium bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-3 rounded-lg transition-colors flex items-center justify-center">
