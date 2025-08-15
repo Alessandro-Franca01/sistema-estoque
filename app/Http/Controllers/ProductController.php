@@ -7,9 +7,16 @@ use App\Models\Category;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Http\Request;
+use App\Helpers\AuditHelper;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        // Aplica as autorizações baseadas na ProductPolicy automaticamente
+        $this->authorizeResource(Product::class, 'product');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -69,6 +76,11 @@ class ProductController extends Controller
         $data['quantity'] = 0;
         $product = Product::create($data);
 
+        // Registra a criação
+        if (class_exists(AuditHelper::class)) {
+            AuditHelper::logCreate($product, $request);
+        }
+
         return redirect()->route('products.index')
             ->with('success', 'Produto criado com sucesso.');
     }
@@ -97,6 +109,7 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         $data = $request->validated();
+        $oldProduct = $product;
 
         if ($request->has('custom_meansurement_unit') && !empty($request->custom_meansurement_unit)) {
             $data['meansurement_unit'] = $request->custom_meansurement_unit;
@@ -104,6 +117,11 @@ class ProductController extends Controller
         }
 
         $product->update($data);
+
+        // Registrar auditoria de atualização
+        if (class_exists(AuditHelper::class)) {
+            AuditHelper::logUpdate($oldProduct, $product->toArray(), $request);
+        }
 
         return redirect()->route('products.index')
             ->with('success', 'Produto atualizado com sucesso.');
@@ -114,10 +132,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
-
+        // Exclusão de produtos não é permitida
         return redirect()->route('products.index')
-            ->with('success', 'Produto excluído com sucesso.');
+            ->withErrors('Exclusão de produtos não é permitida.');
     }
 
     /**
@@ -125,9 +142,16 @@ class ProductController extends Controller
      */
     public function toggleStatus(Product $product)
     {
+        $oldProduct = $product;
         $product->update(['is_active' => !$product->is_active]);
 
         $status = $product->is_active ? 'ativado' : 'desativado';
+
+        // Registrar auditoria de alteração de status:
+        // TODO Erro na passagem do audit_id como null
+        if (class_exists(AuditHelper::class)) {
+            request() ? AuditHelper::logUpdate($oldProduct, $product->toArray(), request()) : null;
+        }
 
         return redirect()->back()
             ->with('success', "Produto {$status} com sucesso.");

@@ -47,7 +47,7 @@ class UpdateProductRequest extends FormRequest
             'slug.unique' => 'Já existe um produto com este slug.',
             'slug.max' => 'O slug não pode ter mais de 255 caracteres.',
             'description.max' => 'A descrição não pode ter mais de 255 caracteres.',
-            'meansurement_unit_id.exists' => 'A unidade de medida selecionada não existe.',
+            'meansurement_unit.exists' => 'A unidade de medida selecionada não existe.',
             'custom_meansurement_unit.max' => 'A unidade de medida personalizada não pode ter mais de 50 caracteres.',
             'observation.max' => 'A observação não pode ter mais de 255 caracteres.',
         ];
