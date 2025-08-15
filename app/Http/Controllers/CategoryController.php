@@ -32,7 +32,7 @@ class CategoryController extends Controller
         $sortOrder = $request->get('sort_order', 'asc');
         $query->orderBy($sortBy, $sortOrder);
 
-        $categories = $query->withCount('products')->paginate(15);
+        $categories = $query->withCount('products')->paginate(10);
 
         return view('categories.index', compact('categories'));
     }
@@ -81,6 +81,33 @@ class CategoryController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateCategoryRequest $request, Category $category)
+    {
+        $data = $request->validated();
+
+        // Garantir booleano para is_active quando a checkbox não vier no request
+        $data['is_active'] = $request->boolean('is_active');
+        $oldCategory = $category;
+
+        // Atualiza apenas campos permitidos
+        $category->update([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
+            'is_active' => $data['is_active'],
+        ]);
+
+        // Registrar auditoria de atualização
+        if (class_exists(AuditHelper::class)) {
+            AuditHelper::logUpdate($oldCategory, $category->toArray(), $request);
+        }
+
+        return redirect()->route('categories.index')
+            ->with('success', 'Categoria atualizada com sucesso.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Category $category)
@@ -101,9 +128,18 @@ class CategoryController extends Controller
      */
     public function toggleStatus(Category $category)
     {
+        if (auth()->user()->hasRole('almoxarife'))
+            return redirect()->route('categories.index')->withErrors('Voce nao tem permissao para DESATIVAR uma categoria.');
+
+        $oldCategory = $category;
         $category->update(['is_active' => !$category->is_active]);
 
         $status = $category->is_active ? 'ativada' : 'desativada';
+
+        // Registrar auditoria de alteração de status
+        if (class_exists(AuditHelper::class)) {
+            request() ? AuditHelper::logUpdate($oldCategory, $category->toArray(), request()) : null;
+        }
 
         return redirect()->back()
             ->with('success', "Categoria {$status} com sucesso.");

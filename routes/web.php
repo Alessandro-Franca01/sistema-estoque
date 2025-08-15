@@ -23,6 +23,9 @@ Route::middleware('auth')->group(function () {
 
     // Resources Routes:
     Route::resource('categories', \App\Http\Controllers\CategoryController::class);
+    // Alternar ativação/desativação de categoria
+    Route::patch('categories/{category}/toggle-status', [\App\Http\Controllers\CategoryController::class, 'toggleStatus'])
+        ->name('categories.toggle-status');
     Route::resource('suppliers', \App\Http\Controllers\SupplierController::class);
     Route::resource('products', \App\Http\Controllers\ProductController::class);
     Route::resource('entries', EntryController::class);
@@ -38,7 +41,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Rotas exclusivas do almoxarife
-    Route::group(['middleware' => 'can:almoxarife'], function () {
+    Route::group(['middleware' => 'role:almoxarife'], function () {
         Route::put('/output/finish/{output}', [OutputController::class, 'finish'])->name('output.finish');
         Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
     });
@@ -49,8 +52,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
     });
-
-
 });
 
 require __DIR__.'/auth.php';
+
