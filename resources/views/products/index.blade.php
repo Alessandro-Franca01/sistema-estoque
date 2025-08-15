@@ -3,13 +3,19 @@
 @section('title', 'Listagem de Produtos')
 
 @section('content')
+    @php
+        // Pegandos as permissões do usuário
+        $canAdmin = auth()->user()->hasRole('administrativo');
+    @endphp
     <div class="container mx-auto px-4 py-8">
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="bg-gray-800 text-white px-6 py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <h1 class="text-2xl font-semibold">Produtos</h1>
-                <a href="{{ route('products.create') }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
-                    Novo Produto
-                </a>
+                @if ($canAdmin)
+                    <a href="{{ route('products.create') }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline text-center">
+                        Novo Produto
+                    </a>
+                @endif
             </div>
 
             <div class="p-6">
@@ -77,7 +83,9 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoria</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estoque</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    @if ($canAdmin)
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -95,16 +103,16 @@
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inativo</span>
                                             @endif
                                         </td>
+                                        @if ($canAdmin)
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                            <a href="{{ route('products.show', $product->id) }}" class="text-indigo-600 hover:text-indigo-900">Ver</a>
-                                            <a href="{{ route('products.edit', $product->id) }}" class="text-blue-600 hover:text-blue-900">Editar</a>
-                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline-block"
-                                                onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900">Excluir</button>
-                                            </form>
+                                                <a href="{{ route('products.edit', $product->id) }}" class="text-blue-600 hover:text-blue-900">Editar</a>
+                                                <form action="{{ route('products.toggle-status', $product->id) }}" method="POST" class="inline-block mr-3" onsubmit="return confirm('Tem certeza que deseja {{ $product->is_active ? 'desativar' : 'ativar' }} esta produto?');">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">{{ $product->is_active ? 'Desativar' : 'Ativar' }}</button>
+                                                </form>
                                         </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

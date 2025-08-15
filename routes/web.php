@@ -20,12 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->middleware('role:administrativo')->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
     // Resources Routes:
     Route::resource('categories', \App\Http\Controllers\CategoryController::class);
-    // Alternar ativação/desativação de categoria
-    Route::patch('categories/{category}/toggle-status', [\App\Http\Controllers\CategoryController::class, 'toggleStatus'])
-        ->name('categories.toggle-status');
     Route::resource('suppliers', \App\Http\Controllers\SupplierController::class);
     Route::resource('products', \App\Http\Controllers\ProductController::class);
     Route::resource('entries', EntryController::class);
@@ -34,16 +30,23 @@ Route::middleware('auth')->group(function () {
     Route::resource('inventories', \App\Http\Controllers\InventoryController::class);
     Route::resource('calls', \App\Http\Controllers\CallController::class);
 
+    // Alternar ativação/desativação de categoria
+
+    Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+
     // Rotas exclusivas do administrativo
     Route::group(['middleware' => 'role:administrativo'], function () {
         Route::get('/user/create', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
         Route::post('/user/store', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
+        Route::patch('categories/{category}/toggle-status', [\App\Http\Controllers\CategoryController::class, 'toggleStatus'])
+            ->name('categories.toggle-status');
+        Route::patch('products/{products}/toggle-status', [\App\Http\Controllers\ProductController::class, 'toggleStatus'])
+            ->name('products.toggle-status');
     });
 
     // Rotas exclusivas do almoxarife
     Route::group(['middleware' => 'role:almoxarife'], function () {
         Route::put('/output/finish/{output}', [OutputController::class, 'finish'])->name('output.finish');
-        Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
     });
 
     // Rotas acessíveis por ambos os perfis (almoxarife, administrativo)

@@ -69,7 +69,7 @@
                         <label for="meansurement_unit" class="block text-gray-700 text-sm font-bold mb-2">
                             Unidade de Medida
                         </label>
-                        <select name="meansurement_unit_id" id="meansurement_unit_id"
+                        <select name="meansurement_unit" id="meansurement_unit"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             <option value="">Selecione uma unidade de medida</option>
                                 <option value="m">
@@ -103,7 +103,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         const customUnitCheckbox = document.getElementById('custom_unit_checkbox');
         const customUnitInputDiv = document.getElementById('custom_unit_input');
-        const meansurementUnitSelect = document.getElementById('meansurement_unit_id');
+        const meansurementUnitSelect = document.getElementById('meansurement_unit');
 
         // Set initial state of select based on product's meansurement_unit
         const productMeansurementUnit = "{{ $product->meansurement_unit }}";
