@@ -50,6 +50,58 @@ class User extends Authenticatable
         ];
     }
 
+    public function hasRole(string $role): bool
+    {
+        return $this->roles()
+            ->where('name', $role)
+            ->where('is_active', true) // Considera apenas roles ativas
+            ->exists();
+    }
+
+    /**
+     * Verifica se o usuário possui qualquer um dos papéis informados.
+     * Aceita array de strings ou múltiplos argumentos string.
+     */
+    public function hasAnyRole(array|string ...$roles): bool
+    {
+        // Permitir chamada com um array: hasAnyRole(['admin', 'user'])
+        if (count($roles) === 1 && is_array($roles[0])) {
+            $roles = $roles[0];
+        }
+
+        if (empty($roles)) {
+            return false;
+        }
+
+        return $this->roles()
+            ->whereIn('name', $roles)
+            ->where('is_active', true)
+            ->exists();
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        return $this->roles()
+            ->whereHas('permissions', function($query) use ($permission) {
+                $query->where('name', $permission);
+            })->exists();
+    }
+
+    public function isAlmoxarife(): bool
+    {
+        return $this->hasRole(Role::ALMOXARIFE);
+    }
+
+    public function isAdministrativo(): bool
+    {
+        return $this->hasRole(Role::ADMINISTRATIVO);
+    }
+
+    public function auditLogs()
+    {
+        return $this->hasMany(AuditLog::class);
+    }
+
     public function inventories()
     {
         return $this->hasMany(Inventory::class);
@@ -59,12 +111,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(
             Role::class,
-            'user_roles',
-            'user_id',
-            'role_id',
-            'assigned_by',
-            'assigned_at'
-        );
+            'user_roles',  // tabela pivot
+            'user_id',     // FK em user_roles para User
+            'role_id',     // FK em user_roles para Role
+            'id',          // PK em User
+            'id'           // PK em Role
+        )->withPivot(['assigned_by', 'assigned_at']); // campos adicionais na pivot
     }
 
     public function publicServant()
