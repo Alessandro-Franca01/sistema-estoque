@@ -9,6 +9,16 @@
             <h1 class="text-2xl font-semibold">Editar Fornecedor</h1>
         </div>
         <div class="p-6">
+            @if ($errors->any())
+                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                    <strong>Ops! Corrija o(s) erro(s) abaixo:</strong>
+                    <ul class="mt-2 list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form action="{{ route('suppliers.update', $supplier) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -17,12 +27,12 @@
                     <div class="space-y-4">
                         <!-- Razão Social -->
                         <div>
-                            <label for="company_name" class="block text-gray-700 text-sm font-bold mb-2">
+                            <label for="legal_name" class="block text-gray-700 text-sm font-bold mb-2">
                                 Razão Social <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" name="company_name" id="company_name" value="{{ old('company_name', $supplier->company_name) }}"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('company_name') border-red-500 @enderror">
-                            @error('company_name')
+                            <input type="text" name="legal_name" id="legal_name" value="{{ old('legal_name', $supplier->legal_name) }}"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('legal_name') border-red-500 @enderror">
+                            @error('legal_name')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -97,12 +107,12 @@
                         </div>
                         <!-- Notas -->
                         <div>
-                            <label for="notes" class="block text-gray-700 text-sm font-bold mb-2">
+                            <label for="observation" class="block text-gray-700 text-sm font-bold mb-2">
                                 Observações
                             </label>
-                            <textarea name="notes" id="notes" rows="3"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('notes') border-red-500 @enderror">{{ old('notes', $supplier->notes) }}</textarea>
-                            @error('notes')
+                            <textarea name="observation" id="observation" rows="3"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('observation') border-red-500 @enderror">{{ old('observation', $supplier->observation) }}</textarea>
+                            @error('observation')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -130,4 +140,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection
