@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AuditHelper;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreSupplierRequest;
@@ -32,9 +33,12 @@ class SupplierController extends Controller
      */
     public function store(StoreSupplierRequest $request)
     {
+        $this->authorize('create', Supplier::class);
+
         $data = $request->validated();
-//        dd($data);
-        Supplier::create($data);
+        $supplier = Supplier::create($data);
+
+        AuditHelper::logCreate($supplier, $request);
 
         return redirect()->route('suppliers.index')->with('success', 'Fornecedor criado com sucesso.');
     }
@@ -60,8 +64,19 @@ class SupplierController extends Controller
      */
     public function update(UpdateSupplierRequest $request, Supplier $supplier)
     {
+        $this->authorize('update', $supplier);
         $data = $request->validated();
+
+        if (!isset($data['active'])) {
+            $data['active'] = 0;
+        };
+
+        $oldSupplier = $supplier;
         $supplier->update($data);
+
+        if (class_exists(AuditHelper::class)) {
+            AuditHelper::logUpdate($oldSupplier, $supplier->toArray(), $request);
+        }
 
         return redirect()->route('suppliers.index')->with('success', 'Fornecedor atualizado com sucesso.');
     }
