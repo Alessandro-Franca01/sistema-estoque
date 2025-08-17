@@ -21,10 +21,16 @@ class Entry extends Model
         'entry_type',
     ];
 
-    // Types: teste12345
+    // Types
     const TYPE_PURCHASED = 'purchased';
-    const TYPE_INITIAL_ENTRY = 'initial_entry';
+    const TYPE_FEEDING = 'feeding';
     const TYPE_REVERSAL = 'reversal';
+
+    protected $casts = [
+        'is_existing' => 'boolean',
+        'entry_date' => 'datetime',
+        'value' => 'decimal:2',
+    ];
 
     public function supplier()
     {
