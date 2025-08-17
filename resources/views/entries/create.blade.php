@@ -7,12 +7,28 @@
     <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
         <div class="bg-gray-800 text-white px-6 py-4">
             <h1 class="text-2xl font-semibold">Cadastrar Nova Entrada</h1>
-        </div>                                  
+        </div>
 
         <div class="p-6">
             <form action="{{ route('entries.store') }}" method="POST">
                 @csrf
                 <div class="mb-4">
+                    <!-- Tipo de Entrada -->
+                    <div class="mb-4">
+                        <label for="entry_type" class="block text-gray-700 text-sm font-bold mb-2">
+                            Tipo de Entrada <span class="text-red-500">*</span>
+                        </label>
+                        <select name="entry_type" id="entry_type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('entry_type') border-red-500 @enderror" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="purchased" @selected(old('entry_type') === 'purchased')>Compra</option>
+                            <option value="feeding" @selected(old('entry_type') === 'feeding')>Alimentação</option>
+                            <option value="reversal" @selected(old('entry_type') === 'reversal')>Estorno</option>
+                        </select>
+                        @error('entry_type')
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Fornecedor -->
                     <div class="mb-4">
                         <label for="supplier_id" class="block text-gray-700 text-sm font-bold mb-2">
@@ -61,7 +77,7 @@
                     </div>
 
                     <!-- Número da Nota Fiscal -->
-                    <div class="mb-4">
+                    <div class="mb-4" id="invoice_field">
                         <label for="invoice_number" class="block text-gray-700 text-sm font-bold mb-2">
                             Número da Nota Fiscal
                         </label>
@@ -104,7 +120,7 @@
                         Adicionar Produto
                     </button>
                 </div>
-                
+
                 <div class="flex items-center justify-between mt-6">
                     <button type="submit"
                         class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
@@ -124,14 +140,25 @@
         document.addEventListener('DOMContentLoaded', function() {
             let productIndex = 0;
             const products = @json($products ?? []); // Garante que products será um array mesmo se $products for null
-            
+            // const entryTypeEl = document.getElementById('entry_type');
+            // const invoiceFieldEl = document.getElementById('invoice_field');
+            // const invoiceInputEl = document.getElementById('invoice_number');
+            //
+            // function toggleInvoiceRequirement() {
+            //     const isPurchased = entryTypeEl.value === 'purchased';
+            //     invoiceInputEl.required = isPurchased;
+            //     invoiceFieldEl.style.display = isPurchased ? '' : 'none';
+            // }
+            // entryTypeEl.addEventListener('change', toggleInvoiceRequirement);
+            // toggleInvoiceRequirement();
+
             function addProductField() {
                 const container = document.getElementById('products-container');
                 const productDiv = document.createElement('div');
                 productDiv.classList.add('product-item', 'p-4', 'border', 'rounded-md', 'relative', 'bg-gray-50');
                 productDiv.innerHTML = `
                     <button type="button" class="remove-product absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold">×</button>
-                    
+
                     <div class="mb-4">
                         <label for="products_${productIndex}_product_id" class="block text-gray-700 text-sm font-bold mb-2">Produto <span class="text-red-500">*</span></label>
                         <select name="products[${productIndex}][product_id]" id="products_${productIndex}_product_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
@@ -139,17 +166,17 @@
                             ${products.map(product => `<option value="${product.id}">${product.name} (Estoque: ${product.quantity})</option>`).join('')}
                         </select>
                     </div>
-                    
+
                     <div class="mb-4">
                         <label for="products_${productIndex}_batch_number" class="block text-gray-700 text-sm font-bold mb-2">Número do Lote (Produto)</label>
                         <input type="text" name="products[${productIndex}][batch_number]" id="products_${productIndex}_batch_number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     </div>
-                    
+
                     <div class="mb-4">
                         <label for="products_${productIndex}_quantity" class="block text-gray-700 text-sm font-bold mb-2">Quantidade <span class="text-red-500">*</span></label>
                         <input type="number" name="products[${productIndex}][quantity]" id="products_${productIndex}_quantity" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                     </div>
-                    
+
                     <div class="mb-4">
                         <label for="products_${productIndex}_unit_cost" class="block text-gray-700 text-sm font-bold mb-2">Custo Unitário <span class="text-red-500">*</span></label>
                         <input type="number" step="0.01" name="products[${productIndex}][unit_cost]" id="products_${productIndex}_unit_cost" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>

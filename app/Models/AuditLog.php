@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class AuditLog extends Model
 {
     const UPDATED_AT = null;
-    
+
     use HasFactory;
 
     /**
@@ -149,7 +149,8 @@ class AuditLog extends Model
         ?array $oldValues = null,
         ?array $newValues = null,
         ?Request $request = null,
-        array $additionalData = []
+        array $additionalData = [],
+        ?bool $isCustomData = false
     ): AuditLog {
         $data = [
             'event' => $event,
@@ -170,9 +171,11 @@ class AuditLog extends Model
 
         if ($newValues) {
             $data['new_values'] = $newValues;
+
+            if (empty($isCustomData)) {
+                $data['new_values'] = json_encode($newValues);
+            }
         }
-//        static::create(array_merge($data, $additionalData));
-//        dd(array_merge($data, $additionalData));
 
         return static::create(array_merge($data, $additionalData));
     }

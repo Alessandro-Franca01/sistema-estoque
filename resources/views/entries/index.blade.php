@@ -3,56 +3,100 @@
 @section('title', 'Listagem de Entradas')
 
 @section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="flex justify-end mb-4">
-                        <a href="{{ route('entries.create') }}" class="btn btn-primary bg-blue-500 text-white px-4 py-2 rounded-md">Adicionar Entrada</a>
+    @php
+        $user = auth()->user();
+//        $canEdit = $user?->hasAnyRole(['administrativo', 'almoxarife']);
+        $canAdmin = $user?->hasRole('administrativo');
+    @endphp
+
+    <div class="container mx-auto px-4 py-8 mt-4">
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="bg-gray-800 text-white px-6 py-4 flex justify-between items-center">
+                <h1 class="text-2xl font-semibold">Entradas</h1>
+                <a href="{{ route('entries.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Adicionar Entrada
+                </a>
+            </div>
+
+            <div class="p-6">
+                @if (session('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <span class="block sm:inline">{{ session('success') }}</span>
                     </div>
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
-                            <tr>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fornecedor</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data de Entrada</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Número da Nota Fiscal</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Observação</th>
-                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach ($entries as $entry)
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $entry->supplier->trade_name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $entry->entry_date }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ $entry->invoice_number }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($entry->observation)
-                                            <button onclick="showObservationModal('{{ addslashes($entry->observation) }}')"
-                                                    class="text-blue-600 hover:text-blue-900 underline cursor-pointer">
-                                                Visualizar
-                                            </button>
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                        <a href="{{ route('entries.show', $entry) }}" class="text-blue-600 hover:text-blue-900 mr-2">Ver</a>
-                                        <a href="{{ route('entries.edit', $entry) }}" class="text-indigo-600 hover:text-indigo-900 mr-2">Editar</a>
-                                        <form action="{{ route('entries.destroy', $entry) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900">Excluir</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                @endif
+
+                @if ($entries->isEmpty())
+                    <p class="text-gray-600">Nenhuma entrada cadastrada ainda.</p>
+                @else
+                    <div class="overflow-x-auto">
+                        <div class="inline-block min-w-full align-middle">
+                            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead>
+                                    <tr>
+                                        <th class="px-4 py-2">Fornecedor</th>
+                                        <th class="px-4 py-2">Tipo</th>
+                                        <th class="px-4 py-2">Data de Entrada</th>
+                                        <th class="px-4 py-2">Número da Nota Fiscal</th>
+                                        <th class="px-4 py-2">Observação</th>
+                                        <th class="px-4 py-2">Ações</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($entries as $entry)
+                                        <tr>
+                                            <td class="px-4 py-2">
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $entry->supplier->trade_name }}</p>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                @php
+                                                    $types = ['purchased' => 'Compra', 'feeding' => 'Alimentação', 'reversal' => 'Estorno'];
+                                                @endphp
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $types[$entry->entry_type] ?? $entry->entry_type }}</p>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $entry->entry_date }}</p>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $entry->invoice_number }}</p>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                @if($entry->observation)
+                                                    <button onclick="showObservationModal('{{ addslashes($entry->observation) }}')"
+                                                            class="text-blue-600 hover:text-blue-900 underline cursor-pointer">
+                                                        Visualizar
+                                                    </button>
+                                                @else
+                                                    <p class="text-gray-900 whitespace-no-wrap">-</p>
+                                                @endif
+                                            </td>
+                                            <td class="px-4 py-2 text-center">
+                                                <a href="{{ route('entries.show', $entry) }}" class="text-blue-600 hover:text-blue-900 mr-3">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </a>
+{{--                                                TODO: REMOVER ESSE BOTÃO DE EDiÇÃO--}}
+{{--                                                @if($canAdmin)--}}
+{{--                                                    <a href="{{ route('entries.edit', $entry) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">--}}
+{{--                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block" viewBox="0 0 20 20" fill="currentColor">--}}
+{{--                                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.38-2.827-2.828z" />--}}
+{{--                                                        </svg>--}}
+{{--                                                    </a>--}}
+{{--                                                @endif--}}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                     <div class="mt-4">
                         {{ $entries->links() }}
                     </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -81,27 +125,27 @@
     </div>
 
     <script>
-            function showObservationModal(observation) {
-                document.getElementById('modalObservationContent').textContent = observation;
-                document.getElementById('observationModal').classList.remove('hidden');
+        function showObservationModal(observation) {
+            document.getElementById('modalObservationContent').textContent = observation;
+            document.getElementById('observationModal').classList.remove('hidden');
+        }
+
+        function closeObservationModal() {
+            document.getElementById('observationModal').classList.add('hidden');
+        }
+
+        // Fechar modal ao clicar fora do conteúdo
+        document.getElementById('observationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeObservationModal();
             }
+        });
 
-            function closeObservationModal() {
-                document.getElementById('observationModal').classList.add('hidden');
+        // Fechar modal com tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeObservationModal();
             }
-
-            // Fechar modal ao clicar fora do conteúdo
-            document.getElementById('observationModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeObservationModal();
-                }
-            });
-
-            // Fechar modal com tecla ESC
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeObservationModal();
-                }
-            });
+        });
     </script>
 @endsection

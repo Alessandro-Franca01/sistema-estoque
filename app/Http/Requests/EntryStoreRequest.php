@@ -21,12 +21,14 @@ class EntryStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+//        dd($this->request);
         return [
+            'entry_type' => ['required', 'in:purchased,feeding,reversal'],
             'supplier_id' => ['required', 'exists:suppliers,id'],
             'entry_date' => ['required', 'date'],
             'observation' => ['nullable', 'string', 'max:255'],
             'is_existing' => ['boolean'],
-            'invoice_number' => ['nullable', 'string', 'max:30'],
+            'invoice_number' => ['required_if:entry_type,purchased', 'string', 'max:30'],
             'contract_number' => ['nullable', 'string', 'max:20'],
             'batch_number' => ['nullable', 'string', 'max:10'],
             'value' => ['required', 'numeric', 'min:0'],
@@ -41,6 +43,8 @@ class EntryStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'entry_type.required' => 'O tipo de entrada é obrigatório.',
+            'entry_type.in' => 'O tipo de entrada selecionado é inválido.',
             'supplier_id.required' => 'O fornecedor é obrigatório.',
             'supplier_id.exists' => 'O fornecedor selecionado não é válido.',
             'entry_date.required' => 'A data de entrada é obrigatória.',
@@ -48,6 +52,7 @@ class EntryStoreRequest extends FormRequest
             'observation.string' => 'A observação deve ser um texto.',
             'observation.max' => 'A observação não pode ter mais de :max caracteres.',
             'is_existing.boolean' => 'O campo "existente" deve ser verdadeiro ou falso.',
+            'invoice_number.required_if' => 'O número da nota fiscal é obrigatório para entradas do tipo compra.',
             'invoice_number.string' => 'O número da nota fiscal deve ser um texto.',
             'invoice_number.max' => 'O número da nota fiscal não pode ter mais de :max caracteres.',
             'contract_number.string' => 'O número do contrato deve ser um texto.',
