@@ -7,18 +7,20 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white shadow-xl rounded-lg overflow-hidden">
             <!-- Cabeçalho -->
-            <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 px-6 py-5 flex justify-between items-center">
+            <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
-                    <h1 class="text-2xl font-bold text-white">Lista de Chamados</h1>
-                    <p class="mt-1 text-indigo-100">Visualize e gerencie todos os chamados registrados</p>
+                    <h1 class="text-xl sm:text-2xl font-bold text-white">Lista de Chamados</h1>
+                    <p class="mt-1 text-indigo-100 text-sm sm:text-base">Visualize e gerencie todos os chamados registrados</p>
                 </div>
-                <a href="{{ route('calls.create') }}" 
-                   class="inline-flex items-center px-4 py-2 bg-white border border-transparent rounded-md font-semibold text-indigo-700 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
-                    </svg>
-                    Novo Chamado
-                </a>
+                <div class="w-full sm:w-auto">
+                    <a href="{{ route('calls.create') }}"
+                       class="w-full sm:w-auto flex items-center justify-center sm:justify-start px-3 py-2 sm:px-4 sm:py-2 bg-white border border-transparent rounded-md font-medium text-indigo-700 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-colors duration-200 text-sm sm:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="truncate">Novo Chamado</span>
+                    </a>
+                </div>
             </div>
 
             <!-- Filtros e Busca -->
@@ -42,9 +44,11 @@
                         <select id="type" name="type" onchange="this.form.submit()"
                                 class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                             <option value="">Todos os tipos</option>
-                            <option value="Suporte" @if(request('type')=='Suporte') selected @endif>Suporte</option>
-                            <option value="Incidente" @if(request('type')=='Incidente') selected @endif>Incidente</option>
-                            <option value="Solicitação" @if(request('type')=='Solicitação') selected @endif>Solicitação</option>
+                            <option value="whatssap" @if(request('type')=='Suporte') selected @endif>Whatssap</option>
+                            <option value="conectar_cabedelo" @if(request('type')=='Incidente') selected @endif>Conectar Cabedelo</option>
+                            <option value="personally" @if(request('type')=='Solicitação') selected @endif>Pessoalmente</option>
+                            <option value="phone" @if(request('type')=='Solicitação') selected @endif>Telefone</option>
+                            <option value="other" @if(request('type')=='Solicitação') selected @endif>Outro</option>
                         </select>
                     </div>
                     <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -80,7 +84,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 CEP
                             </th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Ações
                             </th>
                         </tr>
@@ -89,7 +93,7 @@
                         @forelse ($calls as $call)
                             <tr class="hover:bg-gray-50 transition-colors duration-150">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                         @if($call->type == 'Incidente') bg-red-100 text-red-800
                                         @elseif($call->type == 'Suporte') bg-blue-100 text-blue-800
                                         @else bg-green-100 text-green-800 @endif">
@@ -108,8 +112,8 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">{{ formatCep($call->cep) }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <div class="flex justify-end space-x-2">
+                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                    <div class="flex justify-center space-x-2">
                                         <a href="{{ route('calls.show', $call) }}" class="text-indigo-600 hover:text-indigo-900" title="Visualizar">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />

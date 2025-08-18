@@ -40,7 +40,7 @@
 
                         <select name="status"
                                 class="min-w-[150px] shadow border rounded py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline">
-                            <option value="">Todos os Status</option>
+{{--                            <option value="">Todos os Status</option>--}}
                             <option value="1" @selected(request('status') === '1')>Ativo</option>
                             <option value="0" @selected(request('status') === '0')>Inativo</option>
                         </select>

@@ -12,7 +12,7 @@
         <div class="bg-gray-800 text-white px-6 py-4 flex items-center justify-between">
             <h1 class="text-2xl font-semibold">Fornecedores</h1>
             @if($canAdmin)
-                <a href="{{ route('suppliers.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <a href="{{ route('suppliers.create') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Novo
                 </a>
             @endif
@@ -26,7 +26,6 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr>
-                        <th class="px-4 py-2">#</th>
                         <th class="px-4 py-2">Razão Social</th>
                         <th class="px-4 py-2">Nome Fantasia</th>
                         <th class="px-4 py-2">CNPJ</th>
@@ -39,7 +38,6 @@
                 <tbody>
                     @forelse($suppliers as $supplier)
                         <tr class="border-b">
-                            <td class="px-4 py-2">{{ $supplier->id }}</td>
                             <td class="px-4 py-2">{{ $supplier->legal_name }}</td>
                             <td class="px-4 py-2">{{ $supplier->trade_name }}</td>
                             <td class="px-4 py-2">{{ $supplier->cnpj }}</td>

@@ -174,17 +174,16 @@
                         <a href="{{ route('outputs.index') }}" class="text-xs sm:text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors whitespace-nowrap">
                             Ver histórico
                         </a>
-                        @if(auth()->user()->hasRole('almoxarife'))
                         <a href="{{ route('outputs.create') }}" class="text-xs sm:text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                             </svg>
                             Nova saída
                         </a>
-                        @endif
                     </div>
                 </div>
 
+                @if($canAdmin)
                 <!-- Card de Cadastros -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
                     <div class="p-4 sm:p-6 flex items-start flex-grow">
@@ -223,6 +222,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 <!-- Card Chamados -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">

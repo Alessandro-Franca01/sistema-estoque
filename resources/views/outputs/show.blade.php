@@ -15,6 +15,19 @@
                 Voltar
             </a>
         </div>
+        @php
+            $statusClasses = [
+                'pendente' => 'bg-yellow-100 text-yellow-800',
+                'concluído' => 'bg-green-100 text-green-800',
+                'cancelado' => 'bg-red-100 text-red-800'
+            ];
+            $status = [
+                'pending' => 'pendente',
+                'completed' => 'concluído',
+                'canceled' => 'cancelado'
+            ];
+            $statusClass = $statusClasses[$output->status] ?? 'bg-gray-100 text-gray-800';
+        @endphp
 
         <!-- Card de Informações -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
@@ -23,32 +36,19 @@
 
                 <div class="space-y-3">
                     <div class="flex flex-col sm:flex-row">
-                        <span class="text-sm font-medium text-gray-500 sm:w-1/3">Data e Hora:</span>
-                        <span class="text-gray-800">{{ $output->output_date->format('d/m/Y H:i') }}</span>
+                        <span class="text-sm font-medium text-gray-500 sm:w-1/3">Data:</span>
+                        <span class="text-gray-800">{{ $output->output_date->format('d/m/Y') }}</span>
                     </div>
-{{--                    TODO: Alterar para mais de um chamado se houver --}}
                     <div class="flex flex-col sm:flex-row">
-                        <span class="text-sm font-medium text-gray-500 sm:w-1/3">Tipo de Chamado:</span>
-                        <span class="text-gray-800 capitalize">{{ str_replace('_', ' ', $output->call_type) }}</span>
+                        <span class="text-sm font-medium text-gray-500 sm:w-1/3">Hora:</span>
+                        <span class="text-gray-800">{{ $output->output_date->format('H:i') }}</span>
                     </div>
-
-                    @if($output->conecta_code)
                     <div class="flex flex-col sm:flex-row">
-                        <span class="text-sm font-medium text-gray-500 sm:w-1/3">Código Conecta:</span>
-                        <span class="text-gray-800">{{ $output->conecta_code ?? 'N/A' }}</span>
+                        <span class="text-sm font-medium text-gray-500 sm:w-1/3">Status:</span>
+                        <span id-="status" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
+                            {{ ucfirst($status[$output->status]) }}
+                        </span>
                     </div>
-                    @endif
-
-                    <div class="flex flex-col sm:flex-row">
-                        <span class="text-sm font-medium text-gray-500 sm:w-1/3">Solicitante:</span>
-                        <span class="text-gray-800">{{ $output->caller_name ?? 'N/A' }}</span>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row">
-                        <span class="text-sm font-medium text-gray-500 sm:w-1/3">Destino:</span>
-                        <span class="text-gray-800">{{ $output->destination }}</span>
-                    </div>
-
                     <div class="flex flex-col sm:flex-row">
                         <span class="text-sm font-medium text-gray-500 sm:w-1/3">Responsável:</span>
                         <span class="text-gray-800">{{ $output->publicServant->name }}</span>
@@ -114,7 +114,6 @@
                             </tbody>
                         </table>
                     </div>
-
                     <!-- Mensagem de erro -->
                     <div class="mt-6 text-red-500 text-sm hidden" id="formError">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -123,7 +122,7 @@
 
                         <span id="errorMessage">A soma das quantidades usadas e devolvidas deve ser igual à quantidade retirada para todos os produtos.</span>
                     </div>
-
+                    @if(!$output->status === 'completed')
                     <!-- Botão de envio -->
                     <div class="mt-6 flex justify-between items-center">
                         <button type="submit" id="submitButton"
@@ -135,6 +134,7 @@
                             Atualizar Produtos
                         </button>
                     </div>
+                    @endif
                 </form>
             </div>
         </div>

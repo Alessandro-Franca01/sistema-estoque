@@ -97,11 +97,7 @@ class CategoryController extends Controller
             'description' => $data['description'] ?? null,
             'is_active' => $data['is_active'],
         ]);
-
-        // Registrar auditoria de atualização
-        if (class_exists(AuditHelper::class)) {
-            AuditHelper::logUpdate($oldCategory, $category->toArray(), $request);
-        }
+        AuditHelper::logUpdate($oldCategory, $category->toArray(), $request);
 
         return redirect()->route('categories.index')
             ->with('success', 'Categoria atualizada com sucesso.');

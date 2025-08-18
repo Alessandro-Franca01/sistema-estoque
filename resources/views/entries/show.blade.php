@@ -8,22 +8,17 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <div class="mb-4">
-                        <strong>Fornecedor:</strong> {{ $entry->supplier->name }}
-                    </div>
+                    <h1 class="text-2xl text-center font-semibold mb-4"><strong> Detalhes da Entrada </strong></h1>
                     <div class="mb-4">
                         <strong>Tipo de Entrada:</strong>
                         @php($types = ['purchased' => 'Compra', 'feeding' => 'Alimentação', 'reversal' => 'Estorno'])
                         {{ $types[$entry->entry_type] ?? $entry->entry_type }}
                     </div>
                     <div class="mb-4">
-                        <strong>Data de Entrada:</strong> {{ $entry->entry_date }}
+                        <strong>Data de Entrada:</strong> {{ $entry->entry_date->format('d/m/Y')  }}
                     </div>
                     <div class="mb-4">
                         <strong>Observação:</strong> {{ $entry->observation ?? 'N/A' }}
-                    </div>
-                    <div class="mb-4">
-                        <strong>É Existente:</strong> {{ $entry->is_existing ? 'Sim' : 'Não' }}
                     </div>
                     <div class="mb-4">
                         <strong>Número da Nota Fiscal:</strong> {{ $entry->invoice_number ?? 'N/A' }}
@@ -32,7 +27,7 @@
                         <strong>Número do Contrato:</strong> {{ $entry->contract_number ?? 'N/A' }}
                     </div>
                     <div class="mb-4">
-                        <strong>Número do Lote (Geral):</strong> {{ $entry->batch_number ?? 'N/A' }}
+                        <strong>Número do Lote :</strong> {{ $entry->batch_number ?? 'N/A' }}
                     </div>
                     <div class="mb-4">
                         <strong>Valor Total:</strong> {{ number_format($entry->value, 2, ',', '.') }}

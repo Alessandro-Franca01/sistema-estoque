@@ -49,6 +49,19 @@ class AuditHelper
         );
     }
 
+    public static function logUpdateCustomData(Model $model, array $changes, ?Request $request = null, array $additionalData = [], array $data, bool $isCustomData = true): AuditLog
+    {
+        return AuditLog::record(
+            event: AuditLog::EVENT_UPDATED,
+            auditable: $model,
+            oldValues: $data,
+            newValues: $changes,
+            request: $request ?? request(),
+            additionalData: $additionalData,
+            isCustomData: $isCustomData
+        );
+    }
+
     /**
      * Registra uma ação de exclusão
      */

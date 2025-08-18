@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AuditHelper;
 use App\Models\Call;
 use App\Models\Output;
 use Illuminate\Http\Request;
@@ -47,10 +48,12 @@ class CallController extends Controller
             'output_id' => 'nullable|exists:outputs,id',
         ]);
 
-        Call::create($validated);
+        $call = Call::create($validated);
+        // Registra a criação
+        AuditHelper::logCreate($call, $request);
 
         return redirect()->route('calls.index')
-            ->with('success', 'Call created successfully.');
+            ->with('success', 'Chamando criado com sucesso.');
     }
 
     /**
@@ -58,6 +61,8 @@ class CallController extends Controller
      */
     public function show(Call $call): View
     {
+        $call->load('output');
+
         return view('calls.show', compact('call'));
     }
 
