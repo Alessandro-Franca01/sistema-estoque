@@ -20,7 +20,7 @@ class OutputController extends Controller
 
     public function create()
     {
-        $products = Product::all();
+        $products = Product::where('quantity', '>', 0)->get();
         $public_servants = PublicServant::all();
 
         return view('outputs.create', compact('products', 'public_servants'));
@@ -116,8 +116,6 @@ class OutputController extends Controller
     // TODO: Testando com somente um produto
     public function finish(Request $request, Output $output)
     {
-//        $output->load('products');
-//        dd($request->all(), $output->toArray());
         // Step 1: Validate the incoming request for product updates
         // TODO: Melhorar as validações e add uma Segunda camada
         $request->validate([

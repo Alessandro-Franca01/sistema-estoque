@@ -21,7 +21,7 @@
                             <label for="type" class="block text-sm font-medium text-gray-700">
                                 Tipo <span class="text-red-500">*</span>
                             </label>
-                            <select id="type" name="type" required
+                            <select id="type" name="type" required class="mt-1 block w-full py-2 px-3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('type') border-red-300 text-red-900 @enderror">
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('type') border-red-300 text-red-900 @enderror">
                                 <option value="">Selecione o tipo</option>
                                 <option value="whatssap" @if(old('type')=='WhatsApp') selected @endif>WhatsApp</option>
@@ -51,7 +51,7 @@
                         <!-- Código de Conexão -->
                         <div>
                             <label for="connect_code" class="block text-sm font-medium text-gray-700">
-                                Código de Conexão
+                                Código Conecta Cabedelo
                             </label>
                             <input type="text" id="connect_code" name="connect_code" value="{{ old('connect_code') }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('connect_code') border-red-300 text-red-900 @enderror"
@@ -93,10 +93,10 @@
                                 Saída <span class="text-red-500">*</span>
                             </label>
                             <select id="output_id" name="output_id" required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('output_id') border-red-300 text-red-900 @enderror">
+                                class="mt-1 block w-full py-2 px-3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('output_id') border-red-300 text-red-900 @enderror">
                                 <option value="">Selecione a Saída</option>
                                 @foreach($outputs as $output)
-                                    <option value="{{ $output->id }}" @if(old('output_id') == $output->id) selected @endif>{{ $output->connect_code }} - {{ \Carbon\Carbon::parse($output->output_date)->format('d/m/Y') }}</option>
+                                    <option value="{{ $output->id }}"> {{ \Carbon\Carbon::parse($output->output_date)->format('d/m/Y H:i') }}</option>
                                 @endforeach
                             </select>
                             @error('output_id')
@@ -176,7 +176,7 @@
                     </div>
                 </form>
             </div>
-        
+
     </div>
 </div>
 @endsection

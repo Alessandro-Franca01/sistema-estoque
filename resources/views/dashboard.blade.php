@@ -183,6 +183,7 @@
                     </div>
                 </div>
 
+                @if($canAdmin)
                 <!-- Card de Cadastros -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
                     <div class="p-4 sm:p-6 flex items-start flex-grow">
@@ -221,6 +222,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 <!-- Card Chamados -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
