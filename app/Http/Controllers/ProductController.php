@@ -74,6 +74,7 @@ class ProductController extends Controller
         }
 
         $data['quantity'] = 0;
+        $data['is_existing'] = 0;
         $product = Product::create($data);
 
         // Registra a criação

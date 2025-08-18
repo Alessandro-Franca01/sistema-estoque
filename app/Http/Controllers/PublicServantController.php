@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AuditHelper;
 use App\Models\PublicServant;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,7 @@ class PublicServantController extends Controller
     public function index()
     {
         $servants = PublicServant::all();
-        
+
         return view('public_servants.index', compact('servants'));
     }
 
@@ -21,17 +22,22 @@ class PublicServantController extends Controller
 
     public function store(Request $request)
     {
+//        dd(request()->all());
         $request->validate([
             'name' => 'required|string|max:255',
             'registration' => 'required|string|max:255',
             'cpf' => 'required|string|size:11|unique:public_servants',
             'email' => 'nullable|email',
             'phone' => 'nullable|string',
-            'role' => 'required|in:OPERADOR,ALMOXARIFE,SERVIDOR',
-            'active' => 'boolean',
+            'job_function' => 'required|in:OPERADOR,ALMOXARIFE,SERVIDOR',
+            'department' => 'required|string|max:120',
+            'position' => 'required|string|max:150',
         ]);
 
-        PublicServant::create($request->all());
+        $pulicServant = PublicServant::create($request->all());
+
+        AuditHelper::logCreate($pulicServant, $request);
+
         return redirect()->route('public_servants.index')->with('success', 'Servidor cadastrado com sucesso.');
     }
 

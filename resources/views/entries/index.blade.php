@@ -5,7 +5,6 @@
 @section('content')
     @php
         $user = auth()->user();
-//        $canEdit = $user?->hasAnyRole(['administrativo', 'almoxarife']);
         $canAdmin = $user?->hasRole('administrativo');
     @endphp
 
@@ -13,9 +12,11 @@
         <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
             <div class="bg-gray-800 text-white px-6 py-4 flex justify-between items-center">
                 <h1 class="text-2xl font-semibold">Entradas</h1>
-                <a href="{{ route('entries.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                @if (auth()->user()->hasRole('administrativo'))
+                <a href="{{ route('entries.create') }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Adicionar Entrada
                 </a>
+                @endif
             </div>
 
             <div class="p-6">
@@ -37,7 +38,7 @@
                                         <th class="px-4 py-2">Fornecedor</th>
                                         <th class="px-4 py-2">Tipo</th>
                                         <th class="px-4 py-2">Data de Entrada</th>
-                                        <th class="px-4 py-2">Número da Nota Fiscal</th>
+                                        <th class="px-4 py-2">Nota Fiscal</th>
                                         <th class="px-4 py-2">Observação</th>
                                         <th class="px-4 py-2">Ações</th>
                                     </tr>
@@ -50,7 +51,7 @@
                                             </td>
                                             <td class="px-4 py-2">
                                                 @php
-                                                    $types = ['purchased' => 'Compra', 'feeding' => 'Alimentação', 'reversal' => 'Estorno'];
+                                                    $types = ['purchased' => 'Compra', 'feeding' => 'Alimentação', 'reversal' => 'Estorno', 'initial_entry' => 'Entrada Inicial'];
                                                 @endphp
                                                 <p class="text-gray-900 whitespace-no-wrap">{{ $types[$entry->entry_type] ?? $entry->entry_type }}</p>
                                             </td>
