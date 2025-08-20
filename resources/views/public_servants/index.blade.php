@@ -49,8 +49,9 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CPF</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Função</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acesso</th>
                             @if($canAdmin)
-                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
                             @endif
                         </tr>
                         </thead>
@@ -78,28 +79,19 @@
                                         {{ $servant->active ? 'Ativo' : 'Inativo' }}
                                     </span>
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                        {{ !empty($servant->user_id) ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                        {{ !empty($servant->user_id)  ? 'SIM' : 'NÃO' }}
+                                    </span>
+                                </td>
                                 @if($canAdmin)
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div class="flex justify-end space-x-2">
-                                            <a href="{{ route('public_servants.edit', $servant->id) }}" class="text-blue-600 hover:text-blue-900" title="Editar">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                                                </svg>
-                                            </a>
-                                            <form action="#" method="POST" class="inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="text-{{ $servant->active ? 'yellow' : 'green' }}-600 hover:text-{{ $servant->active ? 'yellow' : 'green' }}-900" title="{{ $servant->active ? 'Desativar' : 'Ativar' }}">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                        @if($servant->active)
-                                                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-                                                        @else
-                                                            <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l3.5-3.5L5 8a6 6 0 0110-2.243A6 6 0 0118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd" />
-                                                        @endif
-                                                    </svg>
-                                                </button>
-                                            </form>
-                                        </div>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <a href="{{ route('public_servants.edit', $servant->id) }}" class="text-blue-600 hover:text-blue-900" title="Editar">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                            </svg>
+                                        </a>
                                     </td>
                                 @endif
                             </tr>
@@ -115,11 +107,11 @@
                 </div>
 
                 <!-- Paginação -->
-{{--                @if($servants->hasPages())--}}
-{{--                    <div class="px-4 py-3 bg-gray-50 border-t border-gray-200 sm:px-6">--}}
-{{--                        {{ $servants->links() }}--}}
-{{--                    </div>--}}
-{{--                @endif--}}
+                @if($servants->hasPages())
+                    <div class="px-4 py-3 bg-gray-50 border-t border-gray-200 sm:px-6">
+                        {{ $servants->links() }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>

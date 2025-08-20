@@ -107,7 +107,7 @@
 
                     <!-- Secretaria -->
                     <div>
-                        <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">
+                        <label for="position" class="block text-gray-700 text-sm font-bold mb-2">
                             Secretaria
                         </label>
                         <input type="text" name="position" id="position" value="{{ old('position') }}"
@@ -119,10 +119,10 @@
 
                     <!-- Setor -->
                     <div>
-                        <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">
+                        <label for="department" class="block text-gray-700 text-sm font-bold mb-2">
                             Setor
                         </label>
-                        <input type="text" name="department" id="phone" value="{{ old('department') }}"
+                        <input type="text" name="department" id="department" value="{{ old('department') }}"
                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('department') border-red-500 @enderror">
                         @error('department')
                         <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>

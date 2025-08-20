@@ -36,6 +36,9 @@
                     <x-nav-link :href="route('calls.index')" :active="request()->routeIs('calls.index')">
                         {{ __('Chamados') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('public_servants.index')" :active="request()->routeIs('public_servants.index')">
+                        {{ __('Servidores') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -56,7 +59,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Seus Dados') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -66,7 +69,7 @@
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('Sair') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -111,6 +114,9 @@
 {{--            </x-responsive-nav-link>--}}
             <x-responsive-nav-link :href="route('calls.index')" :active="request()->routeIs('calls.index')">
                 {{ __('Chamados') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('public_servants.index')" :active="request()->routeIs('public_servants.index')">
+                {{ __('Servidores') }}
             </x-responsive-nav-link>
         </div>
 

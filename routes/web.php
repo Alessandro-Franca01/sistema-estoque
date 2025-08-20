@@ -38,12 +38,13 @@ Route::middleware('auth')->group(function () {
             ->name('categories.toggle-status');
         Route::patch('products/{products}/toggle-status', [\App\Http\Controllers\ProductController::class, 'toggleStatus'])
             ->name('products.toggle-status');
+        Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
     });
 
     // Rotas exclusivas do almoxarife
     Route::group(['middleware' => 'role:almoxarife'], function () {
         // Alternar ativação/desativação de categoria
-        Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+        Route::put('/output/finish/{output}', [OutputController::class, 'finish'])->name('output.finish');
     });
 
     // Rotas acessíveis por ambos os perfis (almoxarife, administrativo)
@@ -51,7 +52,6 @@ Route::middleware('auth')->group(function () {
         // Produtos (leitura para ambos)
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
         Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
-        Route::put('/output/finish/{output}', [OutputController::class, 'finish'])->name('output.finish');
     });
 });
 
