@@ -68,14 +68,6 @@
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('observation') }}</textarea>
                     </div>
 
-                    <!-- É Existente? -->
-                    <div class="mb-4">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" name="is_existing" id="is_existing" value="1" class="form-checkbox" {{ old('is_existing') ? 'checked' : '' }}>
-                            <span class="ml-2 text-gray-700 text-sm font-bold">É Existente?</span>
-                        </label>
-                    </div>
-
                     <!-- Número da Nota Fiscal -->
                     <div class="mb-4" id="invoice_field">
                         <label for="invoice_number" class="block text-gray-700 text-sm font-bold mb-2">

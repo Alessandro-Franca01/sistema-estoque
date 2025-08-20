@@ -9,6 +9,18 @@
             <h1 class="text-2xl font-semibold">Cadastrar Servidor Público</h1>
         </div>
 
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">Oops!</strong>
+                <span class="block sm:inline">Houve alguns problemas com sua submissão.</span>
+                <ul class="mt-3 list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="p-6">
             <form action="{{ route('public_servants.store') }}" method="POST">
                 @csrf
@@ -81,31 +93,47 @@
                         <label for="role" class="block text-gray-700 text-sm font-bold mb-2">
                             Função <span class="text-red-500">*</span>
                         </label>
-                        <select name="role" id="role"
+                        <select name="job_function" id="job_function"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('role') border-red-500 @enderror" required>
                             <option value="">Selecione uma função</option>
-                            @foreach(['OPERADOR', 'ALMOXARIFE', 'SERVIDOR'] as $role)
-                                <option value="{{ $role }}" @selected(old('role') == $role)>{{ $role }}</option>
+                            @foreach(['OPERADOR', 'ALMOXARIFE', 'SERVIDOR'] as $job_function)
+                                <option value="{{ $job_function }}" @selected(old('job_function') == $job_function)>{{ $job_function }}</option>
                             @endforeach
                         </select>
-                        @error('role')
+                        @error('job_function')
                             <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Ativo -->
-                    <div class="flex items-center">
-                        <input type="checkbox" name="active" id="active" value="1"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" @checked(old('active', true))>
-                        <label for="active" class="ml-2 block text-gray-700 text-sm font-bold">
-                            Ativo
+                    <!-- Secretaria -->
+                    <div>
+                        <label for="position" class="block text-gray-700 text-sm font-bold mb-2">
+                            Secretaria
                         </label>
+                        <input type="text" name="position" id="position" value="{{ old('position') }}"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('position') border-red-500 @enderror">
+                        @error('position')
+                        <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
+
+                    <!-- Setor -->
+                    <div>
+                        <label for="department" class="block text-gray-700 text-sm font-bold mb-2">
+                            Setor
+                        </label>
+                        <input type="text" name="department" id="department" value="{{ old('department') }}"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('department') border-red-500 @enderror">
+                        @error('department')
+                        <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                 </div>
 
                 <div class="flex items-center justify-between mt-8">
                     <button type="submit"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                         Cadastrar Servidor
                     </button>
                     <a href="{{ route('public_servants.index') }}"

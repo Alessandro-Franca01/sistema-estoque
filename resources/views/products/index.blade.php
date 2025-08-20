@@ -4,7 +4,6 @@
 
 @section('content')
     @php
-        // Pegandos as permissões do usuário
         $canAdmin = auth()->user()->hasRole('administrativo');
     @endphp
     <div class="container mx-auto px-4 py-8">

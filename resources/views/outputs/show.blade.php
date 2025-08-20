@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="py-4 sm:py-6">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl px-4 sm:px-6 lg:px-8">
         <!-- Cabeçalho -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-900">Detalhes da Saída</h1>
@@ -17,9 +17,9 @@
         </div>
         @php
             $statusClasses = [
-                'pendente' => 'bg-yellow-100 text-yellow-800',
-                'concluído' => 'bg-green-100 text-green-800',
-                'cancelado' => 'bg-red-100 text-red-800'
+                'pending' => 'bg-yellow-100 text-yellow-800',
+                'completed' => 'bg-green-100 text-green-800',
+                'canceled' => 'bg-red-100 text-red-800'
             ];
             $status = [
                 'pending' => 'pendente',

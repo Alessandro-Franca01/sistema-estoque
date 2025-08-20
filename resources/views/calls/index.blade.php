@@ -3,6 +3,10 @@
 @section('title', 'Lista de Chamados')
 
 @section('content')
+    @php
+        $user = auth()->user();
+        $canAdmin = $user?->hasRole('administrativo');
+    @endphp
 <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white shadow-xl rounded-lg overflow-hidden">
@@ -120,6 +124,7 @@
                                                 <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
                                             </svg>
                                         </a>
+                                        @if($canAdmin)
                                         <a href="{{ route('calls.edit', $call) }}" class="text-yellow-600 hover:text-yellow-900" title="Editar">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -134,6 +139,7 @@
                                                 </svg>
                                             </button>
                                         </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

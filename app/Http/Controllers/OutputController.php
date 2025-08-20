@@ -21,7 +21,7 @@ class OutputController extends Controller
     public function create()
     {
         $products = Product::where('quantity', '>', 0)->get();
-        $public_servants = PublicServant::all();
+        $public_servants = PublicServant::all()->where('job_function', 'OPERADOR');
 
         return view('outputs.create', compact('products', 'public_servants'));
     }
