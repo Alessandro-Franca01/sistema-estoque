@@ -56,7 +56,7 @@
                                                 <p class="text-gray-900 whitespace-no-wrap">{{ $types[$entry->entry_type] ?? $entry->entry_type }}</p>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <p class="text-gray-900 whitespace-no-wrap">{{ $entry->entry_date }}</p>
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $entry->entry_date->format('d/m/Y') }}</p>
                                             </td>
                                             <td class="px-4 py-2">
                                                 <p class="text-gray-900 whitespace-no-wrap">{{ $entry->invoice_number }}</p>

@@ -26,7 +26,8 @@ class CallController extends Controller
      */
     public function create(): View
     {
-        $outputs = Output::all();
+        $outputs = Output::where('status', '!=', Output::STATUS_COMPLETED)->get();
+
         return view('calls.create', compact('outputs'));
     }
 

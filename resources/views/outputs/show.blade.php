@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="py-4 sm:py-6">
-    <div class="max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl px-4 sm:px-6 lg:px-8 justify-center">
         <!-- Cabeçalho -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-900">Detalhes da Saída</h1>
@@ -71,8 +71,8 @@
                             <tr class="text-left text-sm font-semibold text-gray-700">
                                 <th class="px-3 py-2">Produto</th>
                                 <th class="px-3 py-2">Retirado</th>
-                                <th class="px-3 py-2">Usada</th>
-                                <th class="px-3 py-2">Devolvida</th>
+                                <th class="px-3 py-2">Usado</th>
+                                <th class="px-3 py-2">Devolvido</th>
                                 <th class="px-3 py-2">Status</th>
                             </tr>
                             </thead>
@@ -92,6 +92,7 @@
                                             name="products[{{$index}}][quantity_used]"
                                             value="{{ $product->pivot->quantity_used }}"
                                             class="quantity-used w-full px-2 py-1 border border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-300"
+                                            @disabled($output->status == 'completed')
                                             min="0"
                                             max="{{ $product->pivot->quantity }}"
                                             data-product-id="{{ $product->id }}">
@@ -102,6 +103,7 @@
                                             name="products[{{$index}}][quantity_returned]"
                                             value="{{ $product->pivot->quantity_returned }}"
                                             class="quantity-returned w-full px-2 py-1 border border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-300"
+                                            @disabled($output->status == 'completed')
                                             min="0"
                                             max="{{ $product->pivot->quantity }}"
                                             data-product-id="{{ $product->id }}">
@@ -122,7 +124,7 @@
 
                         <span id="errorMessage">A soma das quantidades usadas e devolvidas deve ser igual à quantidade retirada para todos os produtos.</span>
                     </div>
-                    @if(!$output->status === 'completed')
+                    @if($output->status != 'completed')
                     <!-- Botão de envio -->
                     <div class="mt-6 flex justify-between items-center">
                         <button type="submit" id="submitButton"
@@ -147,6 +149,15 @@
                     const submitButton = document.getElementById('submitButton');
                     const formError = document.getElementById('formError');
                     const errorMessage = document.getElementById('errorMessage');
+
+                    // Se a saída estiver concluída, desabilita os inputs e interrompe os scripts de validação/envio
+                    const isCompleted = "{{ $output->status }}" === 'completed';
+                    if (isCompleted) {
+                        document.querySelectorAll('.quantity-used, .quantity-returned').forEach(input => {
+                            input.disabled = true;
+                        });
+                        return;
+                    }
 
                     // Função para validar uma linha individual
                     // TODO: Erro está aqui, FOREACH está interando mais do que a quantidade de produtos
@@ -222,15 +233,17 @@
                     function updateSubmitButton() {
                         const isValid = validateAllRows();
                         // console.log('É tudo valido? ' + isValid);
-                        submitButton.disabled = !isValid;
+                        if (submitButton) {
+                            submitButton.disabled = !isValid;
+                        }
                         formError.classList.toggle('hidden', isValid);
 
-                        if (isValid) {
+                        if (isValid && submitButton) {
                             // alert('todos os produtos estão validaos')
                             submitButton.classList.remove('bg-gray-400');
                             submitButton.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
                             submitButton.disable = false;
-                        } else {
+                        } else if (submitButton) {
                             submitButton.classList.add('bg-gray-400');
                             submitButton.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
                         }
