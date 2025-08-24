@@ -21,6 +21,13 @@
                         </div>
                     </div>
 
+                    <!-- Atualizar dados do Servidor Público -->
+                    <div class="border-b border-gray-200 pb-6">
+                        <div class="max-w-xl">
+                            @include('profile.partials.update-public-servant-form')
+                        </div>
+                    </div>
+
                     <!-- Atualizar Senha -->
                     <div class="border-b border-gray-200 pb-6">
                         <div class="max-w-xl">

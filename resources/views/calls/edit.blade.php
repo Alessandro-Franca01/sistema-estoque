@@ -41,11 +41,11 @@
                             <x-input-error :messages="$errors->get('phone')" class="mt-2" />
                         </div>
 
-                        <!-- Caller Name -->
+                        <!-- Applicant -->
                         <div class="mt-4">
-                            <x-input-label for="caller_name" :value="__('Caller Name')" />
-                            <x-text-input id="caller_name" class="block mt-1 w-full" type="text" name="caller_name" :value="old('caller_name', $call->caller_name)" />
-                            <x-input-error :messages="$errors->get('caller_name')" class="mt-2" />
+                            <x-input-label for="applicant" :value="__('Applicant')" />
+                            <x-text-input id="applicant" class="block mt-1 w-full" type="text" name="applicant" :value="old('applicant', $call->applicant)" />
+                            <x-input-error :messages="$errors->get('applicant')" class="mt-2" />
                         </div>
 
                         <!-- Observation -->

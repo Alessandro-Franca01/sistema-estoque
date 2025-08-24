@@ -38,9 +38,6 @@ class OutputController extends Controller
 
         $output = Output::create($request->only([
             'output_date',
-//            'call_type',
-//            'caller_name',
-//            'destination',
             'public_servant_id',
         ]));
 
@@ -81,7 +78,7 @@ class OutputController extends Controller
         $request->validate([
             'output_date' => 'required|date',
             'call_type' => 'required|string',
-            'caller_name' => 'nullable|string|max:255',
+            'applicant' => 'nullable|string|max:255',
             'destination' => 'nullable|string',
             'public_servant_id' => 'required|exists:public_servants,id',
             'products' => 'required|array',
@@ -92,7 +89,7 @@ class OutputController extends Controller
         $output->update($request->only([
             'output_date',
             'call_type',
-            'caller_name',
+            'applicant',
             'destination',
             'public_servant_id',
         ]));

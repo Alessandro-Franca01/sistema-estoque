@@ -57,14 +57,15 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role_id' => $role->id,
         ]);
-
+//      TODO: Assinar com o ID do usuario que enviou o email
         $assigned_by = null;
+        $assigned_by = $user->id;
 
-        if(!config('custom.show_link_user_create')){
-            $assigned_by = auth()->user()->id;
-        }else{
-            $assigned_by = $user->id;
-        }
+//        if(!config('custom.show_link_user_create')){
+//            $assigned_by = auth()->user()->id;
+//        }else{
+//            $assigned_by = $user->id;
+//        }
 
         $user->roles()->attach($role->id, [
                 'assigned_by' => $assigned_by,

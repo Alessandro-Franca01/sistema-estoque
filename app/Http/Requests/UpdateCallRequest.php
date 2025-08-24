@@ -24,7 +24,7 @@ class UpdateCallRequest extends FormRequest
             'service_order' => 'nullable|string|max:255',
             'connect_code' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
-            'caller_name' => 'nullable|string|max:255',
+            'applicant' => 'nullable|string|max:255',
             'destination' => 'required|string',
             'cep' => 'nullable|string|max:8',
             'complement' => 'nullable|string',

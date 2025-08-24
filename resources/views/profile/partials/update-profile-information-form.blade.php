@@ -1,7 +1,7 @@
 <section>
     <header class="mb-6">
         <h2 class="text-lg font-medium text-gray-900">
-            Informações do Perfil
+            Informações de Usuário
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
@@ -18,7 +18,7 @@
         @method('patch')
 
         <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
+            <label for="name" class="block text-sm font-medium text-gray-700">Nome de Usuário</label>
             <input id="name" name="name" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name" />
             @error('name')
             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>

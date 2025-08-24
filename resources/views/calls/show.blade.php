@@ -49,7 +49,7 @@
                         </div>
                         <div>
                             <p class="text-sm font-medium text-gray-500">Solicitante</p>
-                            <p class="mt-1 text-sm text-gray-900">{{ $call->caller_name ?? 'N/A' }}</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ $call->applicant ?? 'N/A' }}</p>
                         </div>
                     </div>
                 </div>

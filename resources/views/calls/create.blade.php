@@ -76,18 +76,18 @@
 
                         <!-- Nome do Solicitante -->
                         <div>
-                            <label for="caller_name" class="block text-sm font-medium text-gray-700">
+                            <label for="applicant" class="block text-sm font-medium text-gray-700">
                                 Nome do Solicitante
                             </label>
-                            <input type="text" id="caller_name" name="caller_name" value="{{ old('caller_name') }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('caller_name') border-red-300 text-red-900 @enderror"
+                            <input type="text" id="applicant" name="applicant" value="{{ old('applicant') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('applicant') border-red-300 text-red-900 @enderror"
                                 placeholder="Nome completo">
-                            @error('caller_name')
+                            @error('applicant')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <!-- Output ID -->
+                        <!-- Output ID teste12345 -->
                         <div>
                             <label for="output_id" class="block text-sm font-medium text-gray-700">
                                 Saída <span class="text-red-500">*</span>

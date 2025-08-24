@@ -96,7 +96,7 @@
                         <select name="job_function" id="job_function"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('role') border-red-500 @enderror" required>
                             <option value="">Selecione uma função</option>
-                            @foreach(['OPERADOR', 'ALMOXARIFE', 'SERVIDOR'] as $job_function)
+                            @foreach(['OPERADOR', 'SERVIDOR'] as $job_function)
                                 <option value="{{ $job_function }}" @selected(old('job_function') == $job_function)>{{ $job_function }}</option>
                             @endforeach
                         </select>
