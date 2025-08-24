@@ -33,15 +33,15 @@
                             </div>
                         </div>
                         <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
-                                <a href="{{ route('categories.index') }}" class="text-xs sm:text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 transition-colors whitespace-nowrap">
-                                    Ver todas
-                                </a>
-                                <a href="{{ route('categories.create') }}" class="text-xs sm:text-sm font-medium bg-green-500 hover:bg-green-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                                    </svg>
-                                    Nova categoria
-                                </a>
+                            <a href="{{ route('categories.index') }}" class="text-xs sm:text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 transition-colors whitespace-nowrap">
+                                Ver todas
+                            </a>
+                            <a href="{{ route('categories.create') }}" class="text-xs sm:text-sm font-medium bg-green-500 hover:bg-green-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                Nova categoria
+                            </a>
                         </div>
                     </div>
 
@@ -72,7 +72,6 @@
                         @endif
                     </div>
                 </div>
-
 
                 <!-- Card Inventários -->
 {{--                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">--}}
@@ -130,28 +129,36 @@
 
                 <!-- Card Entradas de Produtos -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
-                    <div class="p-4 sm:p-6 flex items-start flex-grow">
+                    <div class="p-6 flex items-start">
                         <div class="bg-amber-100 dark:bg-amber-900 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-amber-600 dark:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                             </svg>
                         </div>
-                        <div class="flex-grow min-w-0">
+                        <div class="flex-grow">
                             <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Entradas</h3>
-                            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncate">Registre novas entradas de produtos</p>
+                            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncat">Registre novas entradas de produtos</p>
                         </div>
                     </div>
-                    <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
-                        <a href="{{ route('entries.index') }}" class="text-xs sm:text-sm font-medium text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 transition-colors whitespace-nowrap">
-                            Ver histórico
+                    <div class="px-6 pb-4 flex justify-between items-center">
+                        <a href="{{ route('entries.index') }}" class="text-sm font-medium text-amber-600 hover:text-amber-800 transition-colors flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                            </svg>
+                            Histórico
                         </a>
                         @if($canAdmin)
-                        <a href="{{ route('entries.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                            </svg>
-                            Nova entrada
-                        </a>
+                            <div class="flex items-center space-x-2">
+                                <a href="{{ route('entries.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                                    Nova
+                                </a>
+                                <a href="{{ route('entries.reversal.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                                    Estorno
+                                </a>
+                                <a href="{{ route('entries.feeding.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                                    Alimentação
+                                </a>
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -183,42 +190,6 @@
                     </div>
                 </div>
 
-                @if($canAdmin)
-                <!-- Card de Servidores -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
-                    <div class="p-4 sm:p-6 flex items-start flex-grow">
-                        <div class="bg-indigo-100 dark:bg-indigo-900 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-indigo-600 dark:text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                        </div>
-                        <div class="flex-grow min-w-0">
-                            <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Servidores</h3>
-                            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncate">Realize novos cadastros no sistema</p>
-                        </div>
-                    </div>
-                    <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
-                            <a href="{{ route('public_servants.index') }}" class="text-xs sm:text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors whitespace-nowrap block mb-1">
-                                Ver servidores
-                            </a>
-                            <a href="{{ route('public_servants.create') }}" class="text-xs sm:text-sm font-medium bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                                </svg>
-                                Novo Servidor
-                            </a>
-{{--                        <div class="flex-1">--}}
-{{--                            <a href="{{ route('users.create') }}" class="w-full text-xs sm:text-sm font-medium bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-3 rounded-lg transition-colors flex items-center justify-center">--}}
-{{--                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">--}}
-{{--                                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />--}}
-{{--                                </svg>--}}
-{{--                                Novo Usuário--}}
-{{--                            </a>--}}
-{{--                        </div>--}}
-                    </div>
-                </div>
-                @endif
-
                 <!-- Card Chamados -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
                     <div class="p-4 sm:p-6 flex items-start flex-grow">
@@ -244,6 +215,42 @@
                         </a>
                     </div>
                 </div>
+
+                @if($canAdmin)
+                    <!-- Card de Servidores -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
+                        <div class="p-4 sm:p-6 flex items-start flex-grow">
+                            <div class="bg-indigo-100 dark:bg-indigo-900 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-indigo-600 dark:text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </div>
+                            <div class="flex-grow min-w-0">
+                                <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Servidores</h3>
+                                <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncate">Realize novos cadastros no sistema</p>
+                            </div>
+                        </div>
+                        <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
+                            <a href="{{ route('public_servants.index') }}" class="text-xs sm:text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors whitespace-nowrap block mb-1">
+                                Ver servidores
+                            </a>
+                            <a href="{{ route('public_servants.create') }}" class="text-xs sm:text-sm font-medium bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                Novo Servidor
+                            </a>
+                            {{--                        <div class="flex-1">--}}
+                            {{--                            <a href="{{ route('users.create') }}" class="w-full text-xs sm:text-sm font-medium bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-3 rounded-lg transition-colors flex items-center justify-center">--}}
+                            {{--                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">--}}
+                            {{--                                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />--}}
+                            {{--                                </svg>--}}
+                            {{--                                Novo Usuário--}}
+                            {{--                            </a>--}}
+                            {{--                        </div>--}}
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

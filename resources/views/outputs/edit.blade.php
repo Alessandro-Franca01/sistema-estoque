@@ -28,8 +28,8 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="caller_name" class="block font-medium text-sm text-gray-700">Nome do Solicitante</label>
-                                <input type="text" name="caller_name" id="caller_name" class="block mt-1 w-full" value="{{ $output->caller_name }}">
+                                <label for="applicant" class="block font-medium text-sm text-gray-700">Nome do Solicitante</label>
+                                <input type="text" name="applicant" id="applicant" class="block mt-1 w-full" value="{{ $output->applicant }}">
                             </div>
                             <div>
                                 <label for="destination" class="block font-medium text-sm text-gray-700">Destino</label>

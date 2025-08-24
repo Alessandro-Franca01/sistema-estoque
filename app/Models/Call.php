@@ -15,7 +15,7 @@ class Call extends Model
         'service_order',
         'connect_code',
         'phone',
-        'caller_name',
+        'applicant',
         'destination',
         'cep',
         'complement',

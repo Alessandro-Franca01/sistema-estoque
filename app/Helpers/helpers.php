@@ -17,8 +17,20 @@ if (!function_exists('formatPhone')) {
 
         // Remove tudo que não é dígito
         $digits = preg_replace('/\D/', '', $phone);
-
         $length = strlen($digits);
+
+        // Com código do país Brasil (55)
+        if ($length === 13 && substr($digits, 0, 2) === '55') { // 55 + DDD (2) + 9 dígitos
+            $ddd = substr($digits, 2, 2);
+            $num = substr($digits, 4); // 9 dígitos
+            $numFmt = preg_replace('/(\d{5})(\d{4})/', '$1-$2', $num);
+            return "+55 ($ddd) $numFmt";
+        } elseif ($length === 12 && substr($digits, 0, 2) === '55') { // 55 + DDD (2) + 8 dígitos
+            $ddd = substr($digits, 2, 2);
+            $num = substr($digits, 4); // 8 dígitos
+            $numFmt = preg_replace('/(\d{4})(\d{4})/', '$1-$2', $num);
+            return "+55 ($ddd) $numFmt";
+        }
 
         if ($length === 11) { // Com DDD e 9º dígito
             return preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $digits);
@@ -29,7 +41,6 @@ if (!function_exists('formatPhone')) {
         } elseif ($length === 8) { // Sem DDD e sem 9º dígito
             return preg_replace('/(\d{4})(\d{4})/', '$1-$2', $digits);
         }
-
         return $phone; // Retorna original se não conseguir formatar
     }
 }
@@ -213,6 +224,10 @@ if (!function_exists('customMask')) {
     // Função para mostrar a mascara generica:
     function customMask($val, $mask): string
     {
+//        $digits = preg_replace('/\D/', '', $val);
+//        $lengthVal = strlen($digits);
+//
+//        if (leng)
         $maskared = '';
         $k = 0;
         for ($i = 0; $i <= strlen($mask) - 1; ++$i) {

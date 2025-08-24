@@ -26,7 +26,8 @@ class CallController extends Controller
      */
     public function create(): View
     {
-        $outputs = Output::all();
+        $outputs = Output::where('status', '!=', Output::STATUS_COMPLETED)->get();
+
         return view('calls.create', compact('outputs'));
     }
 
@@ -40,7 +41,7 @@ class CallController extends Controller
             'service_order' => 'nullable|string|max:255',
             'connect_code' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
-            'caller_name' => 'nullable|string|max:255',
+            'applicant' => 'nullable|string|max:255',
             'destination' => 'required|string',
             'cep' => 'nullable|string|max:8',
             'complement' => 'nullable|string',
@@ -84,7 +85,7 @@ class CallController extends Controller
             'service_order' => 'nullable|string|max:255',
             'connect_code' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
-            'caller_name' => 'nullable|string|max:255',
+            'applicant' => 'nullable|string|max:255',
             'destination' => 'required|string',
             'cep' => 'nullable|string|max:8',
             'complement' => 'nullable|string',

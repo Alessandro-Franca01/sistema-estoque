@@ -8,6 +8,15 @@
         <div class="bg-gray-800 text-white px-6 py-4">
             <h1 class="text-2xl font-semibold">Cadastrar Nova Entrada</h1>
         </div>
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                <ul class="list-disc ml-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <div class="p-6">
             <form action="{{ route('entries.store') }}" method="POST">
@@ -18,16 +27,10 @@
                         <label for="entry_type" class="block text-gray-700 text-sm font-bold mb-2">
                             Tipo de Entrada <span class="text-red-500">*</span>
                         </label>
-                        <select name="entry_type" id="entry_type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('entry_type') border-red-500 @enderror" required>
-                            <option value="">Selecione o tipo</option>
-                            <option value="purchased" @selected(old('entry_type') === 'purchased')>Compra</option>
-                            <option value="feeding" @selected(old('entry_type') === 'feeding')>Alimentação</option>
-                            <option value="reversal" @selected(old('entry_type') === 'reversal')>Estorno</option>
-                        </select>
-                        @error('entry_type')
-                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
-                        @enderror
+                        <input type="text" disabled="true" name="type" value="compra"
+                               class="shadow appearance-none bg-gray-400 border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     </div>
+                    <input type="hidden" name="entry_type" value="initial_entry">
 
                     <!-- Fornecedor -->
                     <div class="mb-4">
@@ -71,7 +74,7 @@
                     <!-- Número da Nota Fiscal -->
                     <div class="mb-4" id="invoice_field">
                         <label for="invoice_number" class="block text-gray-700 text-sm font-bold mb-2">
-                            Número da Nota Fiscal
+                            Número da Nota Fiscal <span class="text-red-500">*</span>
                         </label>
                         <input type="text" name="invoice_number" id="invoice_number" value="{{ old('invoice_number') }}"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
@@ -80,7 +83,7 @@
                     <!-- Número do Contrato -->
                     <div class="mb-4">
                         <label for="contract_number" class="block text-gray-700 text-sm font-bold mb-2">
-                            Número do Contrato
+                            Número do Contrato <span class="text-red-500">*</span>
                         </label>
                         <input type="text" name="contract_number" id="contract_number" value="{{ old('contract_number') }}"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
@@ -98,7 +101,7 @@
                     <!-- Valor Total da Entrada -->
                     <div class="mb-4">
                         <label for="value" class="block text-gray-700 text-sm font-bold mb-2">
-                            Valor Total da Entrada
+                            Valor Total da Entrada <span class="text-red-500">*</span>
                         </label>
                         <input type="number" step="0.01" name="value" id="value" value="{{ old('value') }}"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
@@ -115,7 +118,7 @@
 
                 <div class="flex items-center justify-between mt-6">
                     <button type="submit"
-                        class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        class="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                         Cadastrar Entrada
                     </button>
                     <a href="{{ route('entries.index') }}"
@@ -132,17 +135,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             let productIndex = 0;
             const products = @json($products ?? []); // Garante que products será um array mesmo se $products for null
-            // const entryTypeEl = document.getElementById('entry_type');
-            // const invoiceFieldEl = document.getElementById('invoice_field');
-            // const invoiceInputEl = document.getElementById('invoice_number');
-            //
-            // function toggleInvoiceRequirement() {
-            //     const isPurchased = entryTypeEl.value === 'purchased';
-            //     invoiceInputEl.required = isPurchased;
-            //     invoiceFieldEl.style.display = isPurchased ? '' : 'none';
-            // }
-            // entryTypeEl.addEventListener('change', toggleInvoiceRequirement);
-            // toggleInvoiceRequirement();
 
             function addProductField() {
                 const container = document.getElementById('products-container');

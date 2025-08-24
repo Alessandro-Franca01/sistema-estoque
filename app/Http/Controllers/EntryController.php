@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\ProductEntry;
 use App\Http\Requests\EntryStoreRequest;
 use App\Http\Requests\EntryUpdateRequest;
+use Illuminate\Support\Facades\DB;
 
 class EntryController extends Controller
 {
@@ -28,7 +29,7 @@ class EntryController extends Controller
      */
     public function index()
     {
-        $entries = Entry::with(['supplier', 'products'])->latest()->paginate(10);
+        $entries = Entry::with(['supplier', 'products'])->latest()->paginate(6);
 
         return view('entries.index', compact('entries'));
     }
@@ -40,6 +41,7 @@ class EntryController extends Controller
     {
         $suppliers = Supplier::all();
         $products = Product::all();
+
         return view('entries.create', compact('suppliers', 'products'));
     }
 
@@ -55,6 +57,11 @@ class EntryController extends Controller
         if ($request->has('entry_type') == 'feeding') {
             $entryType = 'initial_entry';
         }
+
+        // TODO REMOVER ESSE COMENTARIO DEPOIS QUE RESETAR O BANCO E TESTAR
+//        if ($request->has('entry_type') != Entry::TYPE_PURCHASED) {
+//            throw new \Exception('Tipo de entrada inválido.');
+//        }
 
         $data['entry_type'] = $entryType;
         $entry = Entry::create($data);
@@ -76,6 +83,7 @@ class EntryController extends Controller
         // Prepare data for audit
         $jsonData = $request->all();
         unset($jsonData['_token']);
+        // TODO: Mesmo com a data costumizada está funcioando corretamente
         AuditHelper::logCreateCustomData($entry, $request, [], $jsonData);
 
         return redirect()->route('entries.index')->with('success', 'Entrada criada com sucesso!');
@@ -98,6 +106,7 @@ class EntryController extends Controller
         $entry->load('products');
         $suppliers = Supplier::all();
         $products = Product::all();
+
         return view('entries.edit', compact('entry', 'suppliers', 'products'));
     }
 
@@ -173,8 +182,123 @@ class EntryController extends Controller
                 }
             }
         }
-
         $entry->delete();
+
         return redirect()->route('entries.index')->with('success', 'Entrada excluída com sucesso!');
+    }
+
+    public function createReversal()
+    {
+        $entries = Entry::where('entry_type', '=', 'initial_entry')->get();
+
+        return view('entries.reversal', compact('entries'));
+    }
+
+    public function storeReversal(Request $request)
+    {
+//        dd($request->all());
+        $request->validate([
+            'entry' => 'required',
+            'observation' => 'required|string|max:3000',
+        ]);
+
+        DB::transaction(function () use ($request) {
+            $entryToReverse = Entry::findOrFail($request->entry);
+
+            // Prevenir duplo estorno
+            if ($entryToReverse->entry_type === Entry::TYPE_REVERSAL) {
+                throw new \Exception('Esta entrada já foi estornada.');
+            }
+
+            // Subtrair produtos do estoque
+            foreach ($entryToReverse->products as $product) {
+                $productModel = Product::find($product->id);
+                if ($productModel) {
+                    $productModel->decrement('quantity', $product->pivot->quantity);
+                }
+            }
+
+            // Marcar a entrada como estornada e salvar o motivo
+            $entryToReverse->update([
+                'entry_type' => Entry::TYPE_REVERSAL,
+                'observation' => $entryToReverse->observation,
+            ]);
+
+            // TODO: NAO ESTA SALVVANDO OS VALORES ANTIGOS
+            AuditHelper::logUpdate($entryToReverse, ['entry_type', 'observation'], $request);
+        });
+
+        return redirect()->route('entries.index')->with('success', 'Entrada estornada com sucesso!');
+    }
+
+    public function createFeeding()
+    {
+        $suppliers = Supplier::all();
+        $products = Product::WHERE('quantity', '=', 0)->get();
+
+        return view('entries.feeding', compact('suppliers', 'products'));
+    }
+
+    /**
+     * Store a newly created feeding type entry in storage.
+     *
+     * @param  \App\Http\Requests\EntryStoreRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function storeFeeding(EntryStoreRequest $request)
+    {
+        dd($request->all());
+        $data = $request->validated();
+
+        if ($request->has('entry_type') != Entry::TYPE_FEEDING) {
+            throw new \Exception('Tipo de entrada inválido.');
+        }
+
+        // Impedir alimentação duplicada para o mesmo produto
+        // 1) Normaliza a lista de produtos do request
+        $requestedProductIds = collect($request->products ?? [])
+            ->pluck('product_id')
+            ->filter()
+            ->map(fn($id) => (int) $id)
+            ->values();
+//        dd($requestedProductIds);
+        // 2) Verifica duplicados dentro do próprio request
+        $duplicatesInRequest = $requestedProductIds->duplicates()->unique()->values();
+        if ($duplicatesInRequest->isNotEmpty()) {
+            $duplicateProducts = Product::whereIn('id', $duplicatesInRequest)->pluck('name')->toArray();
+            return back()
+                ->withErrors(['products' => 'Há produtos repetidos na lista: ' . implode(', ', $duplicateProducts)])
+                ->withInput();
+        }
+        // 3) Add vallidation to check if the product not have any item in stock
+        $products = Product::Query()->whereNotIn('id', $requestedProductIds)->where('quantity', '>', 0)->get();
+//        dd($products);
+        $entry = DB::transaction(function () use ($data, $request) {
+            $entry = Entry::create($data);
+
+            foreach ($request->products as $productData) {
+                $entry->products()->attach($productData['product_id'], [
+                    'entry_id' => $entry->id,
+                    'batch_item' => $productData['batch_item'] ?? null,
+                    'quantity' => $productData['quantity'],
+                    'unit_cost' => $productData['unit_cost'],
+                    'total_cost' => $productData['quantity'] * $productData['unit_cost'],
+                    'feeding_flag' => true,
+                ]);
+
+                $product = Product::find($productData['product_id']);
+                if ($product) {
+                    $product->increment('quantity', $productData['quantity']);
+                }
+            }
+
+            // Prepare data for audit
+            $jsonData = $request->all();
+            unset($jsonData['_token']);
+            AuditHelper::logCreateCustomData($entry, $request, [], $jsonData);
+//            return $entry;
+        });
+
+        return redirect()->route('entries.index')->with('success', 'Entrada tipo alimentação criada com sucesso!');
     }
 }

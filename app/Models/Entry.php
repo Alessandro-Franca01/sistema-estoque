@@ -13,7 +13,6 @@ class Entry extends Model
         'supplier_id',
         'entry_date',
         'observation',
-        'is_existing',
         'invoice_number',
         'contract_number',
         'batch_number',
@@ -27,7 +26,6 @@ class Entry extends Model
     const TYPE_REVERSAL = 'reversal';
 
     protected $casts = [
-        'is_existing' => 'boolean',
         'entry_date' => 'datetime',
         'value' => 'decimal:2',
     ];

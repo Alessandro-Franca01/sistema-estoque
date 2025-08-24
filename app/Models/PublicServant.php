@@ -10,7 +10,6 @@ class PublicServant extends Model
         'name',
         'registration',
         'cpf',
-
         'email',
         'phone',
         'department',

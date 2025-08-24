@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('calls', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['whatssap', 'conectar_cabedelo', 'personally', 'phone', 'other'])->default('conectar_cabedelo');
-            $table->string('service_order')->nullable();
-            $table->string('connect_code')->nullable();
+            $table->string('service_order', '30')->nullable();
+            $table->string('connect_code', '20')->nullable();
             $table->string('phone')->nullable();
-            $table->string('caller_name')->nullable();
+            $table->string('applicant')->nullable();
             $table->text('destination');
             $table->string('cep', 8)->nullable();
             $table->string('complement')->nullable();
             $table->text('observation')->nullable();
-            $table->foreignId('output_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('output_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

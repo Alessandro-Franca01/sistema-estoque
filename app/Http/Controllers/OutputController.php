@@ -38,9 +38,6 @@ class OutputController extends Controller
 
         $output = Output::create($request->only([
             'output_date',
-//            'call_type',
-//            'caller_name',
-//            'destination',
             'public_servant_id',
         ]));
 
@@ -81,7 +78,7 @@ class OutputController extends Controller
         $request->validate([
             'output_date' => 'required|date',
             'call_type' => 'required|string',
-            'caller_name' => 'nullable|string|max:255',
+            'applicant' => 'nullable|string|max:255',
             'destination' => 'nullable|string',
             'public_servant_id' => 'required|exists:public_servants,id',
             'products' => 'required|array',
@@ -92,7 +89,7 @@ class OutputController extends Controller
         $output->update($request->only([
             'output_date',
             'call_type',
-            'caller_name',
+            'applicant',
             'destination',
             'public_servant_id',
         ]));
@@ -112,12 +109,14 @@ class OutputController extends Controller
         return redirect()->route('outputs.index')->with('success', 'Saída excluída com sucesso.');
     }
 
-    // Step 1: Implement the finish method
-    // TODO: Testando com somente um produto
+
     public function finish(Request $request, Output $output)
     {
-        // Step 1: Validate the incoming request for product updates
-        // TODO: Melhorar as validações e add uma Segunda camada
+        if ($output->is_finished) {
+
+            return redirect()->route('outputs.index')->with('error', 'Saída ja finalizada.');
+        }
+
         $request->validate([
             'products' => 'required|array',
             'products.*.id' => 'required|exists:products,id',
@@ -127,7 +126,6 @@ class OutputController extends Controller
 
         // Use a database transaction to ensure atomicity
         DB::transaction(function () use ($request, $output) {
-            // Step 2: Load the pivot data for the output's products
             $output->load('products');
 
             foreach ($request->products as $productData) {
@@ -135,37 +133,29 @@ class OutputController extends Controller
                 $quantityUsed = $productData['quantity_used'];
                 $quantityReturned = $productData['quantity_returned'];
 
-                // Find the pivot record for the current product
                 $pivot = $output->products->where('id', $productId)->first()->pivot;
 
-                // Step 3: Update the ProductOutput pivot table
                 $pivot->quantity_used = $quantityUsed;
                 $pivot->quantity_returned = $quantityReturned;
                 $pivot->is_finished = true; // Mark as finished
                 $pivot->save();
 
-                // Step 4: Update the actual product's stock quantity
                 $product = Product::find($productId);
                 $oldProduct = $product;
                 if (!empty($product) && ($product->quantity >= $quantityUsed)) {
-                    // Subtract only the quantity used from the product's stock
                     $product->quantity -= $quantityUsed;
                     $product->save();
 
                     AuditHelper::logUpdate($oldProduct, $product->toArray(), $request);
                 }
             }
-
-            // Step 5: Update the Output status to completed
             $oldOutput = $output;
             $output->status = Output::STATUS_COMPLETED;
             $output->save();
 
-            // Step 6: Prepare data for audit
             AuditHelper::logUpdateCustomData($oldOutput, $output->toArray(), $request, [], $oldOutput->toArray());
         });
 
-        // Step 7: Redirect with a success message
         return redirect()->route('outputs.index')->with('success', 'Saída finalizada e estoque atualizado com sucesso.');
     }
 }

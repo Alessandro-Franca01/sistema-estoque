@@ -105,7 +105,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $call->caller_name }}</div>
+                                    <div class="text-sm font-medium text-gray-900">{{ $call->applicant }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">{{ formatPhone($call->phone) }}</div>

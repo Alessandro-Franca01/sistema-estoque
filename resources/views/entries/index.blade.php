@@ -49,14 +49,21 @@
                                             <td class="px-4 py-2">
                                                 <p class="text-gray-900 whitespace-no-wrap">{{ $entry->supplier->trade_name }}</p>
                                             </td>
-                                            <td class="px-4 py-2">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm">
                                                 @php
                                                     $types = ['purchased' => 'Compra', 'feeding' => 'Alimentação', 'reversal' => 'Estorno', 'initial_entry' => 'Entrada Inicial'];
+                                                    $classes =
+                                                        [
+                                                            'purchased' => '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Compra</span>',
+                                                            'feeding' => '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">Alimentação</span>',
+                                                            'reversal' => '<span class="px-6 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Estorno</span>',
+                                                            'initial_entry' => '<span class="px-6 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Entrada Inicial</span>'
+                                                        ];
                                                 @endphp
-                                                <p class="text-gray-900 whitespace-no-wrap">{{ $types[$entry->entry_type] ?? $entry->entry_type }}</p>
+                                                <span class="{{ $classes[$entry->entry_type] ?? $classes[$entry->entry_type] }}">{{ $types[$entry->entry_type] ?? $types[$entry->entry_type] }}</span>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <p class="text-gray-900 whitespace-no-wrap">{{ $entry->entry_date }}</p>
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $entry->entry_date->format('d/m/Y') }}</p>
                                             </td>
                                             <td class="px-4 py-2">
                                                 <p class="text-gray-900 whitespace-no-wrap">{{ $entry->invoice_number }}</p>

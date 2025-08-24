@@ -83,13 +83,6 @@
                                 <x-text-input id="value" class="block mt-1 w-full" type="number" step="0.01" name="value" :value="old('value', $entry->value)" />
                                 <x-input-error :messages="$errors->get('value')" class="mt-2" />
                             </div>
-
-                            <!-- Is Existing -->
-                            <div class="flex items-center">
-                                <input type="checkbox" id="is_existing" name="is_existing" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" {{ old('is_existing', $entry->is_existing) ? 'checked' : '' }}>
-                                <x-input-label for="is_existing" class="inline ml-2" :value="__('É Existente?')" />
-                                <x-input-error :messages="$errors->get('is_existing')" class="mt-2" />
-                            </div>
                         </div>
                     </div>
 
