@@ -147,6 +147,33 @@
             // entryTypeEl.addEventListener('change', toggleInvoiceRequirement);
             // toggleInvoiceRequirement();
 
+            // Sincroniza opções desabilitadas entre todos os selects de produtos
+            function syncDisabledOptions() {
+                const selects = Array.from(document.querySelectorAll('#products-container select[name^="products"][name$="[product_id]"]'));
+                const chosen = new Set(selects.map(s => s.value).filter(Boolean));
+                selects.forEach(s => {
+                    Array.from(s.options).forEach(opt => {
+                        if (!opt.value) return;
+                        opt.disabled = chosen.has(opt.value) && s.value !== opt.value;
+                    });
+                });
+            }
+
+            // Anexa validação de duplicidade a um select específico
+            function attachSelectDedup(selectEl) {
+                selectEl.addEventListener('change', () => {
+                    const value = selectEl.value;
+                    if (!value) { syncDisabledOptions(); return; }
+                    const others = Array.from(document.querySelectorAll('#products-container select[name^="products"][name$="[product_id]"]')).filter(s => s !== selectEl);
+                    const duplicate = others.some(s => s.value === value);
+                    if (duplicate) {
+                        alert('Este produto já foi adicionado. Selecione outro.');
+                        selectEl.value = '';
+                    }
+                    syncDisabledOptions();
+                });
+            }
+
             function addProductField() {
                 const container = document.getElementById('products-container');
                 const productDiv = document.createElement('div');
@@ -182,7 +209,13 @@
                 // Adiciona evento de clique para remover o produto
                 productDiv.querySelector('.remove-product').addEventListener('click', function() {
                     productDiv.remove();
+                    syncDisabledOptions();
                 });
+
+                // Anexa validação ao select recém-criado e sincroniza opções
+                const selectEl = productDiv.querySelector(`select[name="products[${productIndex}][product_id]"]`);
+                attachSelectDedup(selectEl);
+                syncDisabledOptions();
 
                 productIndex++;
             }
@@ -192,6 +225,17 @@
 
             // Adiciona um campo de produto por padrão quando a página carrega
             addProductField();
+
+            // Impede envio do formulário se houver produtos duplicados
+            document.querySelector('form').addEventListener('submit', function(e) {
+                const selects = Array.from(document.querySelectorAll('#products-container select[name^="products"][name$="[product_id]"]'));
+                const values = selects.map(s => s.value).filter(Boolean);
+                const hasDup = new Set(values).size !== values.length;
+                if (hasDup) {
+                    e.preventDefault();
+                    alert('Há produtos duplicados na lista. Remova os duplicados antes de enviar.');
+                }
+            });
         });
     </script>
 
