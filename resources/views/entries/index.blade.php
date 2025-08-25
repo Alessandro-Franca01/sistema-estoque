@@ -47,18 +47,16 @@
                                     @foreach ($entries as $entry)
                                         <tr>
                                             <td class="px-4 py-2">
-                                                <p class="text-gray-900 whitespace-no-wrap">{{ $entry->supplier->trade_name }}</p>
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $entry->supplier->trade_name ?? 'Sem Fornecedor' }}</p>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                                 @php
-                                                    $types = ['purchased' => 'Compra', 'feeding' => 'Alimentação', 'reversal' => 'Estorno', 'initial_entry' => 'Entrada Inicial'];
+                                                    $types = ['purchased' => 'Compra', 'feeding' => 'Alimentação', 'reversal' => 'Estorno'];
                                                     $classes =
                                                         [
-                                                            'purchased' => '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Compra</span>',
-                                                            'feeding' => '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">Alimentação</span>',
-                                                            'reversal' => '<span class="px-6 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Estorno</span>',
-                                                            'initial_entry' => '<span class="px-6 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Entrada Inicial</span>'
-                                                        ];
+                                                            'purchased' => '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-300">Compra</span>',
+                                                            'feeding' => '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-300">Alimentação</span>',
+                                                            'reversal' => '<span class="px-6 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-300">Estorno</span>',                                                        ];
                                                 @endphp
                                                 <span class="{{ $classes[$entry->entry_type] ?? $classes[$entry->entry_type] }}">{{ $types[$entry->entry_type] ?? $types[$entry->entry_type] }}</span>
                                             </td>
@@ -66,7 +64,7 @@
                                                 <p class="text-gray-900 whitespace-no-wrap">{{ $entry->entry_date->format('d/m/Y') }}</p>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <p class="text-gray-900 whitespace-no-wrap">{{ $entry->invoice_number }}</p>
+                                                <p class="text-gray-900 whitespace-no-wrap">{{ $entry->invoice_number ?? 'Sem Nota Fiscal' }}</p>
                                             </td>
                                             <td class="px-4 py-2">
                                                 @if($entry->observation)
@@ -75,7 +73,7 @@
                                                         Visualizar
                                                     </button>
                                                 @else
-                                                    <p class="text-gray-900 whitespace-no-wrap">-</p>
+                                                    <p class="text-gray-900 whitespace-no-wrap"> Sem Observação</p>
                                                 @endif
                                             </td>
                                             <td class="px-4 py-2 text-center">

@@ -24,7 +24,7 @@ class EntryStoreRequest extends FormRequest
         return [
             'entry_type' => ['required', 'in:purchased'],
             'supplier_id' => ['required', 'exists:suppliers,id'],
-            'entry_date' => ['required', 'date'],
+            'entry_date' => ['required', 'date', 'before_or_equal:today'],
             'observation' => ['nullable', 'string', 'max:255'],
             'invoice_number' => ['required_if:entry_type,purchased', 'string', 'max:30'],
             'contract_number' => ['nullable', 'string', 'max:20'],
@@ -47,6 +47,7 @@ class EntryStoreRequest extends FormRequest
             'supplier_id.exists' => 'O fornecedor selecionado não é válido.',
             'entry_date.required' => 'A data de entrada é obrigatória.',
             'entry_date.date' => 'A data de entrada deve ser uma data válida.',
+            'entry_date.before_or_equal' => 'A data de entrada não pode ser maior que a data atual.',
             'observation.string' => 'A observação deve ser um texto.',
             'observation.max' => 'A observação não pode ter mais de :max caracteres.',
             'invoice_number.required_if' => 'O número da nota fiscal é obrigatório para entradas do tipo compra.',

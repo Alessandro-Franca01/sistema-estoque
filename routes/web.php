@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
         Route::get('entries/reversal/create', [EntryController::class, 'createReversal'])->name('entries.reversal.create');
         Route::post('entries/reversal', [EntryController::class, 'storeReversal'])->name('entries.reversal');
         Route::get('entries/feeding/create', [EntryController::class, 'createFeeding'])->name('entries.feeding.create');
-        Route::post('entries/feeding', [EntryController::class, 'storeReversal'])->name('entries.feeding');
+        Route::post('entries/feeding', [EntryController::class, 'storeFeeding'])->name('entries.feeding');
     });
 
     // Rotas exclusivas do almoxarife

@@ -173,8 +173,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="products_${productIndex}_unit_cost" class="block text-gray-700 text-sm font-bold mb-2">Custo Unitário <span class="text-red-500">*</span></label>
-                        <input type="number" step="0.01" name="products[${productIndex}][unit_cost]" id="products_${productIndex}_unit_cost" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <label for="products_${productIndex}_unit_cost" class="block text-gray-700 text-sm font-bold mb-2">Custo Unitário</label>
+                        <input type="number" step="0.01" name="products[${productIndex}][unit_cost]" id="products_${productIndex}_unit_cost" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     </div>
                 `;
                 container.appendChild(productDiv);
