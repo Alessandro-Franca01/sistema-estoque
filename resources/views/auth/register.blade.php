@@ -5,9 +5,9 @@
 
     <form method="POST" action="{{ route('register') }}" class="space-y-6">
         @csrf
-    
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- COLUNA 1 - Informações Pessoais -->
+            <!-- COLUNA 1 - Informações Pessoais teste12345 -->
             <div class="px-2 mb-4">
                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 border-b pb-2 mb-4">
                      Pessoal

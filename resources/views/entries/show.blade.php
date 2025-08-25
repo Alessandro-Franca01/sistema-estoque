@@ -47,12 +47,13 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach ($entry->products as $product)
+
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $product->name }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $product->pivot->batch_item ?? 'N/A' }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">{{ $product->pivot->quantity }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($product->pivot->unit_cost, 2, ',', '.') }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($product->pivot->total_cost, 2, ',', '.') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $product->pivot->unit_cost == 0 ? 'Não Informado' : number_format($product->pivot->unit_cost, 2, ',', '.') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $product->pivot->total_costt == 0 ? 'Não Informado' : number_format($product->pivot->total_cost, 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

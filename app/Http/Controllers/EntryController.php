@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\AuditHelper;
+use App\Http\Requests\Entry\StoreEntryFeedingRequest;
 use App\Models\Entry;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -50,20 +51,13 @@ class EntryController extends Controller
      */
     public function store(EntryStoreRequest $request)
     {
+        dd($request->all());
         $data = $request->validated();
 
-        // TODO REMOVER ESSA GAMBI DEPOIS que resetar o banco
-        $entryType = Entry::TYPE_PURCHASED;
-        if ($request->has('entry_type') == 'feeding') {
-            $entryType = 'initial_entry';
-        }
-
         // TODO REMOVER ESSE COMENTARIO DEPOIS QUE RESETAR O BANCO E TESTAR
-//        if ($request->has('entry_type') != Entry::TYPE_PURCHASED) {
-//            throw new \Exception('Tipo de entrada inválido.');
-//        }
-
-        $data['entry_type'] = $entryType;
+        if ($request->has('entry_type') != Entry::TYPE_PURCHASED) {
+            throw new \Exception('Tipo de entrada inválido.');
+        }
         $entry = Entry::create($data);
 
         foreach ($request->products as $productData) {
@@ -83,7 +77,6 @@ class EntryController extends Controller
         // Prepare data for audit
         $jsonData = $request->all();
         unset($jsonData['_token']);
-        // TODO: Mesmo com a data costumizada está funcioando corretamente
         AuditHelper::logCreateCustomData($entry, $request, [], $jsonData);
 
         return redirect()->route('entries.index')->with('success', 'Entrada criada com sucesso!');
@@ -189,7 +182,7 @@ class EntryController extends Controller
 
     public function createReversal()
     {
-        $entries = Entry::where('entry_type', '=', 'initial_entry')->get();
+        $entries = Entry::where('entry_type', '=', 'purchased')->get();
 
         return view('entries.reversal', compact('entries'));
     }
@@ -245,14 +238,13 @@ class EntryController extends Controller
      * @param  \App\Http\Requests\EntryStoreRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeFeeding(EntryStoreRequest $request)
+    public function storeFeeding(StoreEntryFeedingRequest $request)
     {
-        dd($request->all());
-        $data = $request->validated();
-
+//        dd($request->all());
         if ($request->has('entry_type') != Entry::TYPE_FEEDING) {
             throw new \Exception('Tipo de entrada inválido.');
         }
+        $data = $request->validated();
 
         // Impedir alimentação duplicada para o mesmo produto
         // 1) Normaliza a lista de produtos do request
@@ -261,9 +253,10 @@ class EntryController extends Controller
             ->filter()
             ->map(fn($id) => (int) $id)
             ->values();
-//        dd($requestedProductIds);
-        // 2) Verifica duplicados dentro do próprio request
+//        dd('step 1', $requestedProductIds);
+        // 2) Verifica duplicados dentro do próprio request TODO: (Add validation for duplicates at view form)
         $duplicatesInRequest = $requestedProductIds->duplicates()->unique()->values();
+//        dd('step 1', $duplicatesInRequest);
         if ($duplicatesInRequest->isNotEmpty()) {
             $duplicateProducts = Product::whereIn('id', $duplicatesInRequest)->pluck('name')->toArray();
             return back()
@@ -277,13 +270,16 @@ class EntryController extends Controller
             $entry = Entry::create($data);
 
             foreach ($request->products as $productData) {
+                $productData['unit_cost'] = empty($productData['unit_cost']) ? 0 : $productData['unit_cost'];
+                $productData['quantity'] = empty($productData['quantity']) ? 0 : $productData['quantity'];
+
                 $entry->products()->attach($productData['product_id'], [
                     'entry_id' => $entry->id,
                     'batch_item' => $productData['batch_item'] ?? null,
                     'quantity' => $productData['quantity'],
                     'unit_cost' => $productData['unit_cost'],
                     'total_cost' => $productData['quantity'] * $productData['unit_cost'],
-                    'feeding_flag' => true,
+                    'created_at' => $entry->created_at,
                 ]);
 
                 $product = Product::find($productData['product_id']);
@@ -296,7 +292,6 @@ class EntryController extends Controller
             $jsonData = $request->all();
             unset($jsonData['_token']);
             AuditHelper::logCreateCustomData($entry, $request, [], $jsonData);
-//            return $entry;
         });
 
         return redirect()->route('entries.index')->with('success', 'Entrada tipo alimentação criada com sucesso!');
