@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WelcomeNewUser;
 use App\Models\PublicServant;
 use App\Models\Role;
 use App\Models\User;
@@ -10,6 +11,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Illuminate\Validation\Rules;
 
@@ -42,26 +45,20 @@ class UserController
             'position' => ['nullable', 'string', 'max:255'],
             'job_function' => ['required', 'string', 'max:255'],
             'role' => ['required', 'string', 'max:100'],
-
         ]);
-        $role = Role::where('name', strtoupper($request->role))->first();
 
+        // TODO 1: USAR TRANSACTION PARA GARANTIR QUE TODOS OS REGISTROS SEJAM FEITOS OU NENHUM SEJA FEITO
+        $role = Role::where('name', strtoupper($request->role))->first();
+        $temporaryPassword = Str::random(12);
         $userNew = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($temporaryPassword),
             'role_id' => $role->id,
         ]);
 
-        // Se tiver configurado no sistema então vai setar assinatua vai ser do proprio usuario criado teste12345
-        if(!config('custom.show_link_user_create')){
-            $assigned_by = auth()->user()->id;
-        }else{
-            $assigned_by = $userNew->id;
-        }
-
         $userNew->roles()->attach($role->id, [
-            'assigned_by' => $assigned_by,
+            'assigned_by' => auth()->user()->id,
             'assigned_at' => now(),
             'user_id' => $userNew->id,
         ]);
@@ -78,13 +75,29 @@ class UserController
             'active' => true,
             'user_id' => $userNew->id,
         ]);
+        // TODO 2: IMPLEMENTAR A AUDITORIA NESSE FLUXO
 
+        // TODO 3: FAZER UM TESTE EM PRODUÇÃO PARA VERIFICAR SE O EVENTO É EXECUTADO COM O JOB E QUEQUE
         event(new Registered($userNew));
 
-        if (!Auth::check()){
-            Auth::login($userNew);
+        // Enviar email de boas-vindas com credenciais
+        try {
+            Mail::to($user->email)->send(new WelcomeNewUser($user, $temporaryPassword));
+        } catch (\Exception $e) {
+            // Log do erro, mas não interrompe o processo de registro
+            \Log::error('Erro ao enviar email de boas-vindas: ' . $e->getMessage());
         }
 
         return redirect(route('dashboard', absolute: false));
+    }
+
+    public function formToSendEmail()
+    {
+        return view('users.send_email');
+    }
+
+    public function sendEmail()
+    {
+
     }
 }
