@@ -226,7 +226,7 @@
                                 </svg>
                             </div>
                             <div class="flex-grow min-w-0">
-                                <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Servidores</h3>
+                                <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Servidores / Usuários</h3>
                                 <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncate">Realize novos cadastros no sistema</p>
                             </div>
                         </div>
@@ -235,10 +235,10 @@
                                 Ver servidores
                             </a>
                             <a href="{{ route('public_servants.create') }}" class="text-xs sm:text-sm font-medium bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                                </svg>
                                 Novo Servidor
+                            </a>
+                            <a href="{{ route('users.create') }}" class="text-xs sm:text-sm font-medium bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                                Novo Usuário
                             </a>
                             {{--                        <div class="flex-1">--}}
                             {{--                            <a href="{{ route('users.create') }}" class="w-full text-xs sm:text-sm font-medium bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-3 rounded-lg transition-colors flex items-center justify-center">--}}

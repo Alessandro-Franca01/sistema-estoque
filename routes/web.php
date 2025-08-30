@@ -20,10 +20,6 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// TODO: Assinar esses rotas depois quando for implementar o cadastro de usuarios por email
-Route::get('/user/create', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
-Route::post('/user/store', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->middleware('role:administrativo')->name('profile.update');
@@ -46,7 +42,17 @@ Route::middleware('auth')->group(function () {
             ->name('categories.toggle-status');
         Route::patch('products/{products}/toggle-status', [\App\Http\Controllers\ProductController::class, 'toggleStatus'])
             ->name('products.toggle-status');
+
+        // Testando rotas de usuarios para administrador
         Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+        // TODO: Assinar esses rotas depois quando for implementar o cadastro de usuarios por email
+        Route::get('/user/create', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
+        Route::post('/user/store', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
+
+        // Criando o envido de email para o usuario fazer proprio cadastro:
+        Route::get('/user/send-email', [\App\Http\Controllers\UserController::class, 'formToSendEmail'])->name('users.send-email');
+        Route::post('/user/send-email', [\App\Http\Controllers\UserController::class, 'sendEmail'])->name('users.send-email');
+
         // News Routes Empties
         Route::get('entries/reversal/create', [EntryController::class, 'createReversal'])->name('entries.reversal.create');
         Route::post('entries/reversal', [EntryController::class, 'storeReversal'])->name('entries.reversal');

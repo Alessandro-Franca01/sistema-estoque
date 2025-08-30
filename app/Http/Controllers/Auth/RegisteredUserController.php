@@ -13,6 +13,9 @@ use App\Models\PublicServant;
 use App\Models\Role;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeNewUser;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -47,8 +50,10 @@ class RegisteredUserController extends Controller
             'position' => ['nullable', 'string', 'max:255'],
             'job_function' => ['required', 'string', 'max:255'],
             'role' => ['required', 'string', 'max:100'],
-
         ]);
+
+        // Gerar senha temporária para o usuário
+        $temporaryPassword = Str::random(12);
         $role = Role::where('name', strtoupper($request->role))->first();
 
         $user = User::create([
@@ -87,10 +92,18 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        // Enviar email de boas-vindas com credenciais
+        try {
+            Mail::to($user->email)->send(new WelcomeNewUser($user, $temporaryPassword));
+        } catch (\Exception $e) {
+            // Log do erro, mas não interrompe o processo de registro
+            \Log::error('Erro ao enviar email de boas-vindas: ' . $e->getMessage());
+        }
+
         if (!Auth::check()){
             Auth::login($user);
         }
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('dashboard', absolute: false))->with('success', 'Usuário cadastrado com sucesso! Um email com as credenciais foi enviado.');
     }
 }
