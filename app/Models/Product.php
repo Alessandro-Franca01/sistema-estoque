@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,8 +35,14 @@ class Product extends Model
     {
         parent::boot();
 
-        // static::creating(function ($product) {
-        // });
+        static::created(function (Product $product) {
+            // Gera o código apenas se não tiver sido definido manualmente
+            if (empty($product->code)) {
+                $product->code = self::formatGeneratedCode($product);
+                // Salva sem disparar eventos
+                $product->saveQuietly();
+            }
+        });
 
         // static::updating(function ($product) {
         // });
@@ -84,5 +91,18 @@ class Product extends Model
     public function scopeInStock($query)
     {
         return $query->where('quantity', '>', 0);
+    }
+
+    private static function formatGeneratedCode(Product $product): string
+    {
+        // Obtém base do prefixo: categoria ou nome do produto
+        $base = optional($product->category)->name ?: $product->name;
+        $baseCaracters = substr($base, 0, 3);
+        // Normaliza: slug sem separadores e em maiúsculas
+        $prefix = Str::upper(Str::slug((string) $baseCaracters, ''));
+        // Formata o ID do produto com zeros à esquerda até ter 4 dígitos
+        $formattedId = str_pad($product->id, 4, '0', STR_PAD_LEFT);
+
+        return sprintf('%s%s', $prefix, $formattedId);
     }
 }

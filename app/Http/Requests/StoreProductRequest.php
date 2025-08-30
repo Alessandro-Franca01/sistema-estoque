@@ -22,7 +22,7 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'code' => 'required|string|max:10|unique:products,code',
+//            'code' => 'required|string|max:10|unique:products,code',
             'description' => 'nullable|string',
             'meansurement_unit' => 'nullable',
             'custom_meansurement_unit' => 'nullable|string|max:50',
@@ -40,9 +40,9 @@ class StoreProductRequest extends FormRequest
         return [
             'name.required' => 'O nome do produto é obrigatório.',
             'name.max' => 'O nome do produto não pode ter mais de 255 caracteres.',
-            'code.required' => 'O código do produto é obrigatório.',
-            'code.max' => 'O código do produto não pode ter mais de 10 caracteres.',
-            'code.unique' => 'Já existe um produto com este código.',
+//            'code.required' => 'O código do produto é obrigatório.',
+//            'code.max' => 'O código do produto não pode ter mais de 10 caracteres.',
+//            'code.unique' => 'Já existe um produto com este código.',
             'meansurement_unit_id.exists' => 'A unidade de medida selecionada não existe.',
             'custom_meansurement_unit.max' => 'A unidade de medida personalizada não pode ter mais de 50 caracteres.',
             'category_id.required' => 'A categoria é obrigatória.',

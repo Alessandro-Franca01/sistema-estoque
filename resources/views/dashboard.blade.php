@@ -251,6 +251,36 @@
                         </div>
                     </div>
                 @endif
+
+                <!-- Card Usuários (Apenas para administradores) -->
+                @if($canAdmin)
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
+                        <div class="p-4 sm:p-6 flex items-start flex-grow">
+                            <div class="bg-cyan-100 dark:bg-cyan-900 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-cyan-600 dark:text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <div class="flex-grow min-w-0">
+                                <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Usuários</h3>
+                                <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncate">Gerencie os usuários do sistema</p>
+                            </div>
+                        </div>
+                        <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
+                            <a href="{{ route('users.index') }}" class="text-xs sm:text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:text-cyan-800 dark:hover:text-cyan-300 transition-colors whitespace-nowrap">
+                                Ver todos
+                            </a>
+                            <div class="flex items-center space-x-2">
+                                <a href="{{ route('users.create') }}" class="text-xs sm:text-sm font-medium bg-cyan-500 hover:bg-cyan-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                                    Novo
+                                </a>
+                                <a href="{{ route('users.form.send.email') }}" class="text-xs sm:text-sm font-medium bg-cyan-500 hover:bg-cyan-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                                    Email de Cadastro
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

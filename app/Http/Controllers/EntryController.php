@@ -51,7 +51,6 @@ class EntryController extends Controller
      */
     public function store(EntryStoreRequest $request)
     {
-        dd($request->all());
         $data = $request->validated();
 
         // TODO REMOVER ESSE COMENTARIO DEPOIS QUE RESETAR O BANCO E TESTAR

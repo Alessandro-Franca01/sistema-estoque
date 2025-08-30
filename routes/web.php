@@ -20,7 +20,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// TODO: Assinar esses rotas depois quando for implementar o cadastro de usuarios por email
+// TODO: Assinar esses rotas depois quando for implementar o cadastro de usuarios por email teste12345
 Route::get('/user/create', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
 Route::post('/user/store', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
 
@@ -52,6 +52,10 @@ Route::middleware('auth')->group(function () {
         Route::post('entries/reversal', [EntryController::class, 'storeReversal'])->name('entries.reversal');
         Route::get('entries/feeding/create', [EntryController::class, 'createFeeding'])->name('entries.feeding.create');
         Route::post('entries/feeding', [EntryController::class, 'storeFeeding'])->name('entries.feeding');
+
+        // Users Routers
+        Route::get('/user/send-email', [UserController::class, 'sendEmailForm'])->name('users.form.send.email');
+        Route::post('/user/send-email', [UserController::class, 'sendEmail'])->name('users.send.email');
     });
 
     // Rotas exclusivas do almoxarife
