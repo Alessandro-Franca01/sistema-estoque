@@ -10,14 +10,16 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Illuminate\Validation\Rules;
+use App\Mail\UserRegisterMail;
 
 class UserController
 {
     public function index(): View
     {
-        $users = User::all();
+        $users = User::with(['roles'])->get();
 
         return view('users.index', compact('users'));
     }
@@ -79,6 +81,19 @@ class UserController
             'user_id' => $userNew->id,
         ]);
 
+        // Envia email de boas-vindas/registro
+        try {
+            Mail::to($userNew->email)->send(new UserRegisterMail([
+                'name' => $userNew->name,
+                'email' => $userNew->email,
+                'role' => $role->display_name ?? $role->name,
+                'registration' => $request->registration,
+            ]));
+        } catch (\Throwable $e) {
+            // Opcional: logar erro, mas não interromper o fluxo de criação
+            \Log::error('Erro ao enviar email de cadastro do usuário: '.$e->getMessage());
+        }
+
         event(new Registered($userNew));
 
         if (!Auth::check()){
@@ -86,5 +101,23 @@ class UserController
         }
 
         return redirect(route('dashboard', absolute: false));
+    }
+
+    public function sendEmailForm()
+    {
+        return view('users.send-register-email');
+    }
+
+
+    public function sendEmail(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|email',
+            'role' => 'required|string|max:20',
+        ]);
+
+        Mail::to($data['email'])->send(new UserRegisterMail($data));
+
+        return back()->with('success', 'Sua mensagem foi enviada com sucesso!');
     }
 }

@@ -10,7 +10,6 @@
             </div>
 
             <div class="p-6">
-{{--                TODO: Testar cadastro de registro --}}
                 <form action="{{ route('users.store') }}" method="POST">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -64,19 +63,6 @@
                                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('department') border-red-500 @enderror"
                                        required>
                                 @error('department')
-                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Senha -->
-                            <div>
-                                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">
-                                    Senha <span class="text-red-500">*</span>
-                                </label>
-                                <input type="password" name="password" id="password"
-                                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('password') border-red-500 @enderror"
-                                       required>
-                                @error('password')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -138,16 +124,6 @@
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-
-                            <!-- Confirmar Senha -->
-                            <div>
-                                <label for="password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">
-                                    Confirmar Senha <span class="text-red-500">*</span>
-                                </label>
-                                <input type="password" name="password_confirmation" id="password_confirmation"
-                                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                       required>
-                            </div>
                         </div>
                     </div>
 
@@ -159,7 +135,7 @@
                         <select name="role" id="role"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('role') border-red-500 @enderror" required>
                             <option value="">Selecione um perfil</option>
-                            @foreach(['ADMINISTRADOR', 'ALMOXARIFE', 'SERVIDOR', 'AUDITOR'] as $role)
+                            @foreach(['ADMINISTRADOR', 'ALMOXARIFE'] as $role)
                                 <option value="{{ $role }}" @selected(old('role') == $role)>{{ $role }}</option>
                             @endforeach
                         </select>

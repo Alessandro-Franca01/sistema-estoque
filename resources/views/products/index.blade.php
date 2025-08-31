@@ -73,24 +73,20 @@
                     <p class="text-gray-600">Nenhum produto cadastrado ainda ou encontrado com os filtros aplicados.</p>
                 @else
                     {{-- Container para a tabela com rolagem horizontal --}}
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <div x-data="{ show:false, title:'', desc:'' }" class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Código</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoria</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estoque</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    @if ($canAdmin)
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
-                                    @endif
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descrição</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach ($products as $product)
                                     <tr> {{-- Removidas as classes de 'flex flex-col' e estilizações mobile --}}
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->id }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->name }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->code }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->category->name ?? 'N/A' }}</td>
@@ -102,20 +98,33 @@
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inativo</span>
                                             @endif
                                         </td>
-                                        @if ($canAdmin)
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                                <a href="{{ route('products.edit', $product->id) }}" class="text-blue-600 hover:text-blue-900">Editar</a>
-                                                <form action="{{ route('products.toggle-status', $product->id) }}" method="POST" class="inline-block mr-3" onsubmit="return confirm('Tem certeza que deseja {{ $product->is_active ? 'desativar' : 'ativar' }} esta produto?');">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900">{{ $product->is_active ? 'Desativar' : 'Ativar' }}</button>
-                                                </form>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                            <button type="button"
+                                                    @click="title = @js($product->name); desc = @js($product->description ?? 'Sem descrição.'); show = true"
+                                                    class="text-indigo-600 hover:text-indigo-900">
+                                                Visualizar
+                                            </button>
                                         </td>
-                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+
+                        <!-- Modal de Descrição -->
+                        <div x-show="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-lg w-full">
+                                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100" x-text="title"></h3>
+                                    <button @click="show=false" class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white text-2xl leading-none">&times;</button>
+                                </div>
+                                <div class="p-4">
+                                    <p class="text-gray-700 dark:text-gray-200 whitespace-pre-line" x-text="desc"></p>
+                                </div>
+                                <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-right">
+                                    <button @click="show=false" class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mt-4">

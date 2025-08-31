@@ -47,8 +47,9 @@ class ProductController extends Controller
         $sortOrder = $request->get('sort_order', 'asc');
         $query->orderBy($sortBy, $sortOrder);
 
-        $products = $query->paginate(15);
+        $products = $query->paginate(6);
         $categories = Category::active()->get();
+
         return view('products.index', compact('products', 'categories'));
     }
 
@@ -113,7 +114,6 @@ class ProductController extends Controller
 
         if ($request->has('custom_meansurement_unit') && !empty($request->custom_meansurement_unit)) {
             $data['meansurement_unit'] = $request->custom_meansurement_unit;
-            //unset($data['meansurement_unit_id']); // Remove meansurement_unit_id if custom unit is used
         }
 
         $product->update($data);

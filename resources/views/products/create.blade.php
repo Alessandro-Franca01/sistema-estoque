@@ -97,6 +97,9 @@
                                 <option value="pc">
                                     peça
                                 </option>
+                                <option value="kg">
+                                    kilos
+                                </option>
                                 <option value="unidade">
                                 unidade
                             </option>
