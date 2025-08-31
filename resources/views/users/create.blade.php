@@ -124,7 +124,6 @@
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-
                         </div>
                     </div>
 
@@ -136,7 +135,7 @@
                         <select name="role" id="role"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('role') border-red-500 @enderror" required>
                             <option value="">Selecione um perfil</option>
-                            @foreach(['ADMINISTRADOR', 'ALMOXARIFE', 'SERVIDOR', 'AUDITOR'] as $role)
+                            @foreach(['ADMINISTRADOR', 'ALMOXARIFE'] as $role)
                                 <option value="{{ $role }}" @selected(old('role') == $role)>{{ $role }}</option>
                             @endforeach
                         </select>

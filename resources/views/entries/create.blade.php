@@ -135,6 +135,26 @@
         document.addEventListener('DOMContentLoaded', function() {
             let productIndex = 0;
             const products = @json($products ?? []); // Garante que products será um array mesmo se $products for null
+            const selectedProducts = new Set(); // Controla produtos já escolhidos
+
+            // Atualiza as opções (desabilita as já selecionadas em outros selects)
+            function updateSelectOptions() {
+                const selects = document.querySelectorAll('#products-container select[name^="products["][name$="][product_id]"]');
+                const currentSelections = new Map();
+                selects.forEach((sel) => {
+                    currentSelections.set(sel, sel.value);
+                });
+
+                selects.forEach((sel) => {
+                    const ownValue = currentSelections.get(sel);
+                    Array.from(sel.options).forEach((opt) => {
+                        if (!opt.value) return; // ignore placeholder
+                        // Desabilita se já selecionado em outro select
+                        const isSelectedElsewhere = selectedProducts.has(opt.value) && opt.value !== ownValue;
+                        opt.disabled = isSelectedElsewhere;
+                    });
+                });
+            }
 
             function addProductField() {
                 const container = document.getElementById('products-container');
@@ -170,14 +190,54 @@
 
                 // Adiciona evento de clique para remover o produto
                 productDiv.querySelector('.remove-product').addEventListener('click', function() {
+                    // Ao remover, liberar o produto selecionado deste bloco
+                    const select = productDiv.querySelector('select[name^="products["][name$="][product_id]"]');
+                    const prev = select?.dataset?.prev || '';
+                    if (prev) {
+                        selectedProducts.delete(prev);
+                    }
+                    updateSelectOptions();
                     productDiv.remove();
                 });
+
+                // Lidar com mudança de seleção para evitar duplicidade
+                const selectEl = productDiv.querySelector(`select#products_${productIndex}_product_id`);
+                selectEl.dataset.prev = '';
+                selectEl.addEventListener('change', (e) => {
+                    const sel = e.currentTarget;
+                    const previous = sel.dataset.prev || '';
+                    const current = sel.value;
+
+                    // Remover o anterior do conjunto
+                    if (previous) {
+                        selectedProducts.delete(previous);
+                    }
+
+                    // Se já estiver selecionado em outro lugar, bloquear e restaurar
+                    if (current && selectedProducts.has(current)) {
+                        alert('Este produto já foi selecionado em outra linha. Escolha um produto diferente.');
+                        sel.value = '';
+                        sel.dataset.prev = '';
+                    } else {
+                        if (current) {
+                            selectedProducts.add(current);
+                        }
+                        sel.dataset.prev = current;
+                    }
+                    updateSelectOptions();
+                });
+
+                // Atualiza opções ao adicionar um novo bloco
+                updateSelectOptions();
 
                 productIndex++;
             }
 
             // Adiciona evento de clique para o botão "Adicionar Produto"
             document.getElementById('add-product').addEventListener('click', addProductField);
+
+            // Disponibiliza a função globalmente para o onclick inline existente
+            window.addProductField = addProductField;
 
             // Adiciona um campo de produto por padrão quando a página carrega
             addProductField();

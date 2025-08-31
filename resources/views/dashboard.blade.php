@@ -20,30 +20,30 @@
             <!-- Grid de Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 <!-- Card Categorias -->
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
-                        <div class="p-4 sm:p-6 flex items-start flex-grow">
-                            <div class="bg-green-100 dark:bg-green-900 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-green-600 dark:text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                                </svg>
-                            </div>
-                            <div class="flex-grow min-w-0">
-                                <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Categorias</h3>
-                                <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncate">Gerencie suas categorias</p>
-                            </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
+                    <div class="p-4 sm:p-6 flex items-start flex-grow">
+                        <div class="bg-green-100 dark:bg-green-900 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-green-600 dark:text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                            </svg>
                         </div>
-                        <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
-                            <a href="{{ route('categories.index') }}" class="text-xs sm:text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 transition-colors whitespace-nowrap">
-                                Ver todas
-                            </a>
-                            <a href="{{ route('categories.create') }}" class="text-xs sm:text-sm font-medium bg-green-500 hover:bg-green-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                                </svg>
-                                Nova categoria
-                            </a>
+                        <div class="flex-grow min-w-0">
+                            <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Categorias</h3>
+                            <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncate">Gerencie suas categorias</p>
                         </div>
                     </div>
+                    <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
+                        <a href="{{ route('categories.index') }}" class="text-xs sm:text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 transition-colors whitespace-nowrap">
+                            Ver todas
+                        </a>
+                        <a href="{{ route('categories.create') }}" class="text-xs sm:text-sm font-medium bg-green-500 hover:bg-green-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Nova categoria
+                        </a>
+                    </div>
+                </div>
 
                 <!-- Card Produtos -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">
@@ -142,9 +142,6 @@
                     </div>
                     <div class="px-6 pb-4 flex justify-between items-center">
                         <a href="{{ route('entries.index') }}" class="text-sm font-medium text-amber-600 hover:text-amber-800 transition-colors flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
-                            </svg>
                             Histórico
                         </a>
                         @if($canAdmin)
@@ -179,7 +176,7 @@
                     </div>
                     <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
                         <a href="{{ route('outputs.index') }}" class="text-xs sm:text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors whitespace-nowrap">
-                            Ver histórico
+                            Histórico
                         </a>
                         <a href="{{ route('outputs.create') }}" class="text-xs sm:text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -268,7 +265,7 @@
                         </div>
                         <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">
                             <a href="{{ route('users.index') }}" class="text-xs sm:text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:text-cyan-800 dark:hover:text-cyan-300 transition-colors whitespace-nowrap">
-                                Ver todos
+                                Todos
                             </a>
                             <div class="flex items-center space-x-2">
                                 <a href="{{ route('users.create') }}" class="text-xs sm:text-sm font-medium bg-cyan-500 hover:bg-cyan-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
