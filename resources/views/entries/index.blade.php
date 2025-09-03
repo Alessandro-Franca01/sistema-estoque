@@ -65,8 +65,11 @@
                                 </td>
                                 <td class="px-4 py-2">
                                     @if($entry->observation)
-                                        <button onclick="showObservationModal('{{ addslashes($entry->observation) }}')"
-                                                class="text-blue-600 hover:text-blue-900 underline cursor-pointer">
+{{--                                        <button onclick="showObservationModal('{{ addslashes($entry->observation) }}')"--}}
+{{--                                                class="text-blue-600 hover:text-blue-900 underline cursor-pointer">--}}
+{{--                                            Visualizar--}}
+{{--                                        </button>--}}
+                                        <button type="button" data-observation="{{ e($entry->observation) }}" class="open-observation text-blue-600 hover:text-blue-800 font-medium">
                                             Visualizar
                                         </button>
                                     @else
@@ -93,22 +96,26 @@
         </div>
     </div>
 
-    <!-- Modal para Observação -->
-    <div id="observationModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Observação Completa</h3>
-                    <div id="modalObservationContent" class="mt-2 max-h-96 overflow-y-auto">
-                        <!-- Conteúdo da observação será inserido aqui -->
+    <!-- Modal de Observação - Versão melhorada -->
+    <div id="observation-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
+            <div class="relative w-full max-w-lg transform rounded-lg bg-white text-left shadow-xl transition-all">
+                <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-lg font-semibold leading-6 text-gray-900">Observação</h3>
+                            <div class="mt-4">
+                                <div class="bg-gray-50 p-4 rounded-md max-h-96 overflow-y-auto">
+                                    <p id="observation-content" class="text-gray-700 whitespace-pre-line"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" onclick="closeObservationModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                    <button type="button" id="close-observation" class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 sm:ml-3 sm:w-auto">
                         Fechar
                     </button>
                 </div>
@@ -117,27 +124,43 @@
     </div>
 
     <script>
-        function showObservationModal(observation) {
-            document.getElementById('modalObservationContent').textContent = observation;
-            document.getElementById('observationModal').classList.remove('hidden');
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('observation-modal');
+            const content = document.getElementById('observation-content');
+            const closeBtn = document.getElementById('close-observation');
+            const backdrop = modal.querySelector('.bg-gray-500');
 
-        function closeObservationModal() {
-            document.getElementById('observationModal').classList.add('hidden');
-        }
-
-        // Fechar modal ao clicar fora do conteúdo
-        document.getElementById('observationModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeObservationModal();
+            function openModal(text) {
+                content.textContent = text && text.trim() ? text : 'Nenhuma observação registrada.';
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
             }
-        });
 
-        // Fechar modal com tecla ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeObservationModal();
+            function closeModal() {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
             }
+
+            // Abrir modal ao clicar em qualquer botão com classe open-observation
+            document.addEventListener('click', function(e) {
+                const trigger = e.target.closest('.open-observation');
+                if (trigger) {
+                    e.preventDefault();
+                    const obs = trigger.getAttribute('data-observation') || '';
+                    openModal(obs);
+                }
+            });
+
+            // Fechar modal
+            closeBtn?.addEventListener('click', closeModal);
+            backdrop?.addEventListener('click', closeModal);
+
+            // Fechar com ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
         });
     </script>
 @endsection

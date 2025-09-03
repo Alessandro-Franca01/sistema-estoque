@@ -104,19 +104,6 @@
                             @enderror
                         </div>
 
-                        <!-- Destino -->
-                        <div>
-                            <label for="destination" class="block text-sm font-medium text-gray-700">
-                                Destino / Local
-                            </label>
-                            <input type="text" id="destination" name="destination" value="{{ old('destination') }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('destination') border-red-300 text-red-900 @enderror"
-                                placeholder="Destino">
-                            @error('destination')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
                         <!-- CEP -->
                         <div>
                             <label for="cep" class="block text-sm font-medium text-gray-700">
@@ -142,6 +129,19 @@
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
+                    </div>
+
+                    <!-- Destino -->
+                    <div>
+                        <label for="destination" class="block text-sm font-medium text-gray-700">
+                            Destino / Local
+                        </label>
+                        <input type="text" id="destination" name="destination" value="{{ old('destination') }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('destination') border-red-300 text-red-900 @enderror"
+                               placeholder="Destino">
+                        @error('destination')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Observações -->
@@ -179,4 +179,74 @@
 
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cepInput = document.getElementById('cep');
+        const destinationInput = document.getElementById('destination');
+        const complementInput = document.getElementById('complement');
+
+        if (!cepInput) return;
+
+        function sanitizeCep(value) {
+            return (value || '').replace(/\D/g, '').slice(0, 8);
+        }
+
+        async function fetchCep(cep) {
+            try {
+                const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                if (!res.ok) return null;
+                const data = await res.json();
+                if (data && !data.erro) return data;
+            } catch (e) {
+                console.warn('Erro ao buscar CEP:', e);
+            }
+            return null;
+        }
+
+        function buildDestination(data) {
+            const parts = [];
+            if (data.logradouro) parts.push(data.logradouro);
+            if (data.bairro) parts.push(data.bairro);
+            const cityState = [data.localidade, data.uf].filter(Boolean).join(' - ');
+            if (cityState) parts.push(cityState);
+            return parts.join(', ');
+        }
+
+        async function handleCepLookup() {
+            const cep = sanitizeCep(cepInput.value);
+            if (cep.length !== 8) return; // CEP inválido/incompleto
+
+            // Indicar carregamento simples
+            const prev = destinationInput ? destinationInput.value : '';
+            if (destinationInput && !destinationInput.value) destinationInput.placeholder = 'Buscando endereço...';
+
+            const data = await fetchCep(cep);
+            if (!data) {
+                if (destinationInput && destinationInput.placeholder === 'Buscando endereço...') destinationInput.placeholder = '';
+                return;
+            }
+
+            // Preenche destino formatado
+            if (destinationInput) {
+                const formatted = buildDestination(data);
+                if (formatted) destinationInput.value = formatted;
+                destinationInput.placeholder = '';
+            }
+
+            // Preenche complemento se vier algo e o campo estiver vazio
+            if (complementInput && !complementInput.value && data.complemento) {
+                complementInput.value = data.complemento;
+            }
+        }
+
+        // Dispara busca ao sair do campo CEP
+        cepInput.addEventListener('blur', handleCepLookup);
+
+        // Opcional: ao digitar 8 dígitos, já busca
+        cepInput.addEventListener('input', function () {
+            const val = sanitizeCep(cepInput.value);
+            if (val.length === 8) handleCepLookup();
+        });
+    });
+</script>
 @endsection
