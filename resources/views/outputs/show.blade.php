@@ -103,10 +103,11 @@
                                             name="products[{{$index}}][quantity_returned]"
                                             value="{{ $product->pivot->quantity_returned }}"
                                             class="quantity-returned w-full px-2 py-1 border border-gray-300 rounded-md text-sm shadow-sm focus:ring focus:ring-indigo-300"
-                                            @disabled($output->status == 'completed')
+                                            disabled
                                             min="0"
                                             max="{{ $product->pivot->quantity }}"
                                             data-product-id="{{ $product->id }}">
+                                        <input type="hidden" class="quantity-returned-hidden" name="products[{{$index}}][quantity_returned]" value="{{ $product->pivot->quantity_returned }}">
                                     </td>
                                     <td class="px-3 py-2 text-sm">
                                         <span class="quantity-status text-xs font-medium text-gray-600"></span>
@@ -249,54 +250,59 @@
                         }
                     }
 
-                    // Validar ao alterar qualquer input
-                    document.querySelectorAll('.quantity-used, .quantity-returned').forEach(input => {
-                        input.addEventListener('input', function() {
-                            const row = this.closest('.product-row');
+                    // Validar e sincronizar ao alterar apenas o campo "Usado"
+                    document.querySelectorAll('.quantity-used').forEach(input => {
+                        function syncRow(row) {
                             const total = parseInt(row.dataset.total);
                             const usedInput = row.querySelector('.quantity-used');
                             const returnedInput = row.querySelector('.quantity-returned');
+                            const returnedHidden = row.querySelector('.quantity-returned-hidden');
 
                             let used = parseInt(usedInput.value) || 0;
-                            let returned = parseInt(returnedInput.value) || 0;
-                            // console.log(row)
-                            console.log('retirados: ' + row.dataset.total)
-                            console.log('usados, retornados: '+used, returned)
+                            if (used < 0) used = 0;
+                            if (used > total) used = total;
+                            usedInput.value = used;
 
-                            // Corrigir valores negativos
-                            if (used < 0) {
-                                usedInput.value = 0;
-                                used = 0;
-                            }
-                            if (returned < 0) {
-                                returnedInput.value = 0;
-                                returned = 0;
-                            }
+                            const returned = total - used;
+                            if (returnedInput) returnedInput.value = returned;
+                            if (returnedHidden) returnedHidden.value = returned;
 
-                            // Ajustar valores se a soma ultrapassar o total
-                            if (used + returned > total) {
-                                if (this === usedInput) {
-                                    returned = total - used;
-                                    returnedInput.value = returned;
-                                } else {
-                                    used = total - returned;
-                                    usedInput.value = used;
-                                }
-                            }
+                            // Atualizar atributos max (apenas para coerência visual)
+                            usedInput.max = total;
+                            if (returnedInput) returnedInput.max = total;
+                        }
 
-                            // Atualizar max para os campos
-                            usedInput.max = total - returned;
-                            returnedInput.max = total - used;
-
+                        // Ao digitar
+                        input.addEventListener('input', function() {
+                            const row = this.closest('.product-row');
+                            syncRow(row);
                             updateSubmitButton();
                         });
 
-                        // Validar também quando o campo perde o foco (blur)
+                        // Ao sair do campo
                         input.addEventListener('blur', function() {
                             const row = this.closest('.product-row');
+                            syncRow(row);
                             validateRow(row);
                             updateSubmitButton();
                         });
+                    });
+
+                    // Inicialização: sincroniza todas as linhas ao carregar
+                    document.querySelectorAll('.product-row').forEach(row => {
+                        const usedInput = row.querySelector('.quantity-used');
+                        if (usedInput) {
+                            const total = parseInt(row.dataset.total);
+                            let used = parseInt(usedInput.value) || 0;
+                            if (used < 0) used = 0;
+                            if (used > total) used = total;
+                            usedInput.value = used;
+                            const returned = total - used;
+                            const returnedInput = row.querySelector('.quantity-returned');
+                            const returnedHidden = row.querySelector('.quantity-returned-hidden');
+                            if (returnedInput) returnedInput.value = returned;
+                            if (returnedHidden) returnedHidden.value = returned;
+                        }
                     });
 
                     // Validar antes de enviar o formulário

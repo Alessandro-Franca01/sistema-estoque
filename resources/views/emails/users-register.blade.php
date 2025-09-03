@@ -45,7 +45,7 @@
                         </p>
 
                         <p style="margin:16px 0;">
-                            <a href="{{ url('/register') }}"
+                            <a href="{{ route('register') }}"
                                style="display:inline-block;background:#4f46e5;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:6px;font-size:14px;">
                                 Cadastre-se
                             </a>

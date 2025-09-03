@@ -172,7 +172,7 @@ class AuditLog extends Model
         if ($newValues) {
             $data['new_values'] = $newValues;
 
-            if (empty($isCustomData)) {
+            if (!empty($isCustomData)) {
                 $data['new_values'] = json_encode($newValues);
             }
         }
