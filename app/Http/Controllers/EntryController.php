@@ -245,17 +245,16 @@ class EntryController extends Controller
         }
         $data = $request->validated();
 
-        // Impedir alimentação duplicada para o mesmo produto
         // 1) Normaliza a lista de produtos do request
         $requestedProductIds = collect($request->products ?? [])
             ->pluck('product_id')
             ->filter()
             ->map(fn($id) => (int) $id)
             ->values();
-//        dd('step 1', $requestedProductIds);
+
         // 2) Verifica duplicados dentro do próprio request TODO: (Add validation for duplicates at view form)
         $duplicatesInRequest = $requestedProductIds->duplicates()->unique()->values();
-//        dd('step 1', $duplicatesInRequest);
+
         if ($duplicatesInRequest->isNotEmpty()) {
             $duplicateProducts = Product::whereIn('id', $duplicatesInRequest)->pluck('name')->toArray();
             return back()
@@ -264,7 +263,7 @@ class EntryController extends Controller
         }
         // 3) Add vallidation to check if the product not have any item in stock
         $products = Product::Query()->whereNotIn('id', $requestedProductIds)->where('quantity', '>', 0)->get();
-//        dd($products);
+
         $entry = DB::transaction(function () use ($data, $request) {
             $entry = Entry::create($data);
 

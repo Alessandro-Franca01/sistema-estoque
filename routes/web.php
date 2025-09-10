@@ -7,22 +7,45 @@ use App\Http\Controllers\PublicServantController;
 use App\Http\Controllers\OutputController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
+
+// Routes to register user without authentication:
+Route::get('/user/register', [UserController::class, 'register'])->name('user.register');
+Route::post('/user/store', [UserController::class, 'store'])->name('users.store');
+Route::get('/register/email', function (Request $request) {
+
+    if ( $request::hasValidSignature()) {
+        $str_register = Str::random(16);
+        $hash = password_hash($str_register, PASSWORD_DEFAULT);
+        session(['str_token' => $str_register]);
+
+        return redirect()->route('user.register',
+            [
+                'tokenRegister' => $hash,
+                'perfil' => $request::input('perfil'),
+                'email' => $request::input('email'),
+            ]
+        );
+    }
+    abort(401);
+})->name('register.email');
+
 
 Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/apresentation', function () {
-    return view('apresentation');
-});
+//Route::get('/apresentation', function () {
+//    return view('apresentation');
+//});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // TODO: Assinar esses rotas depois quando for implementar o cadastro de usuarios por email teste12345
-Route::get('/user/create', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
-Route::post('/user/store', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
+Route::get('/user/create', [UserController::class, 'create'])->name('users.create');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
