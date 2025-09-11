@@ -10,6 +10,10 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 
+Route::get('/', function () {
+    return view('auth.login');
+});
+
 // Routes to register user without authentication:
 Route::get('/user/register', [UserController::class, 'register'])->name('user.register');
 Route::post('/user/store', [UserController::class, 'store'])->name('users.store');
@@ -31,11 +35,7 @@ Route::get('/register/email', function (Request $request) {
     abort(401);
 })->name('register.email');
 
-
-Route::get('/', function () {
-    return view('auth.login');
-});
-
+// Routes to apresentation page (not used)
 //Route::get('/apresentation', function () {
 //    return view('apresentation');
 //});

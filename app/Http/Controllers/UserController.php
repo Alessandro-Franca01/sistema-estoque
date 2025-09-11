@@ -35,7 +35,6 @@ class UserController
 
     public function store(Request $request): RedirectResponse
     {
-//        dd($request->all(), strtolower($request->role)); // teste12345
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],

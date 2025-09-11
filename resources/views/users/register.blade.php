@@ -31,13 +31,6 @@
                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
 
-                <!-- Email -->
-{{--                <div>--}}
-{{--                    <x-input-label for="email" :value="__('Email')" class="mb-1" />--}}
-{{--                    <x-text-input id="email" class="block w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />--}}
-{{--                    <x-input-error :messages="$errors->get('email')" class="mt-2" />--}}
-{{--                </div>--}}
-
                 <!-- CPF -->
                 <div>
                     <x-input-label for="cpf" :value="__('CPF')" class="mb-1" />
@@ -79,17 +72,6 @@
                     <x-text-input id="position" class="block w-full" type="text" name="position" :value="old('position')" autocomplete="position" />
                     <x-input-error :messages="$errors->get('position')" class="mt-2" />
                 </div>
-
-                <!-- Job Function -->
-{{--                <div class="md:col-span-2">--}}
-{{--                    <x-input-label for="job_function" :value="__('Função')" class="mb-1" />--}}
-{{--                    <select id="job_function" name="job_function" class="block w-full rounded-md shadow-sm bg-gray-100 dark:bg-gray-900 text-white border-t border-gray-200 dark:border-gray-700 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600">--}}
-{{--                        <option value="">Selecione uma função...</option>--}}
-{{--                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>--}}
-{{--                        <option value="ALMOXARIFE">ALMOXARIFE</option>--}}
-{{--                    </select>--}}
-{{--                    <x-input-error :messages="$errors->get('job_function')" class="mt-2" />--}}
-{{--                </div>--}}
             </div>
         </div>
 
