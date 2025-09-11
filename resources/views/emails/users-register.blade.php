@@ -1,3 +1,8 @@
+<?php
+
+use Illuminate\Support\Facades\URL;
+
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,6 +10,17 @@
     <title>Bem-vindo ao Sistema</title>
 </head>
 <body style="margin:0;padding:0;background:#f5f7fb;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+@php
+    $url = URL::temporarySignedRoute(
+        'register.email',
+        now()->addMinutes(1440),
+         [
+             'perfil' => $data['role'],
+             'email' => $data['email'],
+         ]
+     );
+    $link = '<a href="'.$url.'"> Click aqui. </a>';
+@endphp
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f5f7fb;padding:24px 0;">
     <tr>
         <td align="center">
@@ -45,7 +61,7 @@
                         </p>
 
                         <p style="margin:16px 0;">
-                            <a href="{{ route('register') }}"
+                            <a href="{{ $url }}"
                                style="display:inline-block;background:#4f46e5;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:6px;font-size:14px;">
                                 Cadastre-se
                             </a>

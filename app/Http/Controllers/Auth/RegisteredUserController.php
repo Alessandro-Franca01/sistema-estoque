@@ -34,8 +34,6 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-//        dd($request->all()); //teste12345, darci12345
-
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -60,12 +58,6 @@ class RegisteredUserController extends Controller
 //      TODO: Assinar com o ID do usuario que enviou o email
         $assigned_by = null;
         $assigned_by = $user->id;
-
-//        if(!config('custom.show_link_user_create')){
-//            $assigned_by = auth()->user()->id;
-//        }else{
-//            $assigned_by = $user->id;
-//        }
 
         $user->roles()->attach($role->id, [
                 'assigned_by' => $assigned_by,
