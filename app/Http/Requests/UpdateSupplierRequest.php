@@ -16,16 +16,6 @@ class UpdateSupplierRequest extends FormRequest
     {
         $supplierId = $this->route('supplier')->id ?? null;
         return [
-            'legal_name' => 'required|string|max:255',
-            'trade_name' => 'nullable|string|max:255',
-            'cnpj' => [
-                'required',
-                'string',
-                'size:14',
-                Rule::unique('suppliers', 'cnpj')->ignore($supplierId),
-            ],
-            'state_registration' => 'nullable|string|max:9',
-            'municipal_registration' => 'nullable|string|max:7',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:14',
             'active' => 'boolean',
@@ -39,18 +29,6 @@ class UpdateSupplierRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'legal_name.required' => 'A :attribute é obrigatória.',
-            'legal_name.max' => 'A :attribute não pode ter mais que :max caracteres.',
-
-            'trade_name.max' => 'O :attribute não pode ter mais que :max caracteres.',
-
-            'cnpj.required' => 'O :attribute é obrigatório.',
-            'cnpj.size' => 'O :attribute deve conter exatamente :size dígitos (somente números).',
-            'cnpj.unique' => 'O :attribute informado já está cadastrado.',
-
-            'state_registration.max' => 'A :attribute deve ter no máximo :max caracteres.',
-            'municipal_registration.max' => 'A :attribute deve ter no máximo :max caracteres.',
-
             'email.email' => 'Informe um :attribute válido.',
             'email.max' => 'O :attribute não pode ter mais que :max caracteres.',
 

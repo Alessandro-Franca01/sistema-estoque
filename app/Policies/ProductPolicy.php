@@ -25,7 +25,8 @@ class ProductPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole('administrativo');
+        return true;
+//        return $user->hasRole('administrativo');
     }
 
     /**

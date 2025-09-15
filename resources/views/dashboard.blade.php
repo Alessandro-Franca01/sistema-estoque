@@ -62,14 +62,14 @@
                         <a href="{{ route('products.index') }}" class="text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors whitespace-nowrap">
                             Ver todos
                         </a>
-                        @if($canAdmin)
+{{--                        @if($canAdmin)--}}
                         <a href="{{ route('products.create') }}" class="text-xs sm:text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                             </svg>
                             Novo produto
                         </a>
-                        @endif
+{{--                        @endif--}}
                     </div>
                 </div>
 
@@ -144,19 +144,19 @@
                         <a href="{{ route('entries.index') }}" class="text-sm font-medium text-amber-600 hover:text-amber-800 transition-colors flex items-center">
                             Histórico
                         </a>
+                        <div class="flex items-center space-x-2">
+                            <a href="{{ route('entries.feeding.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                                Alimentação
+                            </a>
                         @if($canAdmin)
-                            <div class="flex items-center space-x-2">
-                                <a href="{{ route('entries.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
-                                    Nova
-                                </a>
-                                <a href="{{ route('entries.reversal.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
-                                    Estorno
-                                </a>
-                                <a href="{{ route('entries.feeding.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
-                                    Alimentação
-                                </a>
-                            </div>
+                            <a href="{{ route('entries.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                                Nova
+                            </a>
+                            <a href="{{ route('entries.reversal.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
+                                Estorno
+                            </a>
                         @endif
+                        </div>
                     </div>
                 </div>
 
