@@ -67,16 +67,13 @@ Route::middleware('auth')->group(function () {
     Route::group(['middleware' => 'role:administrativo'], function () {
         Route::patch('categories/{category}/toggle-status', [\App\Http\Controllers\CategoryController::class, 'toggleStatus'])
             ->name('categories.toggle-status');
-        Route::patch('products/{products}/toggle-status', [\App\Http\Controllers\ProductController::class, 'toggleStatus'])
-            ->name('products.toggle-status');
-        Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+
         // News Routes Empties
         Route::get('entries/reversal/create', [EntryController::class, 'createReversal'])->name('entries.reversal.create');
         Route::post('entries/reversal', [EntryController::class, 'storeReversal'])->name('entries.reversal');
-        Route::get('entries/feeding/create', [EntryController::class, 'createFeeding'])->name('entries.feeding.create');
-        Route::post('entries/feeding', [EntryController::class, 'storeFeeding'])->name('entries.feeding');
 
         // Users Routers
+        Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
         Route::get('/user/send-email', [UserController::class, 'sendEmailForm'])->name('users.form.send.email');
         Route::post('/user/send-email', [UserController::class, 'sendEmail'])->name('users.send.email');
     });
@@ -88,10 +85,15 @@ Route::middleware('auth')->group(function () {
 
     // Rotas acessíveis por ambos os perfis (almoxarife, administrativo)
     Route::group(['middleware' => 'role:almoxarife,administrativo'], function () {
-        // Produtos (leitura para ambos)
+        // Produtos (leitura e cadastro)
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+        Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
         Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+
         Route::put('/output/finish/{output}', [OutputController::class, 'finish'])->name('output.finish');
+
+        Route::get('entries/feeding/create', [EntryController::class, 'createFeeding'])->name('entries.feeding.create');
+        Route::post('entries/feeding', [EntryController::class, 'storeFeeding'])->name('entries.feeding');
     });
 });
 

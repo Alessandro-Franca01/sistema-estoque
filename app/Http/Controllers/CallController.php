@@ -72,7 +72,17 @@ class CallController extends Controller
      */
     public function edit(Call $call): View
     {
-        return view('calls.edit', compact('call'));
+        $output = $call->output_id ? Output::find($call->output_id) : null;
+
+        if ($output && $output->status != Output::STATUS_PENDING){
+            $message = 'Chamando não pode ser editado pois o status da saida já foi concluido ou cancelado';
+
+            return redirect()->route('calls.index')->withErrors($message);
+        }
+
+        $outputs = Output::where('status', '!=', Output::STATUS_COMPLETED)->get();
+
+        return view('calls.edit', compact('call', 'outputs'));
     }
 
     /**
@@ -80,6 +90,8 @@ class CallController extends Controller
      */
     public function update(Request $request, Call $call): RedirectResponse
     {
+        $oldCall = $call;
+
         $validated = $request->validate([
             'type' => 'required|string|max:255',
             'service_order' => 'nullable|string|max:255',
@@ -94,6 +106,10 @@ class CallController extends Controller
         ]);
 
         $call->update($validated);
+
+        if (class_exists(AuditHelper::class)) {
+            AuditHelper::logUpdate($oldCall, $call->toArray(), $request);
+        }
 
         return redirect()->route('calls.index')
             ->with('success', 'Call updated successfully.');
