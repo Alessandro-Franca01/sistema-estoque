@@ -7,6 +7,20 @@
         <link rel="shortcut icon" href="{{asset('assets/images/logo_prefeitura_cabedelo.png')}}" >
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- Manifest -->
+        <link rel="manifest" href="{{ asset('manifest.json') }}">
+
+        <!-- Ícone para iOS -->
+        <link rel="apple-touch-icon" href="{{ asset('assets/icons/gestin_icone_192.png') }}">
+
+        <!-- Cor da barra de status -->
+        <meta name="theme-color" content="#004aad">
+
+        <!-- iOS WebApp -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="GestIn">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -50,6 +64,16 @@
                 </div>
             </div>
         </footer>
+
+        <script>
+            @if (App::environment('production'))
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("{{ asset('service-worker.js') }}")
+                    .then(() => console.log("✅ Service Worker registrado"))
+                    .catch(err => console.error("Erro ao registrar SW:", err));
+            }
+            @endif
+        </script>
         @stack('scripts')
     </body>
 </html>

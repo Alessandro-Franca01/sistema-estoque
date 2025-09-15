@@ -1,0 +1,21 @@
+{
+    "name": "GestIn - Gestão Inteligente",
+    "short_name": "GestIn",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "transparent",
+    "theme_color": "transparent",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/assets/icons/gestin_icone_192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/icons/gestin_icone_512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
