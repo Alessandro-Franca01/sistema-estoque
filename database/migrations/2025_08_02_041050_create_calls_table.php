@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('cep', 8)->nullable();
             $table->string('complement')->nullable();
             $table->text('observation')->nullable();
+            $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
             $table->foreignId('output_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });

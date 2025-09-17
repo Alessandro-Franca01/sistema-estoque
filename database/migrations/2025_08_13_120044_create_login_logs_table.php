@@ -17,8 +17,6 @@ return new class extends Migration
             $table->string('ip_address', 45);
             $table->text('user_agent')->nullable();
             $table->timestamps();
-
-            // Chave estrangeira
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->decimal('real_amount', 10, 3)->nullable();
             $table->decimal('difference', 10, 3)->nullable();
             $table->text('observations')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
         });
     }
