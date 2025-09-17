@@ -8,7 +8,7 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Manifest -->
-        <link rel="manifest" href="{{ asset('manifest.json') }}">
+        <link rel="manifest" href="/manifest.json" type="application/manifest+json">
 
         <!-- Ícone para iOS -->
         <link rel="apple-touch-icon" href="{{ asset('assets/icons/gestin_icone_192.png') }}">
@@ -66,13 +66,52 @@
         </footer>
 
         <script>
-            @if (App::environment('production'))
-            if ("serviceWorker" in navigator) {
-                navigator.serviceWorker.register("{{ asset('service-worker.js') }}")
-                    .then(() => console.log("✅ Service Worker registrado"))
-                    .catch(err => console.error("Erro ao registrar SW:", err));
-            }
-            @endif
+            (function() {
+                const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname) || location.hostname.endsWith('.test');
+                const isProd = {{ App::environment('production') ? 'true' : 'false' }};
+                const isHttps = location.protocol === 'https:';
+                const enableSW = isHttps || isLocal || isProd;
+
+                if ('serviceWorker' in navigator && enableSW) {
+                    const swUrl = "/service-worker.js";
+                    window.addEventListener('load', () => {
+                        navigator.serviceWorker.register(swUrl)
+                            .then((registration) => {
+                                console.log('✅ Service Worker registrado:', registration);
+
+                                // Fluxo de atualização: solicita ativação imediata do SW novo
+                                function requestSkipWaiting(reg) {
+                                    if (reg && reg.waiting) {
+                                        reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+                                    }
+                                }
+
+                                // Detecta novo SW instalado
+                                registration.addEventListener('updatefound', () => {
+                                    const newWorker = registration.installing;
+                                    if (!newWorker) return;
+                                    newWorker.addEventListener('statechange', () => {
+                                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                            requestSkipWaiting(registration);
+                                        }
+                                    });
+                                });
+
+                                // Se já existe um waiting (atualização feita em segundo plano)
+                                requestSkipWaiting(registration);
+
+                                // Recarrega quando o novo SW assume o controle
+                                let refreshing = false;
+                                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                                    if (refreshing) return;
+                                    refreshing = true;
+                                    window.location.reload();
+                                });
+                            })
+                            .catch(err => console.error('Erro ao registrar SW:', err));
+                    });
+                }
+            })();
         </script>
         @stack('scripts')
     </body>

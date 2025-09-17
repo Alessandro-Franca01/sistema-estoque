@@ -1,21 +1,26 @@
 {
+    "id": "/",
     "name": "GestIn - Gestão Inteligente",
     "short_name": "GestIn",
-    "start_url": "/",
+    "description": "Sistema de gestão de estoque e operações da SECTIN.",
+    "start_url": "/?source=pwa",
+    "scope": "/",
     "display": "standalone",
-    "background_color": "transparent",
-    "theme_color": "transparent",
     "orientation": "portrait",
+    "background_color": "#ffffff",
+    "theme_color": "#004aad",
     "icons": [
         {
             "src": "/assets/icons/gestin_icone_192.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any"
         },
         {
             "src": "/assets/icons/gestin_icone_512.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any"
         }
     ]
 }
