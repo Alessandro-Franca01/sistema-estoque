@@ -12,8 +12,9 @@ return new class extends Migration
             $table->bigIncrements('id')->primary();
             $table->dateTime('start_date');
             $table->dateTime('end_date')->nullable();
-            $table->enum('status', ['OPEN', 'IN_PROGRESS', 'CLOSED'])->default('OPEN');
+            $table->enum('status', ['OPEN', 'STOPPED', 'CLOSED'])->default('OPEN');
             $table->foreignId('user_id')->constrained('users');
+            $table->text('observations')->nullable();
             $table->timestamps();
         });
     }

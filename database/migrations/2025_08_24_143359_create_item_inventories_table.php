@@ -14,6 +14,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products');
             $table->decimal('register_amount', 10, 3);
             $table->decimal('real_amount', 10, 3)->nullable();
+            // TODO: difference > 0 -> TEM QUE COLOCAR O MOTIVO DO EXCEDENTE (PERDA, EXTRAVIO, QUEBRA, ETC)
             $table->decimal('difference', 10, 3)->nullable();
             $table->text('observations')->nullable();
             $table->timestamps();

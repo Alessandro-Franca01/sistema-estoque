@@ -19,6 +19,7 @@ class Call extends Model
         'destination',
         'cep',
         'complement',
+        'status',
         'observation',
         'output_id',
     ];
