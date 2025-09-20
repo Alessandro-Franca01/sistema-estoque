@@ -15,6 +15,7 @@ return new class extends Migration
             $table->enum('status', ['OPEN', 'STOPPED', 'CLOSED'])->default('OPEN');
             $table->foreignId('user_id')->constrained('users');
             $table->text('observations')->nullable();
+            $table->foreignId('department_id')->constrained('departments');
             $table->timestamps();
         });
     }
