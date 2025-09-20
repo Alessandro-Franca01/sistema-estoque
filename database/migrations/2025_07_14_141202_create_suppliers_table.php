@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('municipal_registration', 7)->nullable();
             $table->text('observation')->nullable();
             $table->boolean('active')->default(true);
+            $table->foreignId('department_id')->constrained('departments');
             $table->timestamps();
         });
     }

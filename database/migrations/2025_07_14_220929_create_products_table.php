@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('observation')->nullable();
             $table->boolean('is_active')->default(true);
             $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('department_id')->constrained('departments');
             $table->timestamps();
         });
     }

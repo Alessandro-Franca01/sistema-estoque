@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('contract_number', 20)->nullable();
             $table->string('batch_number', 10)->nullable();
             $table->decimal('value', 10, 2)->nullable();
-            $table->foreignId('supplier_id')->nullable()->constrained()->onDelete('cascade'); // TODO: Reset database again
+            $table->foreignId('supplier_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('department_id')->constrained('departments');
             $table->timestamps();
         });
     }

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('observation')->nullable();
             $table->enum('status', ['in_progress', 'finished', 'cancelled'])->default('in_progress');
             $table->foreignId('output_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('department_id')->constrained('departments');
             $table->timestamps();
         });
     }
