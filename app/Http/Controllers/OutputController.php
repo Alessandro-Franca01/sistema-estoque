@@ -6,6 +6,7 @@ use App\Helpers\AuditHelper;
 use App\Models\Output;
 use App\Models\Product;
 use App\Models\PublicServant;
+use App\Models\Call;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -109,7 +110,7 @@ class OutputController extends Controller
         return redirect()->route('outputs.index')->with('success', 'Saída excluída com sucesso.');
     }
 
-
+    // TODO: Fazer todos os testes nesse metodo antes de colocar em Produção
     public function finish(Request $request, Output $output)
     {
         if ($output->is_finished) {
@@ -128,6 +129,7 @@ class OutputController extends Controller
         DB::transaction(function () use ($request, $output) {
             $output->load('products');
 
+            // Atualziando os produtos
             foreach ($request->products as $productData) {
                 $productId = $productData['id'];
                 $quantityUsed = $productData['quantity_used'];
@@ -152,6 +154,9 @@ class OutputController extends Controller
             $oldOutput = $output;
             $output->status = Output::STATUS_COMPLETED;
             $output->save();
+
+            // Atualizar status do(s) chamado(s) relacionado(s) para 'finished'
+            Call::where('output_id', $output->id)->where('status', Call::STATUS_IN_PROGRESS)->update(['status' => Call::STATUS_FINISHED]);
 
             AuditHelper::logUpdateCustomData($oldOutput, $output->toArray(), $request, [], $oldOutput->toArray());
         });

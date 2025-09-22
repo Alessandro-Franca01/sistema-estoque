@@ -92,6 +92,9 @@ Route::middleware('auth')->group(function () {
 
         Route::put('/output/finish/{output}', [OutputController::class, 'finish'])->name('output.finish');
 
+        // Calls actions
+        Route::put('/calls/{call}/cancel', [\App\Http\Controllers\CallController::class, 'cancel'])->name('calls.cancel');
+
         Route::get('entries/feeding/create', [EntryController::class, 'createFeeding'])->name('entries.feeding.create');
         Route::post('entries/feeding', [EntryController::class, 'storeFeeding'])->name('entries.feeding');
     });

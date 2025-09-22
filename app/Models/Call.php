@@ -31,6 +31,11 @@ class Call extends Model
     const CALL_TYPE_PHONE = 'phone';
     const CALL_TYPE_OTHER = 'other';
 
+    // Status
+    const STATUS_IN_PROGRESS = 'in_progress';
+    const STATUS_FINISHED = 'finished';
+    const STATUS_CANCELLED = 'cancelled';
+
     public function output(): BelongsTo
     {
         return $this->belongsTo(Output::class);
