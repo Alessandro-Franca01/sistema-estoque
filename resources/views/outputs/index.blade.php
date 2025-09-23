@@ -6,6 +6,7 @@
     @php
         $user = auth()->user();
         $canCreate = $user?->hasAnyRole(['administrativo', 'almoxarife']);
+        $canAdmin = $user?->hasRole('administrativo');
     @endphp
 
     <div class="container mx-auto px-4 py-8 mt-4">
@@ -58,9 +59,9 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @php
                                         $statusClasses = [
-                                            'pendente' => 'bg-yellow-100 text-yellow-800',
-                                            'concluído' => 'bg-green-100 text-green-800',
-                                            'cancelado' => 'bg-red-100 text-red-800'
+                                            'pending' => 'bg-yellow-100 text-yellow-800',
+                                            'completed' => 'bg-green-100 text-green-800',
+                                            'canceled' => 'bg-red-100 text-red-800'
                                         ];
                                         $status = [
                                             'pending' => 'pendente',
@@ -73,7 +74,7 @@
                                         {{ ucfirst($status[$output->status]) }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex space-x-2">
                                         <a href="{{ route('outputs.show', $output) }}" class="text-blue-600 hover:text-blue-900" title="Visualizar">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -81,6 +82,18 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
                                         </a>
+                                        @if($canAdmin && $output->status == 'pending')
+                                            <form action="{{ route('output.cancel', $output) }}" method="POST" class="inline">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" class="text-red-600 hover:text-red-900" title="Cancelar" onclick="return confirm('Tem certeza que deseja cancelar esta saída? Isso não poderá ser desfeito.')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

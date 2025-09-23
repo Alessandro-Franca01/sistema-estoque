@@ -6,6 +6,7 @@ use App\Helpers\AuditHelper;
 use App\Models\Output;
 use App\Models\Product;
 use App\Models\PublicServant;
+use App\Models\Call;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -109,7 +110,7 @@ class OutputController extends Controller
         return redirect()->route('outputs.index')->with('success', 'Saída excluída com sucesso.');
     }
 
-
+    // TODO: Fazer todos os testes nesse metodo antes de colocar em Produção
     public function finish(Request $request, Output $output)
     {
         if ($output->is_finished) {
@@ -128,6 +129,7 @@ class OutputController extends Controller
         DB::transaction(function () use ($request, $output) {
             $output->load('products');
 
+            // Atualziando os produtos
             foreach ($request->products as $productData) {
                 $productId = $productData['id'];
                 $quantityUsed = $productData['quantity_used'];
@@ -153,9 +155,45 @@ class OutputController extends Controller
             $output->status = Output::STATUS_COMPLETED;
             $output->save();
 
+            // Atualizar status do(s) chamado(s) relacionado(s) para 'finished'
+            Call::where('output_id', $output->id)->where('status', Call::STATUS_IN_PROGRESS)->update(['status' => Call::STATUS_FINISHED]);
+
             AuditHelper::logUpdateCustomData($oldOutput, $output->toArray(), $request, [], $oldOutput->toArray());
         });
 
         return redirect()->route('outputs.index')->with('success', 'Saída finalizada e estoque atualizado com sucesso.');
     }
+
+    /**
+     * Cancelar uma Saída: atualiza o status para 'canceled', marca chamados relacionados como 'canceled' e registra auditoria.
+     */
+    public function cancel(Request $request, Output $output)
+    {
+        // Impede cancelar uma saída já concluída
+        if ($output->status === Output::STATUS_COMPLETED) {
+            return redirect()->route('outputs.index')->withErrors('Saída já finalizada não pode ser cancelada.');
+        }
+
+        // Caso já esteja cancelada
+        if ($output->status === Output::STATUS_CANCELED) {
+            return redirect()->route('outputs.index')->with('info', 'Saída já está cancelada.');
+        }
+
+        $oldValues = $output->toArray();
+        $output->status = Output::STATUS_CANCELED;
+        $output->save();
+
+        // Atualizar status do(s) chamado(s) relacionado(s) para 'canceled'
+        Call::where('output_id', $output->id)
+            ->where('status', 'in_progress')
+            ->update(['status' => 'canceled']);
+
+        // Registrar auditoria com valores antigos e novos explícitos
+        if (class_exists(AuditHelper::class)) {
+            AuditHelper::logUpdateCustomData($output, $output->toArray(), $request, [], $oldValues);
+        }
+
+        return redirect()->route('outputs.index')->with('success', 'Saída cancelada com sucesso.');
+    }
 }
+

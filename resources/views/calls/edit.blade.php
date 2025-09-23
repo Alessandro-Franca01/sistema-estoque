@@ -36,6 +36,7 @@
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+                    <input type="hidden" name="status" value="{{ old('status', $call->status) }}">
 
                     <!-- Ordem de Serviço -->
                     <div>

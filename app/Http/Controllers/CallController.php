@@ -26,7 +26,7 @@ class CallController extends Controller
      */
     public function create(): View
     {
-        $outputs = Output::where('status', '!=', Output::STATUS_COMPLETED)->get();
+        $outputs = Output::where('status', '=', Output::STATUS_PENDING)->get();
 
         return view('calls.create', compact('outputs'));
     }
@@ -79,8 +79,7 @@ class CallController extends Controller
 
             return redirect()->route('calls.index')->withErrors($message);
         }
-
-        $outputs = Output::where('status', '!=', Output::STATUS_COMPLETED)->get();
+        $outputs = Output::where('status', '=', Output::STATUS_PENDING)->get();
 
         return view('calls.edit', compact('call', 'outputs'));
     }
@@ -124,5 +123,35 @@ class CallController extends Controller
 
         return redirect()->route('calls.index')
             ->with('success', 'Call deleted successfully.');
+    }
+
+    /**
+     * Cancel a call by updating its status to cancelled and logging the change.
+     */
+    public function cancel(Request $request, Call $call): RedirectResponse
+    {
+        // Guard: prevent cancelling an already finished call
+        if ($call->status === Call::STATUS_FINISHED) {
+            return redirect()->route('calls.index')
+                ->withErrors('Chamado já finalizado não pode ser cancelado.');
+        }
+
+        // Guard: if already cancelled
+        if ($call->status === Call::STATUS_CANCELLED) {
+            return redirect()->route('calls.index')
+                ->with('info', 'Chamado já está cancelado.');
+        }
+
+        $oldValues = $call->toArray();
+        $call->status = Call::STATUS_CANCELLED;
+        $call->save();
+
+        // Log audit with explicit old and new values
+        if (class_exists(AuditHelper::class)) {
+            AuditHelper::logUpdateCustomData($call, $call->toArray(), $request, [], $oldValues);
+        }
+
+        return redirect()->route('calls.index')
+            ->with('success', 'Chamado cancelado com sucesso.');
     }
 }

@@ -41,4 +41,9 @@ class Output extends Model
         return $this->belongsToMany(Product::class, 'product_outputs')
             ->withPivot('quantity', 'quantity_used', 'quantity_returned', 'is_finished', 'observation');
     }
+
+    public function calls()
+    {
+        return $this->hasMany(Call::class);
+    }
 }
