@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('cep', 8)->nullable();
             $table->string('complement')->nullable();
             $table->text('observation')->nullable();
-            $table->enum('status', ['in_progress', 'finished', 'cancelled'])->default('in_progress');
+            $table->enum('status', ['in_progress', 'finished', 'canceled'])->default('in_progress');
             $table->foreignId('output_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });

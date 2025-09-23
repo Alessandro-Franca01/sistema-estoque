@@ -26,7 +26,7 @@ class CallController extends Controller
      */
     public function create(): View
     {
-        $outputs = Output::where('status', '!=', Output::STATUS_COMPLETED)->get();
+        $outputs = Output::where('status', '=', Output::STATUS_PENDING)->get();
 
         return view('calls.create', compact('outputs'));
     }
@@ -79,8 +79,7 @@ class CallController extends Controller
 
             return redirect()->route('calls.index')->withErrors($message);
         }
-
-        $outputs = Output::where('status', '!=', Output::STATUS_COMPLETED)->get();
+        $outputs = Output::where('status', '=', Output::STATUS_PENDING)->get();
 
         return view('calls.edit', compact('call', 'outputs'));
     }
@@ -90,6 +89,7 @@ class CallController extends Controller
      */
     public function update(Request $request, Call $call): RedirectResponse
     {
+//        dd($request->all());
         $oldCall = $call;
 
         $validated = $request->validate([
@@ -102,6 +102,7 @@ class CallController extends Controller
             'cep' => 'nullable|string|max:8',
             'complement' => 'nullable|string',
             'observation' => 'nullable|string',
+//            'status' => 'required|string',
             'output_id' => 'nullable|exists:outputs,id',
         ]);
 

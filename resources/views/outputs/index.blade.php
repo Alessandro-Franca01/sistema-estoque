@@ -58,9 +58,9 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @php
                                         $statusClasses = [
-                                            'pendente' => 'bg-yellow-100 text-yellow-800',
-                                            'concluído' => 'bg-green-100 text-green-800',
-                                            'cancelado' => 'bg-red-100 text-red-800'
+                                            'pending' => 'bg-yellow-100 text-yellow-800',
+                                            'completed' => 'bg-green-100 text-green-800',
+                                            'canceled' => 'bg-red-100 text-red-800'
                                         ];
                                         $status = [
                                             'pending' => 'pendente',

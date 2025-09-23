@@ -61,6 +61,13 @@
                     </form>
                 </div>
 
+                <!-- Mensagem de sucesso -->
+                @if (session('success'))
+                    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+                        <p>{{ session('success') }}</p>
+                    </div>
+                @endif
+
                 <!-- Tabela de Chamados -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
@@ -88,6 +95,9 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     CEP
                                 </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                </th>
                                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Ações
                                 </th>
@@ -100,7 +110,7 @@
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                             @if($call->type == 'Incidente') bg-red-100 text-red-800
                                             @elseif($call->type == 'Suporte') bg-blue-100 text-blue-800
-                                            @else bg-green-100 text-green-800 @endif">
+                                            @else bg-blue-100 text-blue-800 @endif">
                                             {{ $call->type }}
                                         </span>
                                     </td>
@@ -115,6 +125,26 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">{{ formatCep($call->cep) }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($call->status)
+                                            @php
+                                                $statusClasses = [
+                                                    'in_progress' => 'bg-yellow-100 text-yellow-800',
+                                                    'finished' => 'bg-green-100 text-green-800',
+                                                    'canceled' => 'bg-red-100 text-red-800'
+                                                ];
+                                                $status = [
+                                                    'in_progress' => 'em andamento',
+                                                    'finished' => 'finalizado',
+                                                    'canceled' => 'cancelado'
+                                                ];
+                                                $statusClass = $statusClasses[$call->status] ?? 'bg-gray-100 text-gray-800';
+                                            @endphp
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
+                                                {{ ucfirst($status[$call->status]) }}
+                                            </span>
+                                       @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         <div class="flex justify-center space-x-2">
