@@ -163,4 +163,37 @@ class OutputController extends Controller
 
         return redirect()->route('outputs.index')->with('success', 'Saída finalizada e estoque atualizado com sucesso.');
     }
+
+    /**
+     * Cancelar uma Saída: atualiza o status para 'canceled', marca chamados relacionados como 'canceled' e registra auditoria.
+     */
+    public function cancel(Request $request, Output $output)
+    {
+        // Impede cancelar uma saída já concluída
+        if ($output->status === Output::STATUS_COMPLETED) {
+            return redirect()->route('outputs.index')->withErrors('Saída já finalizada não pode ser cancelada.');
+        }
+
+        // Caso já esteja cancelada
+        if ($output->status === Output::STATUS_CANCELED) {
+            return redirect()->route('outputs.index')->with('info', 'Saída já está cancelada.');
+        }
+
+        $oldValues = $output->toArray();
+        $output->status = Output::STATUS_CANCELED;
+        $output->save();
+
+        // Atualizar status do(s) chamado(s) relacionado(s) para 'canceled'
+        Call::where('output_id', $output->id)
+            ->where('status', 'in_progress')
+            ->update(['status' => 'canceled']);
+
+        // Registrar auditoria com valores antigos e novos explícitos
+        if (class_exists(AuditHelper::class)) {
+            AuditHelper::logUpdateCustomData($output, $output->toArray(), $request, [], $oldValues);
+        }
+
+        return redirect()->route('outputs.index')->with('success', 'Saída cancelada com sucesso.');
+    }
 }
+

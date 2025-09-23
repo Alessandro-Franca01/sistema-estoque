@@ -89,7 +89,6 @@ class CallController extends Controller
      */
     public function update(Request $request, Call $call): RedirectResponse
     {
-//        dd($request->all());
         $oldCall = $call;
 
         $validated = $request->validate([
@@ -102,7 +101,6 @@ class CallController extends Controller
             'cep' => 'nullable|string|max:8',
             'complement' => 'nullable|string',
             'observation' => 'nullable|string',
-//            'status' => 'required|string',
             'output_id' => 'nullable|exists:outputs,id',
         ]);
 

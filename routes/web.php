@@ -92,6 +92,9 @@ Route::middleware('auth')->group(function () {
 
         Route::put('/output/finish/{output}', [OutputController::class, 'finish'])->name('output.finish');
 
+        // Output actions
+        Route::put('/output/{output}/cancel', [OutputController::class, 'cancel'])->name('output.cancel');
+
         // Calls actions
         Route::put('/calls/{call}/cancel', [\App\Http\Controllers\CallController::class, 'cancel'])->name('calls.cancel');
 
