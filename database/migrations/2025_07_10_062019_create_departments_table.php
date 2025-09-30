@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('cep', 8)->nullable();
             $table->text('address')->nullable();
-            $table->string('number', 4)->nullable();
+            $table->string('address_number', 4)->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
