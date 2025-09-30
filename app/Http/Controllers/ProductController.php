@@ -129,16 +129,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Product $product)
-    {
-        // Exclusão de produtos não é permitida
-        return redirect()->route('products.index')
-            ->withErrors('Exclusão de produtos não é permitida.');
-    }
-
-    /**
      * Toggle product status.
      */
     public function toggleStatus(Product $product)

@@ -103,13 +103,6 @@ class OutputController extends Controller
         return redirect()->route('outputs.index')->with('success', 'Saída atualizada com sucesso.');
     }
 
-    public function destroy(Output $output)
-    {
-        $output->delete();
-
-        return redirect()->route('outputs.index')->with('success', 'Saída excluída com sucesso.');
-    }
-
     // TODO: Fazer todos os testes nesse metodo antes de colocar em Produção
     public function finish(Request $request, Output $output)
     {

@@ -59,14 +59,13 @@
                             Filtrar
                         </button>
                     </form>
+                    <!-- Mensagem de sucesso -->
+                    @if (session('success'))
+                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+                            <p>{{ session('success') }}</p>
+                        </div>
+                    @endif
                 </div>
-
-                <!-- Mensagem de sucesso -->
-                @if (session('success'))
-                    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
-                        <p>{{ session('success') }}</p>
-                    </div>
-                @endif
 
                 <!-- Tabela de Chamados -->
                 <div class="overflow-x-auto">
@@ -177,7 +176,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+                                    <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
                                         Nenhum chamado encontrado.
                                     </td>
                                 </tr>

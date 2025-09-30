@@ -25,7 +25,7 @@
             <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-4">
-                    <!-- Nome do Produto -->
+                    <!-- Nome do Produto teste123445 -->
                     <div>
                         <label for="name" class="block text-gray-700 text-sm font-bold mb-2">
                             Nome do Produto <span class="text-red-500">*</span>
@@ -40,7 +40,7 @@
                     <!-- Código do Produto -->
                     <div>
                         <label for="code" class="block text-gray-700 text-sm font-bold mb-2">
-                            Código do Produto <span class="text-red-500">*</span>
+                            Código do Produto
                         </label>
                         <input type="text" name="code" id="code" value="{{ old('code') }}"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('code') border-red-500 @enderror">

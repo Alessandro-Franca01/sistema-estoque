@@ -157,28 +157,6 @@ class EntryController extends Controller
         return redirect()->route('entries.index')->with('success', 'Entrada atualizada com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Entry $entry)
-    {
-        $sign = in_array($entry->entry_type, [Entry::TYPE_PURCHASED, Entry::TYPE_FEEDING]) ? 1 : -1;
-        foreach ($entry->products as $product) {
-            $productModel = Product::find($product->id);
-            if ($productModel) {
-                $delta = -1 * $sign * $product->pivot->quantity; // revert effect of this entry on stock
-                if ($delta >= 0) {
-                    $productModel->increment('quantity', $delta);
-                } else {
-                    $productModel->decrement('quantity', abs($delta));
-                }
-            }
-        }
-        $entry->delete();
-
-        return redirect()->route('entries.index')->with('success', 'Entrada excluída com sucesso!');
-    }
-
     public function createReversal()
     {
         $entries = Entry::where('entry_type', '=', 'purchased')->get();
@@ -188,7 +166,6 @@ class EntryController extends Controller
 
     public function storeReversal(Request $request)
     {
-//        dd($request->all());
         $request->validate([
             'entry' => 'required',
             'observation' => 'required|string|max:3000',
@@ -239,7 +216,6 @@ class EntryController extends Controller
      */
     public function storeFeeding(StoreEntryFeedingRequest $request)
     {
-//        dd($request->all());
         if ($request->has('entry_type') != Entry::TYPE_FEEDING) {
             throw new \Exception('Tipo de entrada inválido.');
         }

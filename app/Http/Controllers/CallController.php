@@ -115,17 +115,6 @@ class CallController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Call $call): RedirectResponse
-    {
-        $call->delete();
-
-        return redirect()->route('calls.index')
-            ->with('success', 'Call deleted successfully.');
-    }
-
-    /**
      * Cancel a call by updating its status to cancelled and logging the change.
      */
     public function cancel(Request $request, Call $call): RedirectResponse

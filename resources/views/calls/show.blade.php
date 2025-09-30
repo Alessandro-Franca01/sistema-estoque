@@ -61,14 +61,20 @@
                                 @if($call->status)
                                     @php
                                         $statusClasses = [
-                                            'em andamento' => 'bg-yellow-100 text-yellow-800',
-                                            'concluído' => 'bg-green-100 text-green-800',
-                                            'cancelado' => 'bg-red-100 text-red-800'
+                                            'in_progress' => 'bg-yellow-100 text-yellow-800',
+                                            'completed' => 'bg-green-100 text-green-800',
+                                            'cancelled  ' => 'bg-red-100 text-red-800'
                                         ];
-                                        $statusClass = $statusClasses[$call->output->status] ?? 'bg-gray-100 text-gray-800';
+                                        $statusNameCall = [
+                                            'in_progress' => 'Em andamento',
+                                            'completed' => 'Completo',
+                                            'cancelled  ' => 'Cancelado'
+                                        ];
+                                        $statusClass = $statusClasses[$call->status] ?? 'bg-gray-100 text-gray-800';
+                                        $statusCall = $statusNameCall[$call->status] ?? 'Desconhecido';
                                     @endphp
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
-                                        {{ ucfirst($call->status) }}
+                                        {{ $statusCall }}
                                     </span>
                                @endif
                             </div>
@@ -118,10 +124,16 @@
                                             'concluído' => 'bg-green-100 text-green-800',
                                             'cancelado' => 'bg-red-100 text-red-800'
                                         ];
+                                        $statusNanme = [
+                                            'pending' => 'Pendente',
+                                            'completed' => 'Concluído',
+                                            'cancelled' => 'Cancelado'
+                                        ];
                                         $statusClass = $statusClasses[$call->output->status] ?? 'bg-gray-100 text-gray-800';
+                                        $status = $statusNanme[$call->output->status] ?? 'Status Desconhecido';
                                     @endphp
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusClass }}">
-                                        {{ ucfirst($call->output->status) }}
+                                        {{ $status }}
                                     </span>
                                 @else
                                     <span class="text-gray-400">N/A</span>

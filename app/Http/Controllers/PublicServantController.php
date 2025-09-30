@@ -121,10 +121,4 @@ class PublicServantController extends Controller
 
         return redirect()->route('public_servants.index')->with('success', 'Servidor atualizado com sucesso.');
     }
-
-    public function destroy(PublicServant $publicServant)
-    {
-        $publicServant->delete();
-        return redirect()->route('public_servants.index')->with('success', 'Servidor excluído com sucesso.');
-    }
 }

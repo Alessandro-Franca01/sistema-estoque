@@ -80,14 +80,4 @@ class SupplierController extends Controller
 
         return redirect()->route('suppliers.index')->with('success', 'Fornecedor atualizado com sucesso.');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Supplier $supplier)
-    {
-        $supplier->delete();
-
-        return redirect()->route('suppliers.index')->with('success', 'Fornecedor excluído com sucesso.');
-    }
 }

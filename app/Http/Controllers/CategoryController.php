@@ -104,22 +104,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Category $category)
-    {
-        // Check if category has products
-        if ($category->products()->count() > 0) {
-            return redirect()->route('categories.index')
-                ->with('error', 'Não é possível excluir uma categoria que possui produtos.');
-        }
-        $category->delete();
-
-        return redirect()->route('categories.index')
-            ->with('success', 'Categoria excluída com sucesso.');
-    }
-
-    /**
      * Toggle category status.
      */
     public function toggleStatus(Category $category)
