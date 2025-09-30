@@ -268,9 +268,9 @@
                                 Todos
                             </a>
                             <div class="flex items-center space-x-2">
-                                <a href="{{ route('users.create') }}" class="text-xs sm:text-sm font-medium bg-cyan-500 hover:bg-cyan-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
-                                    Novo
-                                </a>
+{{--                                <a href="{{ route('users.create') }}" class="text-xs sm:text-sm font-medium bg-cyan-500 hover:bg-cyan-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">--}}
+{{--                                    Novo--}}
+{{--                                </a>--}}
                                 <a href="{{ route('users.form.send.email') }}" class="text-xs sm:text-sm font-medium bg-cyan-500 hover:bg-cyan-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
                                     Email de Cadastro
                                 </a>
