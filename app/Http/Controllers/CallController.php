@@ -47,6 +47,7 @@ class CallController extends Controller
             'complement' => 'nullable|string',
             'observation' => 'nullable|string',
             'output_id' => 'nullable|exists:outputs,id',
+            'memorandum_1doc' => 'nullable|string|max:15',
         ]);
 
         $call = Call::create($validated);

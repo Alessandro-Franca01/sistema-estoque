@@ -22,6 +22,7 @@ class Call extends Model
         'status',
         'observation',
         'output_id',
+        'memorandum_1doc',
     ];
 
     // Tipos de chamado

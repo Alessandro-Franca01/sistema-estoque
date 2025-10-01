@@ -24,11 +24,11 @@
                             <select id="type" name="type" required class="mt-1 block w-full py-2 px-3 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('type') border-red-300 text-red-900 @enderror">
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('type') border-red-300 text-red-900 @enderror">
                                 <option value="">Selecione o tipo</option>
-                                <option value="whatssap" @if(old('type')=='WhatsApp') selected @endif>WhatsApp</option>
-                                <option value="phone" @if(old('type')=='Telefone') selected @endif>Telefone</option>
+                                <option value="1doc" @if(old('type')=='Solicitanção 1Doc') selected @endif>Solicitanção 1Doc</option>
+                                <option value="call_center" @if(old('type')=='Call Center') selected @endif>Call Center</option>
                                 <option value="conectar_cabedelo" @if(old('type')=='Conecta_App') selected @endif>Conecta App</option>
-                                <option value="personally" @if(old('type')=='Pessoalmente') selected @endif>Pessoalmente</option>
-                                <option value="other" @if(old('type')=='Outro') selected @endif>Outro</option>
+                                <option value="directive_solicitation" @if(old('type')=='Solicitação Diretiva') selected @endif>Solicitação Diretiva</option>
+                                <option value="other" @if(old('type')=='Outros') selected @endif>Outros</option>
                             </select>
                             @error('type')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -58,6 +58,19 @@
                                 placeholder="Código do cliente">
                             @error('connect_code')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Memorando 1Doc -->
+                        <div>
+                            <label for="memorandum_1doc" class="block text-sm font-medium text-gray-700">
+                                Memorando 1Doc
+                            </label>
+                            <input type="text" id="memorandum_1doc" name="memorandum_1doc" value="{{ old('memorandum_1doc') }}"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('memorandum_1doc') border-red-300 text-red-900 @enderror"
+                                   placeholder="Número do Memorando">
+                            @error('memorandum_1doc')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
