@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('calls', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['whatssap', 'conectar_cabedelo', 'personally', 'phone', 'other'])->default('phone');
+            $table->enum('type', ['call_center', 'conectar_cabedelo', 'directive_solicitation', '1doc', 'other'])->default('call_center');
             $table->string('service_order', '30')->nullable();
             $table->string('connect_code', '20')->nullable();
-            $table->string('phone')->nullable();
+            $table->string('phone', '15')->nullable();
             $table->string('applicant')->nullable();
+            $table->string('memorandum_1doc', '15')->nullable();
             $table->text('destination');
             $table->string('cep', 8)->nullable();
             $table->string('complement')->nullable();

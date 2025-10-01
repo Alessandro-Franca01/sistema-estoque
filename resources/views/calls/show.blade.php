@@ -43,10 +43,18 @@
                             <p class="text-sm font-medium text-gray-500">Tipo</p>
                             <p class="mt-1 text-sm text-gray-900 capitalize">{{ str_replace('_', ' ', $call->type) }}</p>
                         </div>
+                        @if($call->connect_code)
                         <div>
                             <p class="text-sm font-medium text-gray-500">Código App Conecta</p>
                             <p class="mt-1 text-sm text-gray-900">{{ $call->connect_code ?? 'N/A' }}</p>
                         </div>
+                        @endif
+                        @if($call->memorandum_1doc)
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Memorando 1Doc</p>
+                                <p class="mt-1 text-sm text-gray-900">{{ $call->memorandum_1doc ?? 'N/A' }}</p>
+                            </div>
+                        @endif
                         <div>
                             <p class="text-sm font-medium text-gray-500">Telefone</p>
                             <p class="mt-1 text-sm text-gray-900">{{ $call->phone ?? 'N/A' }}</p>
@@ -62,12 +70,12 @@
                                     @php
                                         $statusClasses = [
                                             'in_progress' => 'bg-yellow-100 text-yellow-800',
-                                            'completed' => 'bg-green-100 text-green-800',
+                                            'finished' => 'bg-green-100 text-green-800',
                                             'cancelled  ' => 'bg-red-100 text-red-800'
                                         ];
                                         $statusNameCall = [
                                             'in_progress' => 'Em andamento',
-                                            'completed' => 'Completo',
+                                            'finished' => 'Finalizado',
                                             'cancelled  ' => 'Cancelado'
                                         ];
                                         $statusClass = $statusClasses[$call->status] ?? 'bg-gray-100 text-gray-800';
