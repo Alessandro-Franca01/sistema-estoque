@@ -135,25 +135,29 @@
         document.addEventListener('DOMContentLoaded', function() {
             let productIndex = 0;
             const products = @json($products ?? []); // Garante que products será um array mesmo se $products for null
-            const selectedProducts = new Set(); // Controla produtos já escolhidos
+            // Mapas auxiliares
+            const productsByName = new Map((products || []).map(p => [String(p.name).trim().toLowerCase(), p]));
+            const productsById = new Map((products || []).map(p => [String(p.id), p]));
 
-            // Atualiza as opções (desabilita as já selecionadas em outros selects)
-            function updateSelectOptions() {
-                const selects = document.querySelectorAll('#products-container select[name^="products["][name$="][product_id]"]');
-                const currentSelections = new Map();
-                selects.forEach((sel) => {
-                    currentSelections.set(sel, sel.value);
+            // Datalist compartilhado
+            const datalistId = 'products_datalist';
+            const existingDatalist = document.getElementById(datalistId);
+            if (!existingDatalist) {
+                const dl = document.createElement('datalist');
+                dl.id = datalistId;
+                (products || []).forEach(product => {
+                    const opt = document.createElement('option');
+                    opt.value = product.name;
+                    opt.label = `Estoque: ${product.quantity} | ID: ${product.id}`;
+                    opt.setAttribute('data-id', product.id);
+                    dl.appendChild(opt);
                 });
+                document.body.appendChild(dl);
+            }
 
-                selects.forEach((sel) => {
-                    const ownValue = currentSelections.get(sel);
-                    Array.from(sel.options).forEach((opt) => {
-                        if (!opt.value) return; // ignore placeholder
-                        // Desabilita se já selecionado em outro select
-                        const isSelectedElsewhere = selectedProducts.has(opt.value) && opt.value !== ownValue;
-                        opt.disabled = isSelectedElsewhere;
-                    });
-                });
+            function resolveProductByInput(text) {
+                const key = String(text || '').trim().toLowerCase();
+                return productsByName.get(key) || null;
             }
 
             function addProductField() {
@@ -165,10 +169,8 @@
 
                     <div class="mb-4">
                         <label for="products_${productIndex}_product_id" class="block text-gray-700 text-sm font-bold mb-2">Produto <span class="text-red-500">*</span></label>
-                        <select name="products[${productIndex}][product_id]" id="products_${productIndex}_product_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                            <option value="">Selecione um produto</option>
-                            ${products.map(product => `<option value="${product.id}">${product.name} (Estoque: ${product.quantity})</option>`).join('')}
-                        </select>
+                        <input type="text" id="products_${productIndex}_product_label" name="products[${productIndex}][product_label]" list="${datalistId}" placeholder="Digite ou selecione o produto" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <input type="hidden" id="products_${productIndex}_product_id" name="products[${productIndex}][product_id]" />
                     </div>
 
                     <div class="mb-4">
@@ -190,45 +192,35 @@
 
                 // Adiciona evento de clique para remover o produto
                 productDiv.querySelector('.remove-product').addEventListener('click', function() {
-                    // Ao remover, liberar o produto selecionado deste bloco
-                    const select = productDiv.querySelector('select[name^="products["][name$="][product_id]"]');
-                    const prev = select?.dataset?.prev || '';
-                    if (prev) {
-                        selectedProducts.delete(prev);
-                    }
-                    updateSelectOptions();
                     productDiv.remove();
                 });
 
-                // Lidar com mudança de seleção para evitar duplicidade
-                const selectEl = productDiv.querySelector(`select#products_${productIndex}_product_id`);
-                selectEl.dataset.prev = '';
-                selectEl.addEventListener('change', (e) => {
-                    const sel = e.currentTarget;
-                    const previous = sel.dataset.prev || '';
-                    const current = sel.value;
+                // Ligações para o input com datalist e o hidden com o id
+                const labelInput = productDiv.querySelector(`#products_${productIndex}_product_label`);
+                const hiddenId = productDiv.querySelector(`#products_${productIndex}_product_id`);
 
-                    // Remover o anterior do conjunto
-                    if (previous) {
-                        selectedProducts.delete(previous);
+                function validateAndSetProduct() {
+                    const match = resolveProductByInput(labelInput.value);
+                    if (!match) {
+                        hiddenId.value = '';
+                        return;
                     }
-
-                    // Se já estiver selecionado em outro lugar, bloquear e restaurar
-                    if (current && selectedProducts.has(current)) {
-                        alert('Este produto já foi selecionado em outra linha. Escolha um produto diferente.');
-                        sel.value = '';
-                        sel.dataset.prev = '';
-                    } else {
-                        if (current) {
-                            selectedProducts.add(current);
-                        }
-                        sel.dataset.prev = current;
+                    // Evita duplicidade
+                    const otherIds = Array.from(document.querySelectorAll('#products-container input[name$="[product_id]"]'))
+                        .filter(el => el !== hiddenId)
+                        .map(el => el.value)
+                        .filter(Boolean);
+                    if (otherIds.includes(String(match.id))) {
+                        alert('Este produto já foi adicionado. Selecione outro.');
+                        labelInput.value = '';
+                        hiddenId.value = '';
+                        return;
                     }
-                    updateSelectOptions();
-                });
+                    hiddenId.value = match.id;
+                }
 
-                // Atualiza opções ao adicionar um novo bloco
-                updateSelectOptions();
+                labelInput.addEventListener('change', validateAndSetProduct);
+                labelInput.addEventListener('blur', validateAndSetProduct);
 
                 productIndex++;
             }
@@ -241,6 +233,29 @@
 
             // Adiciona um campo de produto por padrão quando a página carrega
             addProductField();
+
+            // Validação no submit
+            const formEl = document.querySelector('form');
+            formEl.addEventListener('submit', function(e) {
+                const hiddenIds = Array.from(document.querySelectorAll('#products-container input[name$="[product_id]"]'));
+                const labels = Array.from(document.querySelectorAll('#products-container input[name$="[product_label]"]'));
+                for (let i = 0; i < labels.length; i++) {
+                    const label = labels[i].value;
+                    const idVal = hiddenIds[i]?.value || '';
+                    const match = resolveProductByInput(label);
+                    if (!match || String(match.id) !== String(idVal)) {
+                        e.preventDefault();
+                        alert('Selecione um produto válido da lista para todos os itens.');
+                        return;
+                    }
+                }
+                const values = hiddenIds.map(s => s.value).filter(Boolean);
+                const hasDup = new Set(values).size !== values.length;
+                if (hasDup) {
+                    e.preventDefault();
+                    alert('Há produtos duplicados na lista. Remova os duplicados antes de enviar.');
+                }
+            });
         });
     </script>
 
