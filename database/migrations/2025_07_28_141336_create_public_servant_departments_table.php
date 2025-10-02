@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('public_servant_departments', function (Blueprint $table) {
             $table->id();
+            $table->string('position')->nullable();
             $table->enum('job_function', ['ADMINISTRADOR', 'ALMOXARIFE', 'OPERADOR', 'SERVIDOR'])->default('SERVIDOR');
             $table->foreignId('public_servant_id')->constrained('public_servants')->onDelete('cascade');
             $table->foreignId('department_id')->constrained('departments')->onDelete('cascade');
