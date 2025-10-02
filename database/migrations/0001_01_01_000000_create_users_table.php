@@ -42,10 +42,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->json('preferences')->nullable();
             $table->string('password');
             $table->boolean('is_active')->default(true);
-            $table->timestamp('last_login_at')->nullable(); // Criar uma tabela de Log e add esses campos: user_id, ip_address, user_agent
-            $table->string('last_login_ip')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
