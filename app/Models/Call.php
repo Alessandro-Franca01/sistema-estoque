@@ -41,4 +41,12 @@ class Call extends Model
     {
         return $this->belongsTo(Output::class);
     }
+
+    /**
+     * Tenant: Departamento ao qual o chamado pertence.
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
 }

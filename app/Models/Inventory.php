@@ -22,4 +22,12 @@ class Inventory extends Model
     {
         return $this->hasMany(ItemInventory::class);
     }
+
+    /**
+     * Tenant: Departamento ao qual o inventário pertence.
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 }

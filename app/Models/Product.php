@@ -70,6 +70,14 @@ class Product extends Model
     }
 
     /**
+     * Tenant: Departamento proprietário do produto.
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    /**
      * Check if the product is in stock.
      */
     public function getIsInStockAttribute(): bool

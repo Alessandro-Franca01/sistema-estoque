@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Supplier extends Model
 {
@@ -40,5 +41,13 @@ class Supplier extends Model
     public function getDisplayNameAttribute(): string
     {
         return $this->trade_name ?: $this->legal_name;
+    }
+
+    /**
+     * Tenant: Departamento ao qual o fornecedor pertence.
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
     }
 }

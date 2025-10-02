@@ -41,6 +41,14 @@ class Entry extends Model
             ->withPivot(['batch_item', 'quantity', 'unit_cost', 'total_cost']);
     }
 
+    /**
+     * Tenant: Departamento ao qual a entrada pertence.
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
     /*
     public function productEntries()
     {

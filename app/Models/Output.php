@@ -46,4 +46,12 @@ class Output extends Model
     {
         return $this->hasMany(Call::class);
     }
+
+    /**
+     * Tenant: Departamento ao qual a saída pertence.
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 }
