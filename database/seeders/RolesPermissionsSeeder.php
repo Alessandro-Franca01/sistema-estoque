@@ -63,6 +63,7 @@ class RolesPermissionsSeeder extends Seeder
 
     private function createPermissions()
     {
+        // TODO: ADD DEPOIS AS PERMISSOES DOS FLUXOS DE ENTRADA, SAIDA E CHAMADOS
         $permissionsData = [
             // ==========================================
             // MÓDULO: DASHBOARD E NAVEGAÇÃO
