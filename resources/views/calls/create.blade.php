@@ -49,7 +49,7 @@
                         </div>
 
                         <!-- Código de Conexão -->
-                        <div>
+                        <div id="group_connect_code" class="{{ old('type') === 'conectar_cabedelo' ? '' : 'hidden' }}">
                             <label for="connect_code" class="block text-sm font-medium text-gray-700">
                                 Código Conecta Cabedelo
                             </label>
@@ -62,7 +62,7 @@
                         </div>
 
                         <!-- Memorando 1Doc -->
-                        <div>
+                        <div id="group_memorandum_1doc" class="{{ old('type') === '1doc' ? '' : 'hidden' }}">
                             <label for="memorandum_1doc" class="block text-sm font-medium text-gray-700">
                                 Memorando 1Doc
                             </label>
@@ -194,6 +194,22 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Controle de exibição condicional por Tipo
+        const typeSelect = document.getElementById('type');
+        const connectGroup = document.getElementById('group_connect_code');
+        const memoGroup = document.getElementById('group_memorandum_1doc');
+
+        function updateTypeVisibility() {
+            const val = typeSelect ? typeSelect.value : '';
+            if (connectGroup) connectGroup.classList.toggle('hidden', val !== 'conectar_cabedelo');
+            if (memoGroup) memoGroup.classList.toggle('hidden', val !== '1doc');
+        }
+
+        if (typeSelect) {
+            updateTypeVisibility();
+            typeSelect.addEventListener('change', updateTypeVisibility);
+        }
+
         const cepInput = document.getElementById('cep');
         const destinationInput = document.getElementById('destination');
         const complementInput = document.getElementById('complement');

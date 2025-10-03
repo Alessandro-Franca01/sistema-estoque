@@ -89,7 +89,15 @@
                         @enderror
                     </div>
 
-                    <!-- Função -->
+                    @php
+                        $deptLink = $publicServant->departments->first();
+                        $pivotJob = old('job_function', optional($deptLink?->pivot)->job_function);
+                        $pivotPos = old('position', optional($deptLink?->pivot)->position);
+                        $pivotDeptId = old('department_id', optional($deptLink)->id);
+                        $pivotActive = old('is_active', optional($deptLink?->pivot)->is_active);
+                    @endphp
+
+                    <!-- Função (pivot job_function) -->
                     <div>
                         <label for="job_function" class="block text-gray-700 text-sm font-bold mb-2">
                             Função <span class="text-red-500">*</span>
@@ -97,8 +105,8 @@
                         <select name="job_function" id="job_function"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('job_function') border-red-500 @enderror" required>
                             <option value="">Selecione uma função</option>
-                            @foreach(['OPERADOR', 'ALMOXARIFE', 'SERVIDOR'] as $job_function)
-                                <option value="{{ $job_function }}" @selected(old('job_function', $publicServant->job_function) == $job_function)>{{ $job_function }}</option>
+                            @foreach(['ADMINISTRADOR','ALMOXARIFE','OPERADOR','SERVIDOR'] as $job_function)
+                                <option value="{{ $job_function }}" @selected($pivotJob == $job_function)>{{ $job_function }}</option>
                             @endforeach
                         </select>
                         @error('job_function')
@@ -106,36 +114,37 @@
                         @enderror
                     </div>
 
-                    <!-- Secretaria -->
+                    <!-- Cargo (pivot position) -->
                     <div>
-                        <label for="position" class="block text-gray-700 text-sm font-bold mb-2">
-                            Secretaria
-                        </label>
-                        <input type="text" name="position" id="position" value="{{ old('position', $publicServant->position) }}"
+                        <label for="position" class="block text-gray-700 text-sm font-bold mb-2">Cargo</label>
+                        <input type="text" name="position" id="position" value="{{ $pivotPos }}"
                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('position') border-red-500 @enderror">
                         @error('position')
                         <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Setor -->
+                    <!-- Departamento (pivot department_id) -->
                     <div>
-                        <label for="department" class="block text-gray-700 text-sm font-bold mb-2">
-                            Setor
-                        </label>
-                        <input type="text" name="department" id="department" value="{{ old('department', $publicServant->department) }}"
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('department') border-red-500 @enderror">
-                        @error('department')
+                        <label for="department_id" class="block text-gray-700 text-sm font-bold mb-2">Departamento <span class="text-red-500">*</span></label>
+                        <select name="department_id" id="department_id"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('department_id') border-red-500 @enderror" required>
+                            <option value="">Selecione um departamento</option>
+                            @foreach($departments as $department)
+                                <option value="{{ $department->id }}" @selected((string)$pivotDeptId === (string)$department->id)>{{ $department->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('department_id')
                         <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Ativo -->
+                    <!-- Status do vínculo (pivot is_active) -->
                     <div class="flex items-center">
-                        <input type="hidden" name="active" value="0">
-                        <input type="checkbox" name="active" id="active" value="1" class="mr-2" @checked(old('active', $publicServant->active))>
-                        <label for="active" class="text-gray-700 text-sm font-bold">Ativo</label>
-                        @error('active')
+                        <input type="hidden" name="is_active" value="0">
+                        <input type="checkbox" name="is_active" id="is_active" value="1" class="mr-2" @checked((bool)$pivotActive)>
+                        <label for="is_active" class="text-gray-700 text-sm font-bold">Vínculo Ativo</label>
+                        @error('is_active')
                         <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
                     </div>

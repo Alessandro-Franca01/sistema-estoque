@@ -101,6 +101,10 @@ Route::middleware('auth')->group(function () {
         Route::get('entries/feeding/create', [EntryController::class, 'createFeeding'])->name('entries.feeding.create');
         Route::post('entries/feeding', [EntryController::class, 'storeFeeding'])->name('entries.feeding');
     });
+
+    // Tenant: alterar departamento atual na sessão
+    Route::post('/tenant/switch', [\App\Http\Controllers\TenantController::class, 'switch'])
+        ->name('tenant.switch');
 });
 
 require __DIR__.'/auth.php';

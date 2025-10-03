@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Concerns\TenantScoped;
 
 class Supplier extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantScoped;
 
     protected $fillable = [
         'legal_name',
@@ -40,5 +42,13 @@ class Supplier extends Model
     public function getDisplayNameAttribute(): string
     {
         return $this->trade_name ?: $this->legal_name;
+    }
+
+    /**
+     * Tenant: Departamento ao qual o fornecedor pertence.
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
     }
 }

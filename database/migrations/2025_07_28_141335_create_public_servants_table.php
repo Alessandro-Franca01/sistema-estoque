@@ -15,10 +15,6 @@ return new class extends Migration
             $table->string('registration')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->string('department')->nullable();
-            $table->string('position')->nullable();
-            $table->enum('job_function', ['ADMINISTRADOR', 'ALMOXARIFE', 'OPERADOR', 'SERVIDOR'])->default('SERVIDOR');
-            $table->boolean('active')->default(true);
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });

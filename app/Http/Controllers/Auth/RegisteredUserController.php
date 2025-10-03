@@ -9,8 +9,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use App\Models\PublicServant;
 use App\Models\Role;
+use App\Models\Department;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -22,9 +24,9 @@ class RegisteredUserController extends Controller
     public function create(): View
     {
         $roles = Role::all();
+        $departments = Department::active()->orderBy('name')->get();
 
-        return view('auth.register', compact('roles'));
-
+        return view('auth.register', compact('roles', 'departments'));
     }
 
     /**
@@ -41,41 +43,47 @@ class RegisteredUserController extends Controller
             'registration' => ['required', 'string', 'max:255', 'unique:'.PublicServant::class],
             'cpf' => ['required', 'string', 'max:14', 'unique:'.PublicServant::class],
             'phone' => ['nullable', 'string', 'max:20'],
-            'department' => ['nullable', 'string', 'max:255'],
+            'department_id' => ['required', 'exists:departments,id'],
             'position' => ['nullable', 'string', 'max:255'],
-            'job_function' => ['required', 'string', 'max:255'],
+            'job_function' => ['required', 'in:ADMINISTRADOR,ALMOXARIFE,OPERADOR,SERVIDOR'],
             'role' => ['required', 'string', 'max:100'],
 
         ]);
         $role = Role::where('name', strtoupper($request->role))->first();
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => $role->id,
-        ]);
-//      TODO: Assinar com o ID do usuario que enviou o email
-        $assigned_by = null;
-        $assigned_by = $user->id;
+        $user = DB::transaction(function () use ($request, $role) {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role_id' => $role->id,
+            ]);
 
-        $user->roles()->attach($role->id, [
-                'assigned_by' => $assigned_by,
+            // registra papel com metadados
+            $user->roles()->attach($role->id, [
+                'assigned_by' => $user->id,
                 'assigned_at' => now(),
             ]);
 
-        $publicServant = PublicServant::create([
-            'name' => $request->name,
-            'registration' => $request->registration,
-            'cpf' => $request->cpf,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'department' => $request->department,
-            'position' => $request->position,
-            'job_function' => $request->job_function,
-            'active' => true,
-            'user_id' => $user->id,
-        ]);
+            // cria servidor público
+            $publicServant = PublicServant::create([
+                'name' => $request->name,
+                'registration' => $request->registration,
+                'cpf' => $request->cpf,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'user_id' => $user->id,
+            ]);
+
+            // vincula ao departamento com dados do pivô
+            $publicServant->departments()->attach($request->integer('department_id'), [
+                'position' => $request->input('position'),
+                'job_function' => $request->input('job_function'),
+                'is_active' => true,
+            ]);
+
+            return $user;
+        });
 
         event(new Registered($user));
 

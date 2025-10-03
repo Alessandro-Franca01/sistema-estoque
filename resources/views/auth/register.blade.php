@@ -50,9 +50,18 @@
 
                 <!-- Department -->
                 <div>
-                    <x-input-label for="department" :value="__('Departamento')" class="mb-1" />
-                    <x-text-input id="department" class="block w-full" type="text" name="department" :value="old('department')" autocomplete="department" />
-                    <x-input-error :messages="$errors->get('department')" class="mt-2" />
+                    <x-input-label for="department_id" :value="__('Secreataria')" class="mb-1" />
+                    <select id="department_id" name="department_id" class="block w-full rounded-md shadow-sm bg-gray-100 dark:bg-gray-900 text-white border-t border-gray-200 dark:border-gray-700 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600">
+                        <option value="">Selecione uma Secreataria...</option>
+                        @isset($departments)
+                            @foreach($departments as $department)
+                                <option value="{{ $department->id }}" {{ (string)old('department_id') === (string)$department->id ? 'selected' : '' }}>
+                                    {{ $department->name }}
+                                </option>
+                            @endforeach
+                        @endisset
+                    </select>
+                    <x-input-error :messages="$errors->get('department_id')" class="mt-2" />
                 </div>
 
                 <!-- Registration -->
@@ -74,8 +83,10 @@
                     <x-input-label for="job_function" :value="__('Função')" class="mb-1" />
                     <select id="job_function" name="job_function" class="block w-full rounded-md shadow-sm bg-gray-100 dark:bg-gray-900 text-white border-t border-gray-200 dark:border-gray-700 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600">
                         <option value="">Selecione uma função...</option>
-                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>
-                        <option value="ALMOXARIFE">ALMOXARIFE</option>
+                        <option value="ADMINISTRADOR" {{ old('job_function')==='ADMINISTRADOR' ? 'selected' : '' }}>ADMINISTRADOR</option>
+                        <option value="ALMOXARIFE" {{ old('job_function')==='ALMOXARIFE' ? 'selected' : '' }}>ALMOXARIFE</option>
+                        <option value="OPERADOR" {{ old('job_function')==='OPERADOR' ? 'selected' : '' }}>OPERADOR</option>
+                        <option value="SERVIDOR" {{ old('job_function')==='SERVIDOR' ? 'selected' : '' }}>SERVIDOR</option>
                     </select>
                     <x-input-error :messages="$errors->get('job_function')" class="mt-2" />
                 </div>
