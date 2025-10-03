@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\AuditHelper;
 use App\Models\PublicServant;
+use App\Models\Department;
+use App\Support\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -11,30 +13,61 @@ class PublicServantController extends Controller
 {
     public function index()
     {
-        $servants = PublicServant::orderBy('name')->paginate(5);
+        // Lista apenas os servidores vinculados ao Department (tenant)
+        $servants = PublicServant::query()
+            ->whereHas('departments', function ($q) {
+                if (Tenant::id()) {
+                    $q->where('departments.id', Tenant::id());
+                }
+            })
+//            ->whereDoesntHave('user') // TODO: NÃO ESTÁ FUNCIONANDO!
+            ->with(['departments' => function ($q) {
+                if (Tenant::id()) {
+                    $q->where('departments.id', Tenant::id());
+                }
+            }])
+            ->orderBy('name')
+            ->paginate(5);
 
         return view('public_servants.index', compact('servants'));
     }
 
     public function create()
     {
-        return view('public_servants.create');
+        $tenantId = Tenant::id();
+        $departments = Department::where('id', '=', $tenantId)->get();
+
+        return view('public_servants.create', compact('departments'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'registration' => 'required|string|max:255',
-            'cpf' => 'required|string|size:11|unique:public_servants',
+            'registration' => 'required|string|max:255|unique:public_servants,registration',
+            'cpf' => 'required|string|size:11|unique:public_servants,cpf',
             'email' => 'nullable|email',
             'phone' => 'nullable|string',
-            'job_function' => 'required|in:OPERADOR,ALMOXARIFE,SERVIDOR',
-            'department' => 'required|string|max:120',
-            'position' => 'required|string|max:150',
+            'job_function' => 'required|in:OPERADOR,ALMOXARIFE,SERVIDOR,ADMINISTRADOR',
+            'department_id' => 'required|exists:departments,id',
+            'position' => 'nullable|string|max:150',
         ]);
 
-        $pulicServant = PublicServant::create($request->all());
+        $pulicServant = PublicServant::create([
+            'name' => $validated['name'],
+            'registration' => $validated['registration'],
+            'cpf' => $validated['cpf'],
+            'email' => $validated['email'] ?? null,
+            'phone' => $validated['phone'] ?? null,
+            'user_id' => auth()->id(),
+        ]);
+
+        // Vincula ao departamento via pivô
+        $pulicServant->departments()->attach((int) $validated['department_id'], [
+            'position' => $validated['position'] ?? null,
+            'job_function' => $validated['job_function'],
+            'is_active' => true,
+        ]);
 
         AuditHelper::logCreate($pulicServant, $request);
 
@@ -48,7 +81,15 @@ class PublicServantController extends Controller
 
     public function edit(PublicServant $publicServant)
     {
-        return view('public_servants.edit', compact('publicServant'));
+        // Eager load do vínculo com o tenant atual
+        $publicServant->load(['departments' => function ($q) {
+            if (Tenant::id()) {
+                $q->where('departments.id', Tenant::id());
+            }
+        }]);
+
+        $departments = Department::active()->orderBy('name')->get();
+        return view('public_servants.edit', compact('publicServant', 'departments'));
     }
 
     public function update(Request $request, PublicServant $publicServant)
@@ -78,11 +119,7 @@ class PublicServantController extends Controller
                 'cpf' => 'required|string|size:11|unique:public_servants,cpf,' . $publicServant->id,
                 'email' => 'nullable|email',
                 'phone' => 'nullable|string',
-                // Os campos abaixo não são exibidos no formulário de perfil, então não obrigamos
-                'department' => 'nullable|string|max:120',
-                'position' => 'nullable|string|max:150',
-                'job_function' => 'nullable|in:OPERADOR,ALMOXARIFE,SERVIDOR',
-                'active' => 'nullable|boolean',
+                // Não atualiza pivô via perfil
             ]);
         } else {
             $validated = $request->validate([
@@ -91,10 +128,10 @@ class PublicServantController extends Controller
                 'cpf' => 'required|string|size:11|unique:public_servants,cpf,' . $publicServant->id,
                 'email' => 'nullable|email',
                 'phone' => 'nullable|string',
-                'job_function' => 'required|in:OPERADOR,ALMOXARIFE,SERVIDOR',
-                'department' => 'required|string|max:120',
-                'position' => 'required|string|max:150',
-                'active' => 'boolean',
+                'job_function' => 'required|in:OPERADOR,ALMOXARIFE,SERVIDOR,ADMINISTRADOR',
+                'department_id' => 'required|exists:departments,id',
+                'position' => 'nullable|string|max:150',
+                'is_active' => 'nullable|boolean',
             ]);
         }
 
@@ -102,7 +139,32 @@ class PublicServantController extends Controller
         $original = $publicServant->getOriginal();
 
         // Atualiza somente os campos esperados
-        $publicServant->update($validated);
+        $publicServant->update([
+            'name' => $validated['name'],
+            'registration' => $validated['registration'],
+            'cpf' => $validated['cpf'],
+            'email' => $validated['email'] ?? null,
+            'phone' => $validated['phone'] ?? null,
+        ]);
+
+        // Atualiza dados do pivô quando vindo do formulário geral (não perfil)
+        if (!$request->boolean('from_profile')) {
+            $depId = (int) $validated['department_id'];
+            // garanta vínculo
+            if (!$publicServant->departments()->where('departments.id', $depId)->exists()) {
+                $publicServant->departments()->attach($depId, [
+                    'position' => $validated['position'] ?? null,
+                    'job_function' => $validated['job_function'],
+                    'is_active' => array_key_exists('is_active', $validated) ? (bool)$validated['is_active'] : true,
+                ]);
+            } else {
+                $publicServant->departments()->updateExistingPivot($depId, [
+                    'position' => $validated['position'] ?? null,
+                    'job_function' => $validated['job_function'],
+                    'is_active' => array_key_exists('is_active', $validated) ? (bool)$validated['is_active'] : $publicServant->departments()->where('departments.id', $depId)->first()->pivot->is_active,
+                ]);
+            }
+        }
 
         // Calcula alterações com base no original
         $current = $publicServant->getAttributes();

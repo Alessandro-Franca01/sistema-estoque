@@ -88,15 +88,15 @@
                         @enderror
                     </div>
 
-                    <!-- Função -->
+                    <!-- Função (job_function) -->
                     <div>
-                        <label for="role" class="block text-gray-700 text-sm font-bold mb-2">
+                        <label for="job_function" class="block text-gray-700 text-sm font-bold mb-2">
                             Função <span class="text-red-500">*</span>
                         </label>
                         <select name="job_function" id="job_function"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('role') border-red-500 @enderror" required>
                             <option value="">Selecione uma função</option>
-                            @foreach(['OPERADOR', 'SERVIDOR'] as $job_function)
+                            @foreach(['ADMINISTRADOR','ALMOXARIFE','OPERADOR','SERVIDOR'] as $job_function)
                                 <option value="{{ $job_function }}" @selected(old('job_function') == $job_function)>{{ $job_function }}</option>
                             @endforeach
                         </select>
@@ -105,11 +105,9 @@
                         @enderror
                     </div>
 
-                    <!-- Secretaria -->
+                    <!-- Cargo (position) -->
                     <div>
-                        <label for="position" class="block text-gray-700 text-sm font-bold mb-2">
-                            Secretaria
-                        </label>
+                        <label for="position" class="block text-gray-700 text-sm font-bold mb-2">Cargo</label>
                         <input type="text" name="position" id="position" value="{{ old('position') }}"
                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('position') border-red-500 @enderror">
                         @error('position')
@@ -117,14 +115,19 @@
                         @enderror
                     </div>
 
-                    <!-- Setor -->
+                    <!-- Departamento (tenant) -->
                     <div>
-                        <label for="department" class="block text-gray-700 text-sm font-bold mb-2">
-                            Setor
-                        </label>
-                        <input type="text" name="department" id="department" value="{{ old('department') }}"
-                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('department') border-red-500 @enderror">
-                        @error('department')
+                        <label for="department_id" class="block text-gray-700 text-sm font-bold mb-2">Departamento <span class="text-red-500">*</span></label>
+                        <select name="department_id" id="department_id"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('department_id') border-red-500 @enderror" required>
+                            <option value="">Selecione um departamento</option>
+                            @isset($departments)
+                                @foreach($departments as $department)
+                                    <option value="{{ $department->id }}" @selected(old('department_id') == $department->id)>{{ $department->name }}</option>
+                                @endforeach
+                            @endisset
+                        </select>
+                        @error('department_id')
                         <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
                     </div>
