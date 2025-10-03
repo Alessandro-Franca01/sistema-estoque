@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Concerns\TenantScoped;
 
 class Inventory extends Model
 {
+    use TenantScoped;
+
     protected $fillable = [
         'start_date',
         'end_date',
