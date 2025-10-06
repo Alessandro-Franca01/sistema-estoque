@@ -1,5 +1,5 @@
 self.addEventListener("install", (event) => {
-  const VERSION = "v1.0.0";
+  const VERSION = "v1.0.1";
   const CACHE_NAME = `gestin-cache-${VERSION}`;
 
   // Pré-cache de rotas/app shell mínimas
@@ -24,7 +24,7 @@ self.addEventListener("install", (event) => {
 
 // Limpa caches antigos na ativação
 self.addEventListener("activate", (event) => {
-  const VERSION = "v1.0.0";
+  const VERSION = "v1.0.1";
   const CURRENT_CACHE = `gestin-cache-${VERSION}`;
   event.waitUntil(
     (async () => {
@@ -89,6 +89,6 @@ async function cacheFirst(request) {
 }
 
 function getCurrentCacheName() {
-  const VERSION = "v1.0.0";
+  const VERSION = "v1.0.1";
   return `gestin-cache-${VERSION}`;
 }

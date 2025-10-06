@@ -11,7 +11,7 @@
         <link rel="manifest" href="/manifest.json" type="application/manifest+json">
 
         <!-- Ícone para iOS -->
-        <link rel="apple-touch-icon" href="{{ asset('assets/icons/gestin_icone_192.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('assets/icons/gestin_icone_192.png') }}?v=1.0.1">
 
         <!-- Cor da barra de status -->
         <meta name="theme-color" content="#004aad">
