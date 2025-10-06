@@ -50,6 +50,13 @@ class RolesPermissionsSeeder extends Seeder
                 'description' => 'Acesso limitado apenas para consulta de informações específicas.',
                 'is_active' => true,
             ],
+            // TODO: Definir o espoco completo para esta role
+            [
+                'name' => 'mantenedor',
+                'display_name' => 'Mantenedor',
+                'description' => 'Acesso especifico e limitado para funcionaliades de manutenção do sistema.',
+                'is_active' => true,
+            ],
         ];
 
         $roles = [];
@@ -63,6 +70,7 @@ class RolesPermissionsSeeder extends Seeder
 
     private function createPermissions()
     {
+        // TODO: ADD DEPOIS AS PERMISSOES DOS FLUXOS DE ENTRADA, SAIDA E CHAMADOS
         $permissionsData = [
             // ==========================================
             // MÓDULO: DASHBOARD E NAVEGAÇÃO

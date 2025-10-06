@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Concerns\TenantScoped;
 
 class Entry extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantScoped;
 
     protected $fillable = [
         'supplier_id',
@@ -39,6 +40,14 @@ class Entry extends Model
     {
         return $this->belongsToMany(Product::class, 'product_entries')
             ->withPivot(['batch_item', 'quantity', 'unit_cost', 'total_cost']);
+    }
+
+    /**
+     * Tenant: Departamento ao qual a entrada pertence.
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 
     /*

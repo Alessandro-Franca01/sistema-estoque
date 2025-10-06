@@ -14,6 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         // Aliases de middleware da aplicação
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'set.current.department' => \App\Http\Middleware\SetCurrentDepartment::class,
+        ]);
+
+        // Middleware de tenant para todas as rotas web
+        $middleware->appendToGroup('web', [
+            'set.current.department',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

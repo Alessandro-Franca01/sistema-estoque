@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Concerns\TenantScoped;
 
 class Output extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantScoped;
 
     protected $table = 'outputs';
 
@@ -45,5 +46,13 @@ class Output extends Model
     public function calls()
     {
         return $this->hasMany(Call::class);
+    }
+
+    /**
+     * Tenant: Departamento ao qual a saída pertence.
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 }

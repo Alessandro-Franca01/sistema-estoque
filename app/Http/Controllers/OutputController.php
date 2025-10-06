@@ -9,6 +9,7 @@ use App\Models\PublicServant;
 use App\Models\Call;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Support\Tenant;
 
 class OutputController extends Controller
 {
@@ -22,7 +23,16 @@ class OutputController extends Controller
     public function create()
     {
         $products = Product::where('quantity', '>', 0)->get();
-        $public_servants = PublicServant::all()->where('job_function', 'OPERADOR');
+        $public_servants = PublicServant::join('public_servant_departments', 'public_servant_departments.public_servant_id', '=', 'public_servants.id')
+            ->where('public_servant_departments.job_function', 'OPERADOR')
+            ->where(function ($q) {
+                if (Tenant::id()) {
+                    $q->where('public_servant_departments.department_id', Tenant::id());
+                }
+            })
+            ->select('public_servants.*')
+            ->distinct()
+            ->get();
 
         return view('outputs.create', compact('products', 'public_servants'));
     }

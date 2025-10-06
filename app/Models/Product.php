@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use App\Models\Concerns\TenantScoped;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantScoped;
 
     protected $fillable = [
         'name',
@@ -67,6 +68,14 @@ class Product extends Model
     public function productOutputs(): HasMany
     {
         return $this->hasMany(ProductOutput::class);
+    }
+
+    /**
+     * Tenant: Departamento proprietário do produto.
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
     }
 
     /**

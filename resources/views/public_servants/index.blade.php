@@ -65,18 +65,26 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ customMask($servant->registration, '##.###-#') }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ formatDocument($servant->cpf) }}</td>
+                                @php
+                                    $dept = $servant->departments->first();
+                                    $jobFunction = $dept?->pivot?->job_function;
+                                    $isActivePivot = (bool) ($dept?->pivot?->is_active);
+                                    $jobClass = match($jobFunction) {
+                                        'ADMINISTRADOR' => 'bg-yellow-100 text-yellow-800',
+                                        'ALMOXARIFE' => 'bg-purple-100 text-purple-800',
+                                        'OPERADOR' => 'bg-blue-100 text-blue-800',
+                                        'SERVIDOR' => 'bg-gray-100 text-gray-800',
+                                        default => 'bg-gray-100 text-gray-800',
+                                    };
+                                @endphp
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                        {{ $servant->job_function === 'ALMOXARIFE' ? 'bg-purple-100 text-purple-800' :
-                                          ($servant->job_function === 'OPERADOR' ? 'bg-blue-100 text-blue-800' :
-                                          'bg-gray-100 text-gray-800') }}">
-                                        {{ $servant->job_function }}
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $jobClass }}">
+                                        {{ $jobFunction ?? '—' }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                        {{ $servant->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        {{ $servant->active ? 'Ativo' : 'Inativo' }}
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $isActivePivot ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                        {{ $isActivePivot ? 'Ativo' : 'Inativo' }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
