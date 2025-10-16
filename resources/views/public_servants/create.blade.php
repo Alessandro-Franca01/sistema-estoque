@@ -54,11 +54,10 @@
                     <!-- CPF -->
                     <div>
                         <label for="cpf" class="block text-gray-700 text-sm font-bold mb-2">
-                            CPF <span class="text-red-500">*</span>
+                            CPF
                         </label>
                         <input type="text" name="cpf" id="cpf" value="{{ old('cpf') }}" maxlength="11"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('cpf') border-red-500 @enderror"
-                            required>
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('cpf') border-red-500 @enderror>
                         @error('cpf')
                             <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
@@ -96,7 +95,7 @@
                         <select name="job_function" id="job_function"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('role') border-red-500 @enderror" required>
                             <option value="">Selecione uma função</option>
-                            @foreach(['ADMINISTRADOR','ALMOXARIFE','OPERADOR','SERVIDOR'] as $job_function)
+                            @foreach(['OPERADOR','SERVIDOR'] as $job_function)
                                 <option value="{{ $job_function }}" @selected(old('job_function') == $job_function)>{{ $job_function }}</option>
                             @endforeach
                         </select>

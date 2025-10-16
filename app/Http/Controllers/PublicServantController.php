@@ -20,7 +20,6 @@ class PublicServantController extends Controller
                     $q->where('departments.id', Tenant::id());
                 }
             })
-//            ->whereDoesntHave('user') // TODO: NÃO ESTÁ FUNCIONANDO!
             ->with(['departments' => function ($q) {
                 if (Tenant::id()) {
                     $q->where('departments.id', Tenant::id());
@@ -44,8 +43,8 @@ class PublicServantController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'registration' => 'required|string|max:255|unique:public_servants,registration',
-            'cpf' => 'required|string|size:11|unique:public_servants,cpf',
+            'registration' => 'required|string|max:9|unique:public_servants,registration',
+            'cpf' => 'nullable|string|size:11',
             'email' => 'nullable|email',
             'phone' => 'nullable|string',
             'job_function' => 'required|in:OPERADOR,ALMOXARIFE,SERVIDOR,ADMINISTRADOR',

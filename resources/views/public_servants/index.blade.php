@@ -64,7 +64,7 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ customMask($servant->registration, '##.###-#') }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ formatDocument($servant->cpf) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ !empty($servant->cpf)  ? formatDocument($servant->cpf) : 'N/A' }}</td>
                                 @php
                                     $dept = $servant->departments->first();
                                     $jobFunction = $dept?->pivot?->job_function;
