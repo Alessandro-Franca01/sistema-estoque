@@ -124,27 +124,46 @@
                         @enderror
                     </div>
 
-                    <!-- Departamento (pivot department_id) -->
+                    <!-- Departamento (tenant) -->
                     <div>
                         <label for="department_id" class="block text-gray-700 text-sm font-bold mb-2">Departamento <span class="text-red-500">*</span></label>
                         <select name="department_id" id="department_id"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('department_id') border-red-500 @enderror" required>
                             <option value="">Selecione um departamento</option>
-                            @foreach($departments as $department)
-                                <option value="{{ $department->id }}" @selected((string)$pivotDeptId === (string)$department->id)>{{ $department->name }}</option>
-                            @endforeach
+                            @isset($departments)
+                                @foreach($departments as $department)
+                                    <option value="{{ $department->id }}" @selected($pivotDeptId == $department->id)>{{ $department->name }}</option>
+                                @endforeach
+                            @endisset
                         </select>
                         @error('department_id')
                         <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Status do vínculo (pivot is_active) -->
-                    <div class="flex items-center">
-                        <input type="hidden" name="is_active" value="0">
-                        <input type="checkbox" name="is_active" id="is_active" value="1" class="mr-2" @checked((bool)$pivotActive)>
-                        <label for="is_active" class="text-gray-700 text-sm font-bold">Vínculo Ativo</label>
-                        @error('is_active')
+                    <!-- Tipo de Servidor -->
+                    <div>
+                        <label for="servant_type" class="block text-gray-700 text-sm font-bold mb-2">Tipo de Servidor <span class="text-red-500">*</span></label>
+                        <select name="servant_type" id="servant_type"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('servant_type') border-red-500 @enderror" required>
+                            <option value="">Selecione o tipo de servidor</option>
+                            <option value="EFETIVO" @selected(old('servant_type', $publicServant->servant_type) == 'EFETIVO')>Efetivo</option>
+                            <option value="COMISSIONADO" @selected(old('servant_type', $publicServant->servant_type) == 'COMISSIONADO')>Comissionado</option>
+                            <option value="TERCEIRIZADO" @selected(old('servant_type', $publicServant->servant_type) == 'TERCEIRIZADO')>Terceirizado</option>
+                        </select>
+                        @error('servant_type')
+                        <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Empresa Terceirizada (mostrar apenas para terceirizados) -->
+                    <div id="outsourced-company-container" class="{{ old('servant_type', $publicServant->servant_type) === 'TERCEIRIZADO' ? '' : 'hidden' }}">
+                        <label for="outsourced_company" class="block text-gray-700 text-sm font-bold mb-2">Empresa Terceirizada</label>
+                        <input type="text" name="outsourced_company" id="outsourced_company" 
+                               value="{{ old('outsourced_company', $publicServant->outsourced_company) }}"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('outsourced_company') border-red-500 @enderror"
+                               {{ old('servant_type', $publicServant->servant_type) === 'TERCEIRIZADO' ? 'required' : '' }}>
+                        @error('outsourced_company')
                         <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -154,7 +173,7 @@
                 <div class="flex items-center justify-between mt-8">
                     <button type="submit"
                         class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        Salvar Alterações
+                        Salvar alterações
                     </button>
                     <a href="{{ route('public_servants.index') }}"
                         class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
@@ -169,13 +188,34 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Máscara para CPF
+        // Mostrar/ocultar campo de empresa terceirizada
+        const servantTypeSelect = document.getElementById('servant_type');
+        const outsourcedCompanyContainer = document.getElementById('outsourced-company-container');
+        
+        function toggleOutsourcedCompany() {
+            if (servantTypeSelect && outsourcedCompanyContainer) {
+                if (servantTypeSelect.value === 'TERCEIRIZADO') {
+                    outsourcedCompanyContainer.classList.remove('hidden');
+                    document.getElementById('outsourced_company').setAttribute('required', 'required');
+                } else {
+                    outsourcedCompanyContainer.classList.add('hidden');
+                    document.getElementById('outsourced_company').removeAttribute('required');
+                }
+            }
+        }
+        
+        // Verificar valor inicial
+        if (servantTypeSelect) {
+            toggleOutsourcedCompany();
+            servantTypeSelect.addEventListener('change', toggleOutsourcedCompany);
+        }
+
+        // Código existente
         const cpfInput = document.getElementById('cpf');
         if (cpfInput) {
             cpfInput.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\D/g, '');
                 e.target.value = value;
-            });
         }
 
         // Máscara para telefone

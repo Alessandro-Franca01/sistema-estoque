@@ -20,7 +20,6 @@ class PublicServantController extends Controller
                     $q->where('departments.id', Tenant::id());
                 }
             })
-//            ->whereDoesntHave('user') // TODO: NÃO ESTÁ FUNCIONANDO!
             ->with(['departments' => function ($q) {
                 if (Tenant::id()) {
                     $q->where('departments.id', Tenant::id());
@@ -44,11 +43,13 @@ class PublicServantController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'registration' => 'required|string|max:255|unique:public_servants,registration',
-            'cpf' => 'required|string|size:11|unique:public_servants,cpf',
+            'registration' => 'required|string|max:9|unique:public_servants,registration',
+            'cpf' => 'nullable|string|size:11',
             'email' => 'nullable|email',
             'phone' => 'nullable|string',
             'job_function' => 'required|in:OPERADOR,ALMOXARIFE,SERVIDOR,ADMINISTRADOR',
+            'servant_type' => 'required|in:EFETIVO,COMISSIONADO,TERCEIRIZADO',
+            'outsourced_company' => 'nullable|required_if:servant_type,TERCEIRIZADO|string|max:255',
             'department_id' => 'required|exists:departments,id',
             'position' => 'nullable|string|max:150',
         ]);
@@ -59,7 +60,9 @@ class PublicServantController extends Controller
             'cpf' => $validated['cpf'],
             'email' => $validated['email'] ?? null,
             'phone' => $validated['phone'] ?? null,
-            'user_id' => auth()->id(),
+            'servant_type' => $validated['servant_type'],
+            'outsourced_company' => $validated['servant_type'] === 'TERCEIRIZADO' ? $validated['outsourced_company'] : null,
+            'user_id' => null,
         ]);
 
         // Vincula ao departamento via pivô
