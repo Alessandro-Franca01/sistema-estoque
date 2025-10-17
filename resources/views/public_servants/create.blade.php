@@ -131,6 +131,31 @@
                         @enderror
                     </div>
 
+                    <!-- Tipo de Servidor -->
+                    <div>
+                        <label for="servant_type" class="block text-gray-700 text-sm font-bold mb-2">Tipo de Servidor <span class="text-red-500">*</span></label>
+                        <select name="servant_type" id="servant_type"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('servant_type') border-red-500 @enderror" required>
+                            <option value="">Selecione o tipo de servidor</option>
+                            <option value="EFETIVO" @selected(old('servant_type') == 'EFETIVO')>Efetivo</option>
+                            <option value="COMISSIONADO" @selected(old('servant_type') == 'COMISSIONADO')>Comissionado</option>
+                            <option value="TERCEIRIZADO" @selected(old('servant_type') == 'TERCEIRIZADO')>Terceirizado</option>
+                        </select>
+                        @error('servant_type')
+                        <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Empresa Terceirizada (mostrar apenas para terceirizados) -->
+                    <div id="outsourced-company-container" class="hidden">
+                        <label for="outsourced_company" class="block text-gray-700 text-sm font-bold mb-2">Empresa Terceirizada</label>
+                        <input type="text" name="outsourced_company" id="outsourced_company" value="{{ old('outsourced_company') }}"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('outsourced_company') border-red-500 @enderror">
+                        @error('outsourced_company')
+                        <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                 </div>
 
                 <div class="flex items-center justify-between mt-8">
@@ -145,13 +170,34 @@
                 </div>
             </form>
         </div>
-    </div>
 </div>
 
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Máscara para CPF
+        // Mostrar/ocultar campo de empresa terceirizada
+        const servantTypeSelect = document.getElementById('servant_type');
+        const outsourcedCompanyContainer = document.getElementById('outsourced-company-container');
+        
+        function toggleOutsourcedCompany() {
+            if (servantTypeSelect && outsourcedCompanyContainer) {
+                if (servantTypeSelect.value === 'TERCEIRIZADO') {
+                    outsourcedCompanyContainer.classList.remove('hidden');
+                    document.getElementById('outsourced_company').setAttribute('required', 'required');
+                } else {
+                    outsourcedCompanyContainer.classList.add('hidden');
+                    document.getElementById('outsourced_company').removeAttribute('required');
+                }
+            }
+        }
+        
+        // Verificar valor inicial
+        if (servantTypeSelect) {
+            toggleOutsourcedCompany();
+            servantTypeSelect.addEventListener('change', toggleOutsourcedCompany);
+        }
+
+        // Código existente
         const cpfInput = document.getElementById('cpf');
         if (cpfInput) {
             cpfInput.addEventListener('input', function(e) {

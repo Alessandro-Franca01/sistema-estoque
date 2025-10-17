@@ -21,7 +21,25 @@ class UserController
 {
     public function index(): View
     {
-        $users = User::with(['roles'])->get();
+        // Se for administrador do sistema, mostra todos os usuários
+        if (auth()->user()->hasRole('administrador')) {
+            $users = User::with(['roles'])->get();
+        } else {
+            // Caso contrário, filtra os usuários pelo departamento do usuário logado
+            $users = User::query()
+                ->whereHas('publicServant.departments', function($query) {
+                    // Obtém os IDs dos departamentos do usuário logado
+                    $departmentIds = auth()->user()->publicServant
+                        ->departments()
+                        ->wherePivot('is_active', true)
+                        ->pluck('departments.id');
+                    
+                    $query->whereIn('departments.id', $departmentIds);
+                })
+                ->orWhere('id', auth()->id()) // Inclui o próprio usuário logado
+                ->with(['roles'])
+                ->get();
+        }
 
         return view('users.index', compact('users'));
     }

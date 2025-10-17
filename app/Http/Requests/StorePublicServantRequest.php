@@ -22,7 +22,16 @@ class StorePublicServantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'registration' => 'required|string|max:9|unique:public_servants,registration',
+            'cpf' => 'nullable|string|size:11',
+            'email' => 'nullable|email',
+            'phone' => 'nullable|string',
+            'job_function' => 'required|in:OPERADOR,ALMOXARIFE,SERVIDOR,ADMINISTRADOR',
+            'position' => 'nullable|string|max:255',
+            'department_id' => 'required|exists:departments,id',
+            'outsourced_company' => 'nullable|string|max:255',
+            'servant_type' => 'required|in:EFETIVO,COMISSIONADO,TERCEIRIZADO',
         ];
     }
 }

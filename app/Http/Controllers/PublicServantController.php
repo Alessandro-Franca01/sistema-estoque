@@ -48,6 +48,8 @@ class PublicServantController extends Controller
             'email' => 'nullable|email',
             'phone' => 'nullable|string',
             'job_function' => 'required|in:OPERADOR,ALMOXARIFE,SERVIDOR,ADMINISTRADOR',
+            'servant_type' => 'required|in:EFETIVO,COMISSIONADO,TERCEIRIZADO',
+            'outsourced_company' => 'nullable|required_if:servant_type,TERCEIRIZADO|string|max:255',
             'department_id' => 'required|exists:departments,id',
             'position' => 'nullable|string|max:150',
         ]);
@@ -58,7 +60,9 @@ class PublicServantController extends Controller
             'cpf' => $validated['cpf'],
             'email' => $validated['email'] ?? null,
             'phone' => $validated['phone'] ?? null,
-            'user_id' => auth()->id(),
+            'servant_type' => $validated['servant_type'],
+            'outsourced_company' => $validated['servant_type'] === 'TERCEIRIZADO' ? $validated['outsourced_company'] : null,
+            'user_id' => null,
         ]);
 
         // Vincula ao departamento via pivô

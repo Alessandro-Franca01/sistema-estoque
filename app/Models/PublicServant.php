@@ -11,6 +11,8 @@ class PublicServant extends Model
 {
     protected $fillable = [
         'name',
+        'outsourced_company',
+        'servant_type',
         'registration',
         'cpf',
         'email',
