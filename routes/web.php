@@ -36,9 +36,13 @@ Route::get('/register/email', function (Request $request) {
 })->name('register.email');
 
 // Routes to apresentation page (not used)
-//Route::get('/apresentation', function () {
-//    return view('apresentation');
-//});
+Route::get('/apresentation', function () {
+    return view('apresentation');
+});
+
+Route::get('/tech-doc', function () {
+    return view('tech_documentation');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
