@@ -21,6 +21,7 @@
                 <p><strong>Data de Fim:</strong> {{ $inventory->end_date ?? 'N/A' }}</p>
                 <p><strong>Status:</strong> {{ $inventory->status }}</p>
                 <p><strong>Responsável:</strong> {{ $inventory->user->name }}</p>
+                <p><strong>Observações:</strong> {{ $inventory->observations ?? 'N/A' }}</p>
             </div>
 
             <h2 class="text-xl font-semibold mb-4">Itens do Inventário</h2>

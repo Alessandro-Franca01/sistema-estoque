@@ -18,7 +18,7 @@
                     <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Status</label>
                     <select name="status" id="status" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         <option value="OPEN" {{ $inventory->status == 'OPEN' ? 'selected' : '' }}>Aberto</option>
-                        <option value="IN_PROGRESS" {{ $inventory->status == 'IN_PROGRESS' ? 'selected' : '' }}>Em Andamento</option>
+                        <option value="STOPPED" {{ $inventory->status == 'STOPPED' ? 'selected' : '' }}>Parado</option>
                         <option value="CLOSED" {{ $inventory->status == 'CLOSED' ? 'selected' : '' }}>Fechado</option>
                     </select>
                 </div>
@@ -26,6 +26,11 @@
                 <div class="mb-4">
                     <label for="end_date" class="block text-gray-700 text-sm font-bold mb-2">Data de Fim</label>
                     <input type="datetime-local" name="end_date" id="end_date" value="{{ old('end_date', $inventory->end_date) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <div class="mb-4">
+                    <label for="observations" class="block text-gray-700 text-sm font-bold mb-2">Observações do Inventário</label>
+                    <textarea name="observations" id="observations" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('observations', $inventory->observations) }}</textarea>
                 </div>
 
                 <h2 class="text-xl font-semibold mt-6 mb-4">Itens do Inventário</h2>

@@ -25,6 +25,11 @@
                 </div>
 
                 <div class="mb-4">
+                    <label for="observations" class="block text-gray-700 text-sm font-bold mb-2">Observações</label>
+                    <textarea name="observations" id="observations" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('observations') }}</textarea>
+                </div>
+
+                <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Produtos</label>
                     @foreach($products as $product)
                         <div class="flex items-center mb-2">
