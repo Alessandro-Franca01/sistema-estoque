@@ -34,11 +34,13 @@ class InventoryController extends Controller
             'start_date' => 'required|date',
             'products' => 'nullable|array',
             'products.*' => 'exists:products,id',
+            'observations' => 'nullable|string',
         ]);
 
         $inventory = new \App\Models\Inventory([
             'start_date' => $request->get('start_date'),
             'user_id' => auth()->id(),
+            'observations' => $request->get('observations'),
         ]);
         $inventory->save();
 
@@ -55,7 +57,7 @@ class InventoryController extends Controller
             }
         }
 
-        return redirect()->route('inventories.index')->with('success', 'Inventário criado com sucesso. Todos os produtos foram adicionados.');
+        return redirect()->route('inventories.index')->with('success', 'Inventário criado com sucesso.');
     }
 
     /**
@@ -83,7 +85,7 @@ class InventoryController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'status' => 'required|in:OPEN,IN_PROGRESS,CLOSED',
+            'status' => 'required|in:OPEN,STOPPED,CLOSED',
             'end_date' => 'nullable|date',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.real_amount' => 'nullable|numeric',
@@ -91,9 +93,13 @@ class InventoryController extends Controller
         ]);
 
         $inventory = \App\Models\Inventory::findOrFail($id);
-        $inventory->update($request->only(['status', 'end_date']));
+        $inventory->update($request->only(['status', 'end_date', 'observations']));
 
         if ($inventory->status == 'CLOSED') {
+            if (!$inventory->end_date) {
+                $inventory->end_date = now();
+                $inventory->save();
+            }
             foreach ($inventory->items as $item) {
                 if (!is_null($item->real_amount)) {
                     $product = $item->product;
@@ -104,12 +110,20 @@ class InventoryController extends Controller
         }
 
         if ($request->has('items')) {
-            foreach ($request->items as $itemData) {
+            $errorMessages = [];
+            foreach ($request->items as $index => $itemData) {
                 $item = $inventory->items()->where('product_id', $itemData['product_id'])->first();
                 if ($item) {
-                    $itemData['difference'] = ($itemData['real_amount'] ?? $item->real_amount) - $item->register_amount;
+                    $real = array_key_exists('real_amount', $itemData) ? $itemData['real_amount'] : $item->real_amount;
+                    $itemData['difference'] = is_null($real) ? null : ($real - $item->register_amount);
+                    if (!is_null($itemData['difference']) && $itemData['difference'] != 0 && empty($itemData['observations'])) {
+                        $errorMessages["items.$index.observations"] = 'Informe observações quando houver diferença na contagem.';
+                    }
                     $item->update($itemData);
                 }
+            }
+            if (!empty($errorMessages)) {
+                return back()->withErrors($errorMessages)->withInput();
             }
         }
 
