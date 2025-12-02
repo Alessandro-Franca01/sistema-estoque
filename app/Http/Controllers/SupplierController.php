@@ -33,6 +33,7 @@ class SupplierController extends Controller
      */
     public function store(StoreSupplierRequest $request)
     {
+//        dd($request->all());
         $this->authorize('create', Supplier::class);
 
         $data = $request->validated();

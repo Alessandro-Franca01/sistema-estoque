@@ -20,7 +20,7 @@
                             <label for="legal_name" class="block text-gray-700 text-sm font-bold mb-2">
                                 Razão Social <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" name="legal_name" id="legal_name" value="{{ old('legal_name') }}"
+                            <input type="text" name="legal_name" placeholder="Digite a Razão Social" id="legal_name" value="{{ old('legal_name') }}"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('legal_name') border-red-500 @enderror">
                             @error('legal_name')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
@@ -31,7 +31,7 @@
                             <label for="trade_name" class="block text-gray-700 text-sm font-bold mb-2">
                                 Nome Fantasia
                             </label>
-                            <input type="text" name="trade_name" id="trade_name" value="{{ old('trade_name') }}"
+                            <input type="text" name="trade_name" id="trade_name" placeholder="Digite o nome Fantasia" value="{{ old('trade_name') }}"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('trade_name') border-red-500 @enderror">
                             @error('trade_name')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
@@ -42,7 +42,7 @@
                             <label for="cnpj" class="block text-gray-700 text-sm font-bold mb-2">
                                 CNPJ <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" name="cnpj" id="cnpj" value="{{ old('cnpj') }}"
+                            <input type="text" name="cnpj" id="cnpj" placeholder="00.000.000/0000-00" value="{{ old('cnpj') }}"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('cnpj') border-red-500 @enderror">
                             @error('cnpj')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
@@ -53,7 +53,7 @@
                             <label for="state_registration" class="block text-gray-700 text-sm font-bold mb-2">
                                 Inscrição Estadual
                             </label>
-                            <input type="text" name="state_registration" id="state_registration" value="{{ old('state_registration') }}"
+                            <input type="text" name="state_registration" placeholder="Digite somente os números" id="state_registration" value="{{ old('state_registration') }}"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('state_registration') border-red-500 @enderror">
                             @error('state_registration')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
@@ -64,7 +64,7 @@
                             <label for="municipal_registration" class="block text-gray-700 text-sm font-bold mb-2">
                                 Inscrição Municipal
                             </label>
-                            <input type="text" name="municipal_registration" id="municipal_registration" value="{{ old('municipal_registration') }}"
+                            <input type="text" name="municipal_registration" placeholder="Digite somente os números" id="municipal_registration" value="{{ old('municipal_registration') }}"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('municipal_registration') border-red-500 @enderror">
                             @error('municipal_registration')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
@@ -78,7 +78,7 @@
                             <label for="email" class="block text-gray-700 text-sm font-bold mb-2">
                                 E-mail
                             </label>
-                            <input type="email" name="email" id="email" value="{{ old('email') }}"
+                            <input type="email" name="email" placeholder="fornecedor@email.com" id="email" value="{{ old('email') }}"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('email') border-red-500 @enderror">
                             @error('email')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
@@ -89,7 +89,7 @@
                             <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">
                                 Telefone
                             </label>
-                            <input type="text" name="phone" id="phone" value="{{ old('phone') }}"
+                            <input type="text" name="phone" placeholder="(00) 0000-0000" id="phone" value="{{ old('phone') }}"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('phone') border-red-500 @enderror">
                             @error('phone')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
@@ -99,9 +99,8 @@
                         <div>
                             <label for="observation" class="block text-gray-700 text-sm font-bold mb-2">
                                 Observações
-                            </label>
                             <textarea name="observation" id="observation" rows="3"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('observation') border-red-500 @enderror">{{ old('notes') }}</textarea>
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('observation') border-red-500 @enderror">{{ old('observation') }}</textarea>
                             @error('observation')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                             @enderror
@@ -131,3 +130,61 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const $cnpj = document.getElementById('cnpj');
+        const $phone = document.getElementById('phone');
+        const $stateReg = document.getElementById('state_registration');
+        const $municipalReg = document.getElementById('municipal_registration');
+
+        function onlyDigits(v) {
+            return (v || '').replace(/\D/g, '');
+        }
+        function maskCNPJ(v) {
+            v = onlyDigits(v).slice(0, 14);
+            // 00.000.000/0000-00
+            if (v.length > 12) v = v.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*/, '$1.$2.$3/$4-$5');
+            else if (v.length > 8) v = v.replace(/(\d{2})(\d{3})(\d{3})(\d{0,4}).*/, '$1.$2.$3/$4');
+            else if (v.length > 5) v = v.replace(/(\d{2})(\d{3})(\d{0,3}).*/, '$1.$2.$3');
+            else if (v.length > 2) v = v.replace(/(\d{2})(\d{0,3}).*/, '$1.$2');
+            return v;
+        }
+
+        function maskPhone(v) {
+            v = onlyDigits(v).slice(0, 11);
+            // Dynamic: (00) 0000-0000 or (00) 00000-0000
+            if (v.length > 10) {
+                // 11 digits => (00) 00000-0000
+                v = v.replace(/(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3');
+            } else if (v.length > 6) {
+                // 7-10 digits => (00) 0000-0000
+                v = v.replace(/(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+            } else if (v.length > 2) {
+                v = v.replace(/(\d{2})(\d{0,5}).*/, '($1) $2');
+            } else if (v.length > 0) {
+                v = v.replace(/(\d{0,2}).*/, '($1)');
+            }
+            return v;
+        }
+
+        function attach(el, formatter) {
+            if (!el) return;
+            const handler = () => {
+                el.value = formatter(el.value);
+            };
+            ['input', 'change', 'blur', 'paste'].forEach(evt => el.addEventListener(evt, handler));
+            // Apply immediately if value exists (e.g., on validation error old())
+            handler();
+        }
+
+        attach($cnpj, maskCNPJ);
+        attach($phone, maskPhone);
+
+        // Registrations: keep only digits (limit to 20 to avoid overflow)
+        attach($stateReg, v => onlyDigits(v).slice(0, 20));
+        attach($municipalReg, v => onlyDigits(v).slice(0, 20));
+    });
+</script>
+@endpush
