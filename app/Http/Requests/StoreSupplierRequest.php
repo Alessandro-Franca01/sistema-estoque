@@ -26,7 +26,6 @@ class StoreSupplierRequest extends FormRequest
             'state_registration' => $stateReg,
             'municipal_registration' => $municipalReg,
             'email' => $this->filled('email') ? trim(strtolower((string) $this->input('email'))) : null,
-            // Checkbox ausente vira false
             'active' => $this->boolean('active'),
         ]);
     }
@@ -36,13 +35,10 @@ class StoreSupplierRequest extends FormRequest
         return [
             'legal_name' => 'required|string|max:255',
             'trade_name' => 'nullable|string|max:255',
-            // banco: string(14), salvamos apenas dígitos
             'cnpj' => 'required|string|size:14|unique:suppliers,cnpj',
-            // banco: 9 e 7, salvamos apenas dígitos
             'state_registration' => 'nullable|string|max:11',
             'municipal_registration' => 'nullable|string|max:9',
             'email' => 'nullable|email:rfc,dns|max:255',
-            // salvando apenas dígitos, normalmente 10 ou 11. coluna tem 14, então validamos até 11 dígitos
             'phone' => 'nullable|string|max:18',
             'active' => 'boolean',
             'observation' => 'nullable|string',
