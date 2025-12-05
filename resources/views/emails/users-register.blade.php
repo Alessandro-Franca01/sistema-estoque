@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\URL;
          [
              'perfil' => $data['role'],
              'email' => $data['email'],
+             'department_id' => $data['department_id']
          ]
      );
     $link = '<a href="'.$url.'"> Click aqui. </a>';
@@ -47,6 +48,10 @@ use Illuminate\Support\Facades\URL;
                             <tr>
                                 <td style="padding:12px;background:#fafafa;"><strong>Perfil</strong></td>
                                 <td style="padding:12px;">{{ $data['role'] ?? 'Não informado' }}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:12px;background:#fafafa;border-top:1px solid #e5e7eb;"><strong>Departamento</strong></td>
+                                <td style="padding:12px;border-top:1px solid #e5e7eb;">{{ $data['department_name'] ?? 'Não informado' }}</td>
                             </tr>
                             @if(!empty($data['registration']))
                                 <tr>

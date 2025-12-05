@@ -11,12 +11,13 @@ use App\Models\Concerns\TenantScoped;
 
 class Category extends Model
 {
-    use HasFactory, TenantScoped;
+    use HasFactory;
 
     protected $fillable = [
         'name',
         'description',
         'is_active',
+        //'department_id',
     ];
 
     protected $casts = [
@@ -29,6 +30,12 @@ class Category extends Model
     protected static function boot()
     {
         parent::boot();
+
+        static::saving(function ($category) {
+            if (\App\Support\Tenant::id()) {
+                $category->department_id = \App\Support\Tenant::id();
+            }
+        });
     }
 
     /**

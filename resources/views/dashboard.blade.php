@@ -148,10 +148,10 @@
                             <a href="{{ route('entries.feeding.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
                                 Alimentação
                             </a>
-                        @if($canAdmin)
                             <a href="{{ route('entries.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
                                 Nova
                             </a>
+                        @if($canAdmin)
                             <a href="{{ route('entries.reversal.create') }}" class="text-xs sm:text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">
                                 Estorno
                             </a>
@@ -212,6 +212,34 @@
                         </a>
                     </div>
                 </div>
+
+{{--                TODO: ADD NOVO PERFIL DE MANTENEDOR --}}
+{{--                @if($canAdmin)--}}
+{{--                    <!-- Card Departamentos -->--}}
+{{--                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex flex-col border border-gray-200 dark:border-gray-700 transition-all hover:shadow-md">--}}
+{{--                        <div class="p-4 sm:p-6 flex items-start flex-grow">--}}
+{{--                            <div class="bg-orange-100 dark:bg-orange-900 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">--}}
+{{--                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-orange-600 dark:text-orange-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">--}}
+{{--                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h3V7H5a2 2 0 00-2 2zm8-2v12h3a2 2 0 002-2V5h-5zm7 0v12h1a2 2 0 002-2V7a2 2 0 00-2-2h-1z" />--}}
+{{--                                </svg>--}}
+{{--                            </div>--}}
+{{--                            <div class="flex-grow min-w-0">--}}
+{{--                                <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Departamentos</h3>--}}
+{{--                                <p class="text-sm sm:text-base text-gray-500 dark:text-gray-400 truncate">Gerencie os departamentos</p>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="px-4 sm:px-6 pb-4 flex justify-between items-center">--}}
+{{--                            <a href="{{ route('departments.index') }}" class="text-xs sm:text-sm font-medium text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-300 transition-colors whitespace-nowrap">--}}
+{{--                                Ver todos--}}
+{{--                            </a>--}}
+{{--                            <a href="{{ route('departments.create') }}" class="text-xs sm:text-sm font-medium bg-orange-500 hover:bg-orange-600 text-white py-1 px-2 sm:py-1 sm:px-3 rounded-lg transition-colors flex items-center whitespace-nowrap">--}}
+{{--                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">--}}
+{{--                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />--}}
+{{--                                </svg>--}}
+{{--                                Novo departamento--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
                 @if($canAdmin)
                     <!-- Card de Servidores -->

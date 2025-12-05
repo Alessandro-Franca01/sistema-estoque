@@ -18,8 +18,7 @@ Route::get('/', function () {
 Route::get('/user/register', [UserController::class, 'register'])->name('user.register');
 Route::post('/user/store', [UserController::class, 'store'])->name('users.store');
 Route::get('/register/email', function (Request $request) {
-
-    if ( $request::hasValidSignature()) {
+    if ($request::hasValidSignature()) {
         $str_register = Str::random(16);
         $hash = password_hash($str_register, PASSWORD_DEFAULT);
         session(['str_token' => $str_register]);
@@ -29,6 +28,7 @@ Route::get('/register/email', function (Request $request) {
                 'tokenRegister' => $hash,
                 'perfil' => $request::input('perfil'),
                 'email' => $request::input('email'),
+                'department_id' => $request::input('department_id')
             ]
         );
     }
@@ -80,6 +80,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
         Route::get('/user/send-email', [UserController::class, 'sendEmailForm'])->name('users.form.send.email');
         Route::post('/user/send-email', [UserController::class, 'sendEmail'])->name('users.send.email');
+        
+        // Departments Management
+        Route::resource('departments', \App\Http\Controllers\DepartmentController::class);
     });
 
     // Rotas exclusivas do almoxarife
