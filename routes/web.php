@@ -80,6 +80,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
         Route::get('/user/send-email', [UserController::class, 'sendEmailForm'])->name('users.form.send.email');
         Route::post('/user/send-email', [UserController::class, 'sendEmail'])->name('users.send.email');
+        
+        // Departments Management
+        Route::resource('departments', \App\Http\Controllers\DepartmentController::class);
     });
 
     // Rotas exclusivas do almoxarife

@@ -33,7 +33,7 @@ class UserController
                         ->departments()
                         ->wherePivot('is_active', true)
                         ->pluck('departments.id');
-                    
+
                     $query->whereIn('departments.id', $departmentIds);
                 })
                 ->orWhere('id', auth()->id()) // Inclui o próprio usuário logado
@@ -110,6 +110,15 @@ class UserController
                     'active' => true,
                     'user_id' => $user->id,
                 ]);
+
+                // Attach department with pivot data( TODO: add values for position, job_function)
+                if ($request->department) {
+                    $publicServant->departments()->attach($request->department, [
+                        'position' => $request->position,
+                        'job_function' => $request->job_function,
+                        'is_active' => true
+                    ]);
+                }
 
                 AuditHelper::logCreate($user, $request);
 
