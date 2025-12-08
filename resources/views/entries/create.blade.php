@@ -174,8 +174,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="products_${productIndex}_batch_number" class="block text-gray-700 text-sm font-bold mb-2">Número do Lote (Produto)</label>
-                        <input type="text" name="products[${productIndex}][batch_number]" id="products_${productIndex}_batch_number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <label for="products_${productIndex}_batch_item" class="block text-gray-700 text-sm font-bold mb-2">Número do Lote (Produto)</label>
+                        <input type="number" name="products[${productIndex}][batch_item]" id="products_${productIndex}_batch_item" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     </div>
 
                     <div class="mb-4">

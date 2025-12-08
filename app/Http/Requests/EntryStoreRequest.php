@@ -35,6 +35,7 @@ class EntryStoreRequest extends FormRequest
             'products.*.product_id' => ['required', 'distinct', 'exists:products,id'],
             'products.*.quantity' => ['required', 'integer', 'min:1'],
             'products.*.unit_cost' => ['nullable', 'numeric', 'min:0'],
+            'products.*.batch_item' => ['nullable', 'numeric', 'min:1'],
         ];
     }
 
