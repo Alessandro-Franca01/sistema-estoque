@@ -33,7 +33,7 @@ class UserController
                         ->departments()
                         ->wherePivot('is_active', true)
                         ->pluck('departments.id');
-                    
+
                     $query->whereIn('departments.id', $departmentIds);
                 })
                 ->orWhere('id', auth()->id()) // Inclui o próprio usuário logado
@@ -53,6 +53,7 @@ class UserController
 
     public function store(Request $request): RedirectResponse
     {
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
@@ -104,12 +105,22 @@ class UserController
                     'cpf' => $request->cpf,
                     'email' => $request->email,
                     'phone' => $request->phone,
-                    'department' => $request->department,
                     'position' => $request->position,
                     'job_function' => $request->job_function,
                     'active' => true,
                     'user_id' => $user->id,
                 ]);
+
+                // Attach department with pivot data
+                if ($request->department_id) {
+                    $publicServant->departments()->attach($request->department_id, [
+                        'position' => $request->position,
+                        'job_function' => $request->job_function,
+                        'is_active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
 
                 AuditHelper::logCreate($user, $request);
 
@@ -148,7 +159,8 @@ class UserController
 
     public function sendEmailForm()
     {
-        return view('users.send-register-email');
+        $departments = \App\Models\Department::orderBy('name')->get();
+        return view('users.send-register-email', compact('departments'));
     }
 
 
@@ -157,11 +169,19 @@ class UserController
         $data = $request->validate([
             'email' => 'required|email',
             'role' => 'required|string|max:20',
+            'department_id' => 'required|exists:departments,id',
         ]);
 
-        Mail::to($data['email'])->send(new UserRegisterMail($data));
+        $department = \App\Models\Department::findOrFail($data['department_id']);
 
-        return back()->with('success', 'Sua mensagem foi enviada com sucesso!');
+        // Adiciona o nome do departamento aos dados do e-mail
+        $emailData = array_merge($data, [
+            'department_name' => $department->name
+        ]);
+
+        Mail::to($data['email'])->send(new UserRegisterMail($emailData));
+
+        return back()->with('success', 'E-mail de cadastro enviado com sucesso!');
     }
 
     public function register(Request $request){
@@ -179,6 +199,7 @@ class UserController
                 'perfil' => $request->perfil,
                 'email' => $request->email,
                 'jobFunction' => $jobFunction,
+                'department_id' => $request->department_id
             ]
         );
     }

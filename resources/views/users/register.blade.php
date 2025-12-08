@@ -52,12 +52,8 @@
                     Profissional
                 </h2>
 
-                <!-- Department -->
-                <div>
-                    <x-input-label for="department" :value="__('Departamento')" class="mb-1" />
-                    <x-text-input id="department" class="block w-full" type="text" name="department" :value="old('department')" autocomplete="department" />
-                    <x-input-error :messages="$errors->get('department')" class="mt-2" />
-                </div>
+                <!-- Department (hidden) -->
+                <input type="hidden" name="department_id" value="{{ request('department_id') }}">
 
                 <!-- Registration -->
                 <div>

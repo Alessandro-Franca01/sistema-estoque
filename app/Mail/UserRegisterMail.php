@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -53,6 +54,15 @@ class UserRegisterMail extends Mailable
             view: 'emails.users-register',
             with: [
                 'data' => $this->data,
+                'url' => URL::temporarySignedRoute(
+                    'register.email',
+                    now()->addMinutes(1440),
+                    [
+                        'perfil' => $this->data['role'],
+                        'email' => $this->data['email'],
+                        'department_id' => $this->data['department_id']
+                    ]
+                )
             ],
         );
     }

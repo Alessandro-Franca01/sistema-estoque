@@ -56,20 +56,40 @@
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="job_function" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
-                            Perfil do Usuário <span class="text-red-500">*</span>
-                        </label>
-                        <select name="role" id="role"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-300 leading-tight focus:outline-none focus:shadow-outline @error('role') border-red-500 @enderror" required>
-                            <option value="">Selecione um perfil</option>
-                            @foreach(['ADMINISTRATIVO', 'ALMOXARIFE'] as $role)
-                                <option value="{{ $role }}" @selected(old('role') == $role)>{{ $role }}</option>
-                            @endforeach
-                        </select>
-                        @error('role')
-                        <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
-                        @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="job_function" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
+                                Perfil do Usuário <span class="text-red-500">*</span>
+                            </label>
+                            <select name="role" id="role"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 leading-tight focus:outline-none focus:shadow-outline @error('role') border-red-500 @enderror" required>
+                                <option value="">Selecione um perfil</option>
+                                @foreach(['ADMINISTRATIVO', 'ALMOXARIFE'] as $role)
+                                    <option value="{{ $role }}" @selected(old('role') == $role)>{{ $role }}</option>
+                                @endforeach
+                            </select>
+                            @error('role')
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="department_id" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-2">
+                                Departamento <span class="text-red-500">*</span>
+                            </label>
+                            <select name="department_id" id="department_id"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 leading-tight focus:outline-none focus:shadow-outline @error('department_id') border-red-500 @enderror" required>
+                                <option value="">Selecione um departamento</option>
+                                @foreach($departments as $department)
+                                    <option value="{{ $department->id }}" @selected(old('department_id') == $department->id)>
+                                        {{ $department->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('department_id')
+                            <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
 
                     <div class="flex items-center justify-between">
