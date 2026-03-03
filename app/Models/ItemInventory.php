@@ -12,7 +12,7 @@ class ItemInventory extends Model
         'register_amount',
         'real_amount',
         'difference',
-        'observations',
+        'reason',
     ];
 
     public function inventory()
