@@ -298,7 +298,6 @@ class InventoryController extends Controller
      */
     public function saveProgress(Request $request, string $id)
     {
-//        dd($request->input(), $id);
         return $this->updateItems($request, $id);
     }
 
