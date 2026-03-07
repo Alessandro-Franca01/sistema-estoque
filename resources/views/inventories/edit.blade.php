@@ -44,7 +44,7 @@
                         <div class="text-sm text-yellow-600 font-medium">Itens com Divergência</div>
                         <div class="text-2xl font-bold text-yellow-800">
                             {{ $inventory->items->filter(function($item) {
-                                return $item->real_amount !== $item->product->quantity;
+                                return $item->real_amount !== null && $item->real_amount != $item->product->quantity;
                             })->count() }}
                         </div>
                     </div>
@@ -78,40 +78,11 @@
                         @method('PUT')
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Status -->
-{{--                            <div>--}}
-{{--                                <label class="block text-sm font-medium text-gray-700 mb-2">Status do Inventário</label>--}}
-{{--                                <div class="flex space-x-4">--}}
-{{--                                    <label class="inline-flex items-center">--}}
-{{--                                        <input type="radio" name="status" value="OPEN" class="form-radio text-purple-600"--}}
-{{--                                            {{ $inventory->status == 'OPEN' ? 'checked' : '' }}>--}}
-{{--                                        <span class="ml-2">Aberto</span>--}}
-{{--                                    </label>--}}
-{{--                                    <label class="inline-flex items-center">--}}
-{{--                                        <input type="radio" name="status" value="STOPPED" class="form-radio text-yellow-600"--}}
-{{--                                            {{ $inventory->status == 'STOPPED' ? 'checked' : '' }}>--}}
-{{--                                        <span class="ml-2">Pausado</span>--}}
-{{--                                    </label>--}}
-{{--                                    <label class="inline-flex items-center">--}}
-{{--                                        <input type="radio" name="status" value="CLOSED" class="form-radio text-green-600"--}}
-{{--                                            {{ $inventory->status == 'CLOSED' ? 'checked' : '' }}>--}}
-{{--                                        <span class="ml-2">Fechado</span>--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-
                             <!-- Data de Início -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Data de Início</label>
                                 <div class="text-gray-900">{{ \Carbon\Carbon::parse($inventory->start_date)->format('d/m/Y H:i') }}</div>
                             </div>
-
-                            <!-- Data de Fim -->
-{{--                            <div>--}}
-{{--                                <label class="block text-sm font-medium text-gray-700 mb-2">Data de Fim</label>--}}
-{{--                                <input type="datetime-local" name="end_date" value="{{ old('end_date', $inventory->end_date) }}"--}}
-{{--                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500">--}}
-{{--                            </div>--}}
 
                             <!-- Observações do Inventário -->
                             <div class="md:col-span-2">
@@ -148,7 +119,16 @@
                 </div>
 
                 <div class="p-6">
-                    <form id="inventoryForm" method="POST" action="#" class="space-y-4">
+                    <div id="errorMessages" class="hidden mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
+                        <div class="flex items-center">
+                            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            <span id="errorMessageText"></span>
+                        </div>
+                    </div>
+
+                    <form id="inventoryForm" method="POST" action="{{ route('inventories.update-items', $inventory->id) }}" class="space-y-4">
                         @csrf
                         @method('PUT')
 
@@ -165,13 +145,13 @@
                                                 <h3 class="text-lg font-medium text-gray-900">{{ $item->product->name }}</h3>
                                                 @if($item->real_amount)
                                                     <span class="ml-2 px-2 py-0.5 text-xs rounded-full
-                                                {{ $item->real_amount == $item->product->quantity ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                                {{ $item->real_amount == $item->product->quantity ? 'OK' : 'Divergente' }}
-                                            </span>
+                                                        {{ $item->real_amount == $item->product->quantity ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                                        {{ $item->real_amount == $item->product->quantity ? 'OK' : 'Divergente' }}
+                                                    </span>
                                                 @else
                                                     <span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-800">
-                                                Pendente
-                                            </span>
+                                                        Pendente
+                                                    </span>
                                                 @endif
                                             </div>
                                             <div class="mt-1 grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
@@ -185,15 +165,13 @@
                                                 </div>
                                                 <div>
                                                     <span class="text-gray-500">Contado:</span>
-                                                    <span class="ml-1 font-bold {{ $item->real_amount != $item->product->quantity ? 'text-yellow-600' : '' }}">
-                                                {{ $item->real_amount ?? '---' }}
-                                            </span>
+                                                    <span class="ml-1 font-bold real-amount-display">{{ $item->real_amount ?? '---' }}</span>
                                                 </div>
                                                 <div>
                                                     <span class="text-gray-500">Diferença:</span>
-                                                    <span class="ml-1 font-bold {{ $item->real_amount ? ($item->real_amount > $item->product->quantity ? 'text-green-600' : 'text-red-600') : '' }}">
-                                                {{ $item->real_amount ? ($item->real_amount - $item->product->quantity) : '---' }}
-                                            </span>
+                                                    <span class="ml-1 font-bold difference-display">
+                                                        {{ $item->real_amount ? ($item->real_amount - $item->product->quantity) : '---' }}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -204,19 +182,39 @@
 
                                             <div>
                                                 <label class="block text-xs text-gray-500 mb-1">Quantidade Contada</label>
-                                                <input type="number" name="items[{{ $index }}][real_amount]"
+                                                <input type="number"
+                                                       name="items[{{ $index }}][real_amount]"
+                                                       data-index="{{ $index }}"
                                                        value="{{ old('items.'.$index.'.real_amount', $item->real_amount) }}"
-                                                       class="w-24 px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+                                                       class="real-amount-input w-24 px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
                                                        min="0" step="1">
                                             </div>
 
                                             <div class="flex-1">
-                                                <label class="block text-xs text-gray-500 mb-1">Motivação</label>
-                                                <input type="text" name="items[{{ $index }}][reason]"
-                                                       value="{{ old('items.'.$index.'.reason', $item->reason) }}"
-                                                       class="w-48 px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
-                                                       placeholder="Motivo da Divergencia">
+                                                <label class="block text-xs text-gray-500 mb-1">Tipo de Divergência</label>
+                                                <select name="items[{{ $index }}][divergence_type]"
+                                                        data-index="{{ $index }}"
+                                                        class="divergence-type w-32 px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500 text-sm">
+                                                    <option value="">Selecione</option>
+                                                    <option value="LOSS" {{ old('items.'.$index.'.divergence_type', $item->divergence_type) == 'LOSS' ? 'selected' : '' }}>Perda</option>
+                                                    <option value="MISPLACED" {{ old('items.'.$index.'.divergence_type', $item->divergence_type) == 'MISPLACED' ? 'selected' : '' }}>Extraviado</option>
+                                                    <option value="BROKEN" {{ old('items.'.$index.'.divergence_type', $item->divergence_type) == 'BROKEN' ? 'selected' : '' }}>Danificado</option>
+                                                    <option value="NONE" {{ old('items.'.$index.'.divergence_type', $item->divergence_type) == 'NONE' ? 'selected' : '' }}>Sem divergência</option>
+                                                </select>
                                             </div>
+
+                                            <div class="flex-1">
+                                                <label class="block text-xs text-gray-500 mb-1">Motivação</label>
+                                                <input type="text"
+                                                       name="items[{{ $index }}][reason]"
+                                                       value="{{ old('items.'.$index.'.reason', $item->reason) }}"
+                                                       data-index="{{ $index }}"
+                                                       class="reason-input w-48 px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+                                                       placeholder="Motivo da divergência">
+                                            </div>
+
+                                            <!-- Mensagem de erro individual -->
+                                            <div class="item-error text-xs text-red-600 hidden mt-1" data-index="{{ $index }}"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -235,7 +233,7 @@
                                         class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
                                     Marcar Todos como Conferidos
                                 </button>
-                                <button type="submit"
+                                <button type="button" id="finalizeInventory"
                                         class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
                                     Finalizar Contagem
                                 </button>
@@ -250,12 +248,102 @@
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // Filtros de busca
+                // Elementos do DOM
                 const filterInput = document.getElementById('filterInput');
                 const filterStatus = document.getElementById('filterStatus');
-                const itemsList = document.getElementById('itemsList');
                 const itemCards = document.querySelectorAll('.item-card');
+                const errorMessages = document.getElementById('errorMessages');
+                const errorMessageText = document.getElementById('errorMessageText');
 
+                // Função para validar todos os itens
+                function validateItems() {
+                    let isValid = true;
+                    const errors = [];
+
+                    document.querySelectorAll('.item-card').forEach(card => {
+                        const index = card.querySelector('input[name$="[product_id]"]')?.name.match(/\[(\d+)\]/)?.[1];
+                        if (!index) return;
+
+                        const realAmount = card.querySelector(`input[name="items[${index}][real_amount]"]`)?.value;
+                        const divergenceType = card.querySelector(`select[name="items[${index}][divergence_type]"]`)?.value;
+                        const reason = card.querySelector(`input[name="items[${index}][reason]"]`)?.value;
+                        const errorElement = card.querySelector(`.item-error[data-index="${index}"]`);
+
+                        // Limpar erro anterior
+                        if (errorElement) {
+                            errorElement.classList.add('hidden');
+                            errorElement.textContent = '';
+                        }
+                        card.classList.remove('border-red-300', 'bg-red-50');
+
+                        // Se tem quantidade contada
+                        if (realAmount && realAmount !== '') {
+                            const systemQuantity = parseFloat(card.querySelector('.font-bold').textContent);
+                            const countedQuantity = parseFloat(realAmount);
+
+                            // Se tem divergência
+                            if (countedQuantity !== systemQuantity) {
+                                if (!divergenceType || divergenceType === '') {
+                                    isValid = false;
+                                    if (errorElement) {
+                                        errorElement.textContent = 'Selecione o tipo de divergência';
+                                        errorElement.classList.remove('hidden');
+                                    }
+                                    card.classList.add('border-red-300', 'bg-red-50');
+                                }
+
+                                if (!reason || reason.trim() === '') {
+                                    isValid = false;
+                                    if (errorElement) {
+                                        errorElement.textContent = errorElement.textContent
+                                            ? errorElement.textContent + ' e informe a motivação'
+                                            : 'Informe a motivação da divergência';
+                                        errorElement.classList.remove('hidden');
+                                    }
+                                    card.classList.add('border-red-300', 'bg-red-50');
+                                }
+                            }
+                        }
+                    });
+
+                    return isValid;
+                }
+
+                // Função para atualizar display de diferença
+                function updateDifference(index) {
+                    const card = document.querySelector(`.item-card input[name="items[${index}][product_id]"]`)?.closest('.item-card');
+                    if (!card) return;
+
+                    const systemQuantity = parseFloat(card.querySelector('.font-bold').textContent);
+                    const realAmount = parseFloat(card.querySelector(`input[name="items[${index}][real_amount]"]`).value) || 0;
+                    const difference = realAmount - systemQuantity;
+
+                    const differenceDisplay = card.querySelector('.difference-display');
+                    if (differenceDisplay) {
+                        differenceDisplay.textContent = difference;
+                        differenceDisplay.className = `ml-1 font-bold difference-display ${
+                            difference > 0 ? 'text-green-600' :
+                                difference < 0 ? 'text-red-600' : ''
+                        }`;
+                    }
+                }
+
+                // Event listeners para inputs de quantidade
+                document.querySelectorAll('.real-amount-input').forEach(input => {
+                    input.addEventListener('input', function() {
+                        const index = this.dataset.index;
+                        updateDifference(index);
+                        validateItems();
+                    });
+                });
+
+                // Event listeners para selects e inputs de motivo
+                document.querySelectorAll('.divergence-type, .reason-input').forEach(element => {
+                    element.addEventListener('change', validateItems);
+                    element.addEventListener('input', validateItems);
+                });
+
+                // Filtros de busca
                 function filterItems() {
                     const searchTerm = filterInput.value.toLowerCase();
                     const statusFilter = filterStatus.value;
@@ -267,11 +355,7 @@
                         const matchesSearch = productName.includes(searchTerm);
                         const matchesStatus = statusFilter === 'all' || itemStatus === statusFilter;
 
-                        if (matchesSearch && matchesStatus) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
+                        card.style.display = matchesSearch && matchesStatus ? 'block' : 'none';
                     });
                 }
 
@@ -288,12 +372,27 @@
                             const index = match[1];
                             const productId = document.querySelector(`input[name="items[${index}][product_id]"]`).value;
                             input.value = productQuantities[productId] || 0;
+
+                            // Selecionar "Sem divergência" automaticamente
+                            const divergenceSelect = document.querySelector(`select[name="items[${index}][divergence_type]"]`);
+                            if (divergenceSelect) {
+                                divergenceSelect.value = 'NONE';
+                            }
+
+                            updateDifference(index);
                         }
                     });
+
+                    validateItems();
                 });
 
                 // Salvar progresso (AJAX)
                 document.getElementById('saveProgress').addEventListener('click', function() {
+                    if (!validateItems()) {
+                        alert('Existem itens com divergência sem tipo ou motivação. Corrija antes de salvar.');
+                        return;
+                    }
+
                     const form = document.getElementById('inventoryForm');
                     const formData = new FormData(form);
 
@@ -308,24 +407,63 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                alert('Progresso salvo com sucesso!');
+                                showNotification('Progresso salvo com sucesso!', 'success');
                             }
                         })
                         .catch(error => {
                             console.error('Erro:', error);
+                            showNotification('Erro ao salvar progresso', 'error');
                         });
                 });
 
-                // Validação antes de finalizar
-                document.getElementById('inventoryForm').addEventListener('submit', function(e) {
+                // Finalizar inventário
+                document.getElementById('finalizeInventory').addEventListener('click', function() {
+                    if (!validateItems()) {
+                        showNotification('Existem itens com divergência sem tipo ou motivação.', 'error');
+                        return;
+                    }
+
                     const pendingItems = document.querySelectorAll('.item-card[data-status="pending"]');
 
                     if (pendingItems.length > 0) {
-                        if (!confirm('Existem itens pendentes. Deseja finalizar mesmo assim?')) {
-                            e.preventDefault();
+                        if (!confirm(`Existem ${pendingItems.length} itens pendentes. Deseja finalizar mesmo assim?`)) {
+                            return;
                         }
                     }
+
+                    // Submeter o formulário
+                    document.getElementById('inventoryForm').submit();
                 });
+
+                // Função para mostrar notificações
+                function showNotification(message, type = 'success') {
+                    const notification = document.createElement('div');
+                    notification.className = `fixed top-4 right-4 px-4 py-3 rounded-lg shadow-lg z-50 transition-all duration-500 transform translate-x-0 ${
+                        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+                    } text-white`;
+
+                    notification.innerHTML = `
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                ${type === 'success'
+                        ? '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />'
+                        : '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />'
+                    }
+                            </svg>
+                            <span>${message}</span>
+                        </div>
+                    `;
+
+                    document.body.appendChild(notification);
+
+                    setTimeout(() => {
+                        notification.classList.add('translate-x-full', 'opacity-0');
+                        setTimeout(() => notification.remove(), 500);
+                    }, 3000);
+                }
+
+                // Validação inicial
+                validateItems();
             });
         </script>
     @endpush
@@ -336,6 +474,9 @@
         }
         .item-card:hover {
             transform: translateX(4px);
+        }
+        .item-card.border-red-300 {
+            border-width: 2px;
         }
     </style>
 @endsection

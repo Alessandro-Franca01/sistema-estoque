@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('item_inventories', function (Blueprint $table) {
-            $table->enum('difference_type', ['LOSS', 'MISPLACED', 'BROKEN', 'NONE'])->default('NONE');
+            $table->enum('divergence_type', ['LOSS', 'MISPLACED', 'BROKEN', 'NONE'])->default('NONE');
             $table->renameColumn('observations', 'reason');
+            $table->dropColumn('difference');
         });
     }
 
@@ -23,8 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('item_inventories', function (Blueprint $table) {
-            $table->dropColumn('difference_type');
-            $table->renameColumn('observations', 'reason');
+            $table->decimal('difference', 10, 3)->nullable();
+            $table->dropColumn('divergence_type');
+            $table->renameColumn('reason', 'observations');
         });
     }
 };

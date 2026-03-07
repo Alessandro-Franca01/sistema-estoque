@@ -225,6 +225,7 @@ class InventoryController extends Controller
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.real_amount' => 'nullable|numeric|min:0',
             'items.*.reason' => 'nullable|string|max:255',
+            'items.*.divergence_type' => 'nullable|in:LOSS,MISPLACED,BROKEN,NONE', // TODO: TERMINAR ISSO DEPOIS COM TESTES
         ]);
 
         $inventory = Inventory::findOrFail($id);
@@ -258,6 +259,11 @@ class InventoryController extends Controller
                     // Atualiza observações se fornecidas
                     if (array_key_exists('reason', $itemData)) {
                         $updateData['reason'] = $itemData['reason'];
+                    }
+
+                    // Atualiza o tipo de divergencia
+                    if (array_key_exists('divergence_type', $itemData) && $itemData['divergence_type'] != 'NONE') {
+                        $updateData['divergence_type'] = $itemData['divergence_type'];
                     }
 
                     // Calcula diferença se houver quantidade real
