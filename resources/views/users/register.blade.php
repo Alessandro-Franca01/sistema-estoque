@@ -81,7 +81,7 @@
                 <input type="hidden" name="role" value="{{ $perfil }}">
                 <input type="hidden" name="email" value="{{ $email }}">
                 <input type="hidden" name="job_function" value="{{ $jobFunction }}">
-                <input type="hidden" name="isFromEmail" value=true>
+                <input type="hidden" name="isFromEmail" value="true">
 
                 <!-- Password -->
                 <div>
