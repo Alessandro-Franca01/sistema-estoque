@@ -7,7 +7,6 @@ use App\Http\Controllers\PublicServantController;
 use App\Http\Controllers\OutputController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 
 Route::get('/', function () {
@@ -17,8 +16,8 @@ Route::get('/', function () {
 // Routes to register user without authentication:
 Route::get('/user/register', [UserController::class, 'register'])->name('user.register');
 Route::post('/user/store', [UserController::class, 'store'])->name('users.store');
-Route::get('/register/email', function (Request $request) {
-    if ($request::hasValidSignature()) {
+Route::get('/register/email', function (Illuminate\Http\Request $request) {
+    if ($request->hasValidSignature()) {
         $str_register = Str::random(16);
         $hash = password_hash($str_register, PASSWORD_DEFAULT);
         session(['str_token' => $str_register]);
@@ -26,9 +25,9 @@ Route::get('/register/email', function (Request $request) {
         return redirect()->route('user.register',
             [
                 'tokenRegister' => $hash,
-                'perfil' => $request::input('perfil'),
-                'email' => $request::input('email'),
-                'department_id' => $request::input('department_id')
+                'perfil' => $request->input('perfil'),
+                'email' => $request->input('email'),
+                'department_id' => $request->input('department_id')
             ]
         );
     }

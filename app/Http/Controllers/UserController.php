@@ -67,7 +67,6 @@ class UserController
             'role' => ['required', 'string', 'max:100'],
         ]);
         $role = Role::where('name', strtolower($request->role))->first();
-        $password = null;
 
         if (empty($role)) {
             return back()->withErrors([
@@ -75,12 +74,8 @@ class UserController
             ]);
         }
 
-        // Se o password for vazio, gera um password aleatório
-        if (!empty($request->password)){
-            $password = $request->password;
-        }else{
-            $password = Hash::make($request->password);
-        }
+        // Hash do password
+        $password = Hash::make($request->password);
 
         try {
             $userNew = DB::transaction(function () use ($request, $role, $password) {

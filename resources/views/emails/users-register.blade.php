@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\URL;
 </head>
 <body style="margin:0;padding:0;background:#f5f7fb;font-family:Arial,Helvetica,sans-serif;color:#111827;">
 @php
-    $url = URL::temporarySignedRoute(
+    $url = $url ?? URL::temporarySignedRoute(
         'register.email',
         now()->addMinutes(1440),
          [
@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\URL;
              'department_id' => $data['department_id']
          ]
      );
-    $link = '<a href="'.$url.'"> Click aqui. </a>';
 @endphp
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f5f7fb;padding:24px 0;">
     <tr>
