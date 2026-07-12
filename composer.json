@@ -28,7 +28,8 @@
         },
         "files": [
             "app/Helpers/helpers.php",
-            "app/Helpers/AuditHelper.php"
+            "app/Helpers/AuditHelper.php",
+            "app/Helpers/EntryRuleHelper.php"
         ]
     },
     "autoload-dev": {

@@ -22,7 +22,7 @@ class AuditHelper
         );
     }
 
-    public static function logCreateCustomData(Model $model, ?Request $request = null, array $additionalData = [], array $data, bool $isCustomData = true): AuditLog
+    public static function logCreateCustomData(Model $model, ?Request $request = null, array $additionalData = [], ?array $data = null, bool $isCustomData = true): AuditLog
     {
         return AuditLog::record(
             event: AuditLog::EVENT_CREATED,
@@ -49,7 +49,7 @@ class AuditHelper
         );
     }
 
-    public static function logUpdateCustomData(Model $model, array $changes, ?Request $request = null, array $additionalData = [], array $data, bool $isCustomData = true): AuditLog
+    public static function logUpdateCustomData(Model $model, array $changes, ?Request $request = null, array $additionalData = [], ?array $data = null, bool $isCustomData = true): AuditLog
     {
         return AuditLog::record(
             event: AuditLog::EVENT_UPDATED,
