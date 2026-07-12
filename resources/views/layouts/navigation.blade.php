@@ -33,9 +33,9 @@
                     <x-nav-link :href="route('outputs.index')" :active="request()->routeIs('outputs.index')">
                         {{ __('Saídas') }}
                     </x-nav-link>
-{{--                    <x-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">--}}
-{{--                        {{ __('Inventários') }}--}}
-{{--                    </x-nav-link>--}}
+                    <x-nav-link :href="route('inventories.index')" :active="request()->routeIs('inventories.index')">
+                        {{ __('Inventários') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('calls.index')" :active="request()->routeIs('calls.index')">
                         {{ __('Chamados') }}
                     </x-nav-link>

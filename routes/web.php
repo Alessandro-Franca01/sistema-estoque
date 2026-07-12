@@ -8,6 +8,7 @@ use App\Http\Controllers\OutputController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Request;
+use App\Http\Controllers\InventoryController;
 use Illuminate\Support\Str;
 
 Route::get('/', function () {
@@ -80,7 +81,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/user', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
         Route::get('/user/send-email', [UserController::class, 'sendEmailForm'])->name('users.form.send.email');
         Route::post('/user/send-email', [UserController::class, 'sendEmail'])->name('users.send.email');
-        
+
         // Departments Management
         Route::resource('departments', \App\Http\Controllers\DepartmentController::class);
     });
@@ -112,6 +113,19 @@ Route::middleware('auth')->group(function () {
     // Tenant: alterar departamento atual na sessão
     Route::post('/tenant/switch', [\App\Http\Controllers\TenantController::class, 'switch'])
         ->name('tenant.switch');
+
+    // Rotas de Inventário
+    Route::resource('inventories', InventoryController::class);
+    Route::put('inventories/{inventory}/items', [InventoryController::class, 'updateItems'])
+        ->name('inventories.update-items');
+    Route::post('inventories/{inventory}/items', [InventoryController::class, 'addItem'])
+        ->name('inventories.add-item');
+    Route::delete('inventories/{inventory}/items/{item}', [InventoryController::class, 'removeItem'])
+        ->name('inventories.remove-item');
+    Route::put('inventories/{inventory}/save-progress', [InventoryController::class, 'saveProgress'])
+        ->name('inventories.save-progress');
+    Route::get('inventories/{inventory}/report', [InventoryController::class, 'report'])
+        ->name('inventories.report');
 });
 
 require __DIR__.'/auth.php';

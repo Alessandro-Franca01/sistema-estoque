@@ -19,6 +19,7 @@ class Product extends Model
         'code',
         'description',
         'quantity',
+        'max_stock_level',
         'meansurement_unit',
         'observation',
         'is_active',

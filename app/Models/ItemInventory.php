@@ -11,8 +11,8 @@ class ItemInventory extends Model
         'product_id',
         'register_amount',
         'real_amount',
-        'difference',
-        'observations',
+        'divergence_type',
+        'reason',
     ];
 
     public function inventory()

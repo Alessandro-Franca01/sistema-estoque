@@ -1,123 +1,482 @@
 @extends('layouts.app')
 
-@section('title', 'Editar Inventário')
+@section('title', 'Processo de Inventário #' . $inventory->id)
 
 @section('content')
-<div class="container mx-auto px-4 py-8 mt-4">
-    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="bg-gray-800 text-white px-6 py-4">
-            <h1 class="text-2xl font-semibold">Editar Inventário #{{ $inventory->id }}</h1>
-        </div>
-
-        <div class="p-6">
-            <form action="{{ route('inventories.update', $inventory->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-
-                <div class="mb-4">
-                    <label for="status" class="block text-gray-700 text-sm font-bold mb-2">Status</label>
-                    <select name="status" id="status" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        <option value="OPEN" {{ $inventory->status == 'OPEN' ? 'selected' : '' }}>Aberto</option>
-                        <option value="STOPPED" {{ $inventory->status == 'STOPPED' ? 'selected' : '' }}>Parado</option>
-                        <option value="CLOSED" {{ $inventory->status == 'CLOSED' ? 'selected' : '' }}>Fechado</option>
-                    </select>
+    <div class="min-h-screen bg-gray-50 py-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Cabeçalho do Processo -->
+            <div class="bg-white shadow-xl rounded-lg overflow-hidden mb-6">
+                <div class="bg-gradient-to-r from-purple-600 to-purple-800 px-6 py-5">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-2xl font-bold text-white">Processo de Inventário #{{ $inventory->id }}</h1>
+                            <p class="mt-1 text-purple-100">Realize a contagem e conferência dos itens</p>
+                        </div>
+                        <div class="flex space-x-3">
+                        <span class="px-3 py-1 bg-white text-purple-700 rounded-full text-sm font-semibold">
+                            {{ $inventory->status }}
+                        </span>
+                            <a href="{{ route('inventories.index') }}"
+                               class="inline-flex items-center px-3 py-1 bg-purple-500 text-white rounded-md hover:bg-purple-400 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                                </svg>
+                                Voltar
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <label for="end_date" class="block text-gray-700 text-sm font-bold mb-2">Data de Fim</label>
-                    <input type="datetime-local" name="end_date" id="end_date" value="{{ old('end_date', $inventory->end_date) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <!-- Cards de Progresso -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-6">
+                    <div class="bg-purple-50 rounded-lg p-4 border border-purple-100">
+                        <div class="text-sm text-purple-600 font-medium">Total de Itens</div>
+                        <div class="text-2xl font-bold text-purple-800">{{ $inventory->items->count() }}</div>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-4 border border-green-100">
+                        <div class="text-sm text-green-600 font-medium">Itens Conferidos</div>
+                        <div class="text-2xl font-bold text-green-800">
+                            {{ $inventory->items->whereNotNull('real_amount')->count() }}
+                        </div>
+                    </div>
+                    <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-100">
+                        <div class="text-sm text-yellow-600 font-medium">Itens com Divergência</div>
+                        <div class="text-2xl font-bold text-yellow-800">
+                            {{ $inventory->items->filter(function($item) {
+                                return $item->real_amount !== null && $item->real_amount != $item->product->quantity;
+                            })->count() }}
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                        <div class="text-sm text-blue-600 font-medium">Progresso</div>
+                        <div class="text-2xl font-bold text-blue-800">
+                            {{ round(($inventory->items->whereNotNull('real_amount')->count() / max($inventory->items->count(), 1)) * 100) }}%
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mb-4">
-                    <label for="observations" class="block text-gray-700 text-sm font-bold mb-2">Observações do Inventário</label>
-                    <textarea name="observations" id="observations" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('observations', $inventory->observations) }}</textarea>
+                <!-- Barra de Progresso -->
+                <div class="px-6 pb-6">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        @php
+                            $progress = ($inventory->items->whereNotNull('real_amount')->count() / max($inventory->items->count(), 1)) * 100;
+                        @endphp
+                        <div class="bg-purple-600 h-2.5 rounded-full transition-all duration-500" style="width: {{ $progress }}%"></div>
+                    </div>
                 </div>
+            </div>
 
-                <h2 class="text-xl font-semibold mt-6 mb-4">Itens do Inventário</h2>
+            <!-- Informações Gerais do Inventário -->
+            <div class="bg-white shadow-xl rounded-lg overflow-hidden mb-6">
+                <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-800">Informações do Inventário</h2>
+                </div>
+                <div class="p-6">
+                    <form action="{{ route('inventories.update', $inventory->id) }}" method="POST" class="space-y-4">
+                        @csrf
+                        @method('PUT')
 
-                <div id="items-container">
-                    @foreach($inventory->items as $index => $item)
-                        <div class="item border-b pb-4 mb-4">
-                            <input type="hidden" name="items[{{ $index }}][product_id]" value="{{ $item->product_id }}">
-                            <p><strong>Produto:</strong> {{ $item->product->name }}</p>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label for="items[{{ $index }}][real_amount]" class="block text-gray-700 text-sm font-bold mb-2">Quantidade Real</label>
-                                    <input type="number" step="0.001" name="items[{{ $index }}][real_amount]" value="{{ old('items.'.$index.'.real_amount', $item->real_amount) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                </div>
-                                <div>
-                                    <label for="items[{{ $index }}][observations]" class="block text-gray-700 text-sm font-bold mb-2">Observações</label>
-                                    <input type="text" name="items[{{ $index }}][observations]" value="{{ old('items.'.$index.'.observations', $item->observations) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Data de Início -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Data de Início</label>
+                                <div class="text-gray-900">{{ \Carbon\Carbon::parse($inventory->start_date)->format('d/m/Y H:i') }}</div>
+                            </div>
+
+                            <!-- Observações do Inventário -->
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Observações Gerais</label>
+                                <textarea name="observations" rows="2"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+                                          placeholder="Observações sobre o inventário...">{{ old('observations', $inventory->observations) }}</textarea>
                             </div>
                         </div>
-                    @endforeach
-                </div>
 
-                <h3 class="text-lg font-semibold mt-6 mb-4">Adicionar Produto ao Inventário</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label for="product_id" class="block text-gray-700 text-sm font-bold mb-2">Produto</label>
-                        <select id="product_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            <option value="">Selecione um produto</option>
-                            @foreach($products as $product)
-                                <option value="{{ $product->id }}">{{ $product->name }}</option>
-                            @endforeach
+                        <div class="flex justify-end">
+                            <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
+                                Atualizar Observação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Itens do Inventário - Área de Contagem -->
+            <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+                <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-gray-800">Contagem de Itens</h2>
+                    <div class="flex space-x-2">
+                        <input type="text" id="filterInput" placeholder="Buscar produto..."
+                               class="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500">
+                        <select id="filterStatus" class="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-purple-500 focus:border-purple-500">
+                            <option value="all">Todos</option>
+                            <option value="pending">Pendentes</option>
+                            <option value="counted">Conferidos</option>
+                            <option value="divergent">Com Divergência</option>
                         </select>
                     </div>
-                    <div>
-                        <button type="button" id="add-item" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-7">Adicionar Item</button>
-                    </div>
                 </div>
 
-                <div class="flex items-center justify-between mt-6">
-                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        Salvar Alterações
-                    </button>
-                    <a href="{{ route('inventories.index') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-                        Voltar para a lista
-                    </a>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const addItemButton = document.getElementById('add-item');
-        const itemsContainer = document.getElementById('items-container');
-        const productSelect = document.getElementById('product_id');
-        let itemIndex = {{ $inventory->items->count() }};
-
-        addItemButton.addEventListener('click', function () {
-            const productId = productSelect.value;
-            const productName = productSelect.options[productSelect.selectedIndex].text;
-
-            if (productId) {
-                const itemHtml = `
-                    <div class="item border-b pb-4 mb-4">
-                        <input type="hidden" name="items[${itemIndex}][product_id]" value="${productId}">
-                        <p><strong>Produto:</strong> ${productName}</p>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="items[${itemIndex}][real_amount]" class="block text-gray-700 text-sm font-bold mb-2">Quantidade Real</label>
-                                <input type="number" step="0.001" name="items[${itemIndex}][real_amount]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            </div>
-                            <div>
-                                <label for="items[${itemIndex}][observations]" class="block text-gray-700 text-sm font-bold mb-2">Observações</label>
-                                <input type="text" name="items[${itemIndex}][observations]" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            </div>
+                <div class="p-6">
+                    <div id="errorMessages" class="hidden mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
+                        <div class="flex items-center">
+                            <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            <span id="errorMessageText"></span>
                         </div>
                     </div>
-                `;
-                itemsContainer.insertAdjacentHTML('beforeend', itemHtml);
-                itemIndex++;
-                productSelect.value = '';
-            }
-        });
-    });
-</script>
-@endpush
+
+                    <form id="inventoryForm" method="POST" action="{{ route('inventories.update-items', $inventory->id) }}" class="space-y-4">
+                        @csrf
+                        @method('PUT')
+
+                        <!-- Lista de Itens para Contagem -->
+                        <div class="space-y-4" id="itemsList">
+                            @foreach($inventory->items as $index => $item)
+                                <div class="item-card border rounded-lg p-4 hover:shadow-md transition-shadow"
+                                     data-product="{{ strtolower($item->product->name) }}"
+                                     data-status="{{ $item->real_amount ? ($item->real_amount != $item->product->quantity ? 'divergent' : 'counted') : 'pending' }}">
+                                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                        <!-- Informações do Produto -->
+                                        <div class="flex-1">
+                                            <div class="flex items-center">
+                                                <h3 class="text-lg font-medium text-gray-900">{{ $item->product->name }}</h3>
+                                                @if($item->real_amount)
+                                                    <span class="ml-2 px-2 py-0.5 text-xs rounded-full
+                                                        {{ $item->real_amount == $item->product->quantity ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                                        {{ $item->real_amount == $item->product->quantity ? 'OK' : 'Divergente' }}
+                                                    </span>
+                                                @else
+                                                    <span class="ml-2 px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-800">
+                                                        Pendente
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <div class="mt-1 grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                                                <div>
+                                                    <span class="text-gray-500">Código:</span>
+                                                    <span class="ml-1 font-mono">{{ $item->product->code ?? 'N/A' }}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="text-gray-500">Sistema:</span>
+                                                    <span class="ml-1 font-bold">{{ $item->product->quantity }}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="text-gray-500">Contado:</span>
+                                                    <span class="ml-1 font-bold real-amount-display">{{ $item->real_amount ?? '---' }}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="text-gray-500">Diferença:</span>
+                                                    <span class="ml-1 font-bold difference-display">
+                                                        {{ $item->real_amount ? ($item->real_amount - $item->product->quantity) : '---' }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Campos de Contagem -->
+                                        <div class="flex flex-col md:flex-row gap-3 items-end">
+                                            <input type="hidden" name="items[{{ $index }}][product_id]" value="{{ $item->product_id }}">
+
+                                            <div>
+                                                <label class="block text-xs text-gray-500 mb-1">Quantidade Contada</label>
+                                                <input type="number"
+                                                       name="items[{{ $index }}][real_amount]"
+                                                       data-index="{{ $index }}"
+                                                       value="{{ old('items.'.$index.'.real_amount', $item->real_amount) }}"
+                                                       class="real-amount-input w-24 px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+                                                       min="0" step="1">
+                                            </div>
+
+                                            <div class="flex-1">
+                                                <label class="block text-xs text-gray-500 mb-1">Tipo de Divergência</label>
+                                                <select name="items[{{ $index }}][divergence_type]"
+                                                        data-index="{{ $index }}"
+                                                        class="divergence-type w-32 px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500 text-sm">
+                                                    <option value="">Selecione</option>
+                                                    <option value="LOSS" {{ old('items.'.$index.'.divergence_type', $item->divergence_type) == 'LOSS' ? 'selected' : '' }}>Perda</option>
+                                                    <option value="MISPLACED" {{ old('items.'.$index.'.divergence_type', $item->divergence_type) == 'MISPLACED' ? 'selected' : '' }}>Extraviado</option>
+                                                    <option value="BROKEN" {{ old('items.'.$index.'.divergence_type', $item->divergence_type) == 'BROKEN' ? 'selected' : '' }}>Danificado</option>
+                                                    <option value="NONE" {{ old('items.'.$index.'.divergence_type', $item->divergence_type) == 'NONE' ? 'selected' : '' }}>Sem divergência</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="flex-1">
+                                                <label class="block text-xs text-gray-500 mb-1">Motivação</label>
+                                                <input type="text"
+                                                       name="items[{{ $index }}][reason]"
+                                                       value="{{ old('items.'.$index.'.reason', $item->reason) }}"
+                                                       data-index="{{ $index }}"
+                                                       class="reason-input w-48 px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+                                                       placeholder="Motivo da divergência">
+                                            </div>
+
+                                            <!-- Mensagem de erro individual -->
+                                            <div class="item-error text-xs text-red-600 hidden mt-1" data-index="{{ $index }}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-200">
+                            <button type="button" id="saveProgress"
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                                Salvar Progresso
+                            </button>
+
+                            <div class="flex space-x-3">
+                                <button type="button" id="markAllCounted"
+                                        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+                                    Marcar Todos como Conferidos
+                                </button>
+                                <button type="button" id="finalizeInventory"
+                                        class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
+                                    Finalizar Contagem
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Elementos do DOM
+                const filterInput = document.getElementById('filterInput');
+                const filterStatus = document.getElementById('filterStatus');
+                const itemCards = document.querySelectorAll('.item-card');
+                const errorMessages = document.getElementById('errorMessages');
+                const errorMessageText = document.getElementById('errorMessageText');
+
+                // Função para validar todos os itens
+                function validateItems() {
+                    let isValid = true;
+                    const errors = [];
+
+                    document.querySelectorAll('.item-card').forEach(card => {
+                        const index = card.querySelector('input[name$="[product_id]"]')?.name.match(/\[(\d+)\]/)?.[1];
+                        if (!index) return;
+
+                        const realAmount = card.querySelector(`input[name="items[${index}][real_amount]"]`)?.value;
+                        const divergenceType = card.querySelector(`select[name="items[${index}][divergence_type]"]`)?.value;
+                        const reason = card.querySelector(`input[name="items[${index}][reason]"]`)?.value;
+                        const errorElement = card.querySelector(`.item-error[data-index="${index}"]`);
+
+                        // Limpar erro anterior
+                        if (errorElement) {
+                            errorElement.classList.add('hidden');
+                            errorElement.textContent = '';
+                        }
+                        card.classList.remove('border-red-300', 'bg-red-50');
+
+                        // Se tem quantidade contada
+                        if (realAmount && realAmount !== '') {
+                            const systemQuantity = parseFloat(card.querySelector('.font-bold').textContent);
+                            const countedQuantity = parseFloat(realAmount);
+
+                            // Se tem divergência
+                            if (countedQuantity !== systemQuantity) {
+                                if (!divergenceType || divergenceType === '') {
+                                    isValid = false;
+                                    if (errorElement) {
+                                        errorElement.textContent = 'Selecione o tipo de divergência';
+                                        errorElement.classList.remove('hidden');
+                                    }
+                                    card.classList.add('border-red-300', 'bg-red-50');
+                                }
+
+                                if (!reason || reason.trim() === '') {
+                                    isValid = false;
+                                    if (errorElement) {
+                                        errorElement.textContent = errorElement.textContent
+                                            ? errorElement.textContent + ' e informe a motivação'
+                                            : 'Informe a motivação da divergência';
+                                        errorElement.classList.remove('hidden');
+                                    }
+                                    card.classList.add('border-red-300', 'bg-red-50');
+                                }
+                            }
+                        }
+                    });
+
+                    return isValid;
+                }
+
+                // Função para atualizar display de diferença
+                function updateDifference(index) {
+                    const card = document.querySelector(`.item-card input[name="items[${index}][product_id]"]`)?.closest('.item-card');
+                    if (!card) return;
+
+                    const systemQuantity = parseFloat(card.querySelector('.font-bold').textContent);
+                    const realAmount = parseFloat(card.querySelector(`input[name="items[${index}][real_amount]"]`).value) || 0;
+                    const difference = realAmount - systemQuantity;
+
+                    const differenceDisplay = card.querySelector('.difference-display');
+                    if (differenceDisplay) {
+                        differenceDisplay.textContent = difference;
+                        differenceDisplay.className = `ml-1 font-bold difference-display ${
+                            difference > 0 ? 'text-green-600' :
+                                difference < 0 ? 'text-red-600' : ''
+                        }`;
+                    }
+                }
+
+                // Event listeners para inputs de quantidade
+                document.querySelectorAll('.real-amount-input').forEach(input => {
+                    input.addEventListener('input', function() {
+                        const index = this.dataset.index;
+                        updateDifference(index);
+                        validateItems();
+                    });
+                });
+
+                // Event listeners para selects e inputs de motivo
+                document.querySelectorAll('.divergence-type, .reason-input').forEach(element => {
+                    element.addEventListener('change', validateItems);
+                    element.addEventListener('input', validateItems);
+                });
+
+                // Filtros de busca
+                function filterItems() {
+                    const searchTerm = filterInput.value.toLowerCase();
+                    const statusFilter = filterStatus.value;
+
+                    itemCards.forEach(card => {
+                        const productName = card.dataset.product;
+                        const itemStatus = card.dataset.status;
+
+                        const matchesSearch = productName.includes(searchTerm);
+                        const matchesStatus = statusFilter === 'all' || itemStatus === statusFilter;
+
+                        card.style.display = matchesSearch && matchesStatus ? 'block' : 'none';
+                    });
+                }
+
+                filterInput.addEventListener('input', filterItems);
+                filterStatus.addEventListener('change', filterItems);
+
+                // Marcar todos como conferidos
+                document.getElementById('markAllCounted').addEventListener('click', function() {
+                    const productQuantities = @json($inventory->items->pluck('product.quantity', 'product_id'));
+
+                    document.querySelectorAll('input[name$="[real_amount]"]').forEach(input => {
+                        const match = input.name.match(/items\[(\d+)\]\[real_amount\]/);
+                        if (match) {
+                            const index = match[1];
+                            const productId = document.querySelector(`input[name="items[${index}][product_id]"]`).value;
+                            input.value = productQuantities[productId] || 0;
+
+                            // Selecionar "Sem divergência" automaticamente
+                            const divergenceSelect = document.querySelector(`select[name="items[${index}][divergence_type]"]`);
+                            if (divergenceSelect) {
+                                divergenceSelect.value = 'NONE';
+                            }
+
+                            updateDifference(index);
+                        }
+                    });
+
+                    validateItems();
+                });
+
+                // Salvar progresso (AJAX)
+                document.getElementById('saveProgress').addEventListener('click', function() {
+                    if (!validateItems()) {
+                        alert('Existem itens com divergência sem tipo ou motivação. Corrija antes de salvar.');
+                        return;
+                    }
+
+                    const form = document.getElementById('inventoryForm');
+                    const formData = new FormData(form);
+
+                    fetch('{{ route("inventories.save-progress", $inventory->id) }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                        },
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showNotification('Progresso salvo com sucesso!', 'success');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro:', error);
+                            showNotification('Erro ao salvar progresso', 'error');
+                        });
+                });
+
+                // Finalizar inventário
+                document.getElementById('finalizeInventory').addEventListener('click', function() {
+                    if (!validateItems()) {
+                        showNotification('Existem itens com divergência sem tipo ou motivação.', 'error');
+                        return;
+                    }
+
+                    const pendingItems = document.querySelectorAll('.item-card[data-status="pending"]');
+
+                    if (pendingItems.length > 0) {
+                        if (!confirm(`Existem ${pendingItems.length} itens pendentes. Deseja finalizar mesmo assim?`)) {
+                            return;
+                        }
+                    }
+
+                    // Submeter o formulário
+                    document.getElementById('inventoryForm').submit();
+                });
+
+                // Função para mostrar notificações
+                function showNotification(message, type = 'success') {
+                    const notification = document.createElement('div');
+                    notification.className = `fixed top-4 right-4 px-4 py-3 rounded-lg shadow-lg z-50 transition-all duration-500 transform translate-x-0 ${
+                        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+                    } text-white`;
+
+                    notification.innerHTML = `
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                ${type === 'success'
+                        ? '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />'
+                        : '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />'
+                    }
+                            </svg>
+                            <span>${message}</span>
+                        </div>
+                    `;
+
+                    document.body.appendChild(notification);
+
+                    setTimeout(() => {
+                        notification.classList.add('translate-x-full', 'opacity-0');
+                        setTimeout(() => notification.remove(), 500);
+                    }, 3000);
+                }
+
+                // Validação inicial
+                validateItems();
+            });
+        </script>
+    @endpush
+
+    <style>
+        .item-card {
+            transition: all 0.2s ease-in-out;
+        }
+        .item-card:hover {
+            transform: translateX(4px);
+        }
+        .item-card.border-red-300 {
+            border-width: 2px;
+        }
+    </style>
 @endsection
